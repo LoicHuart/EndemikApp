@@ -5,7 +5,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "merge-dev-loic": "git checkout loic && git checkout dev && git pull && git checkout loic && git merge dev",
+    "merge-dev-duygu": "git checkout duygu && git checkout dev && git pull && git checkout duygu && git merge dev",
+    "merge-dev-gaspard": "git checkout gaspard && git checkout dev && git pull && git checkout gaspard && git merge dev"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
