@@ -1,3 +1,2 @@
-export { account } from "./account";
-export { home } from "./home";
-export { login } from "./login";
+export { HomeScreen } from './HomeScreen';
+export { NotificationsScreen } from './NotificationsScreen';
