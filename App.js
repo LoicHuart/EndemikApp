@@ -3,7 +3,7 @@ import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { HomeScreen, NotificationsScreen } from './screens/';
+import { HomeScreen, TestScreen } from './screens/';
 
 import { Images, articles, argonTheme } from "./constants";
 
@@ -15,7 +15,7 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+        <Drawer.Screen name="TestScreen" component={TestScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
