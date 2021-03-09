@@ -3,7 +3,7 @@ import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { HomeScreen, NotificationsScreen } from './screens/';
+import { dashbord, holidaysManagement, holidaysRequest, login, profil, usersManagement } from './screens/';
 
 
 
@@ -13,9 +13,15 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+      <Drawer.Navigator initialRouteName="dashbord">
+        <Drawer.Screen name="dashbord" component={dashbord} />
+        <Drawer.Screen name="holidaysManagement" component={holidaysManagement} />
+        <Drawer.Screen name="holidaysRequest" component={holidaysRequest} />
+        <Drawer.Screen name="login" component={login} />
+        <Drawer.Screen name="profil" component={profil} />
+        <Drawer.Screen name="usersManagement" component={usersManagement} />
+
+        
       </Drawer.Navigator>
     </NavigationContainer>
   );

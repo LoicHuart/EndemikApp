@@ -1,13 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
-export const home = ({navigation}) => {
+export const profil = ({navigation}) => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>home</Text>
+      <Text>profil</Text>
       <Button
-        onPress={() => navigation.navigate('TestScreen')}
-        title="Go to TestScreen"
+        onPress={() => navigation.goBack()}
+        title="Go Back"
       />
     </View>
   );
