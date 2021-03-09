@@ -2,14 +2,15 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native'
 import { Block, Text, Button as GaButton, theme } from "galio-framework";
 
-import { Button, Select, Icon, Input, Header, Switch, Drawer} from "../components/";
+import { Button, Select, Icon, Input, Header, Switch} from "../components/";
 import { Images, articles, argonTheme } from "../constants";
 
 
-export const TestScreen = ({navigation}) => {
+export const NotificationsScreen = ({navigation}) => {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 
+    
             <Header
                 search
             
