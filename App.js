@@ -9,7 +9,7 @@ import { home, TestScreen } from './screens/';
 import { HomeScreen, NotificationsScreen } from './screens/';
 >>>>>>> parent of 312d3d4 (testScreen)
 
-import { Images, articles, argonTheme } from "./constants";
+
 
 
 const Drawer = createDrawerNavigator();
