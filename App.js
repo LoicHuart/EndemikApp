@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { HomeScreen, NotificationsScreen } from './screens/';
 
-
+import { Images, articles, argonTheme } from "./constants";
 
 
 const Drawer = createDrawerNavigator();

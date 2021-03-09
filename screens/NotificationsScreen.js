@@ -1,14 +1,60 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { Block, Text, Button as GaButton, theme } from "galio-framework";
+
+import { Button, Select, Icon, Input, Header, Switch} from "../components/";
+import { Images, articles, argonTheme } from "../constants";
 
 
 export const NotificationsScreen = ({navigation}) => {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Button onPress={() => navigation.goBack()} title="Go back home" />
+
+    
+            <Header
+                search
+            
+                title="Title"
+        
+                
+            />
+
+
+            <Button onPress={() => navigation.goBack()}>Go back home</Button>
+
+            <Select
+                defaultIndex={1}
+                options={[1, 2, 3, 4, 5]}
+                style={styles.shadow}
+            />
+
+           
+            <Select
+                defaultIndex={1}
+                options={["01", "02", "03", "04", "05"]}
+            />
+
+            
+            <Input
+            right
+            placeholder="Icon Right"
+            iconContent={
+                <Icon
+                size={11}
+                color={argonTheme.COLORS.ICON}
+                name="search-zoom-in"
+                family="ArgonExtra"
+                />
+            }
+            />
+
+
+
+          
+           
         </View>
     )
 }
 
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
