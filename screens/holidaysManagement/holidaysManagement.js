@@ -1,18 +1,16 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
-
-export const holidaysManagement = ({navigation}) => {
+import { HeaderCustom } from "../../components/";
+export const holidaysManagement = ({ navigation }) => {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>holidaysManagement</Text>
-      <Button
-        onPress={() => navigation.goBack()}
-        title="Go Back"
-      />
+    <View style={{ flex: 1 }}>
+      <HeaderCustom navigation={navigation} />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>holidaysManagement</Text>
+        <Button onPress={() => navigation.goBack()} title="Go Back" />
+      </View>
     </View>
   );
 };
-
-
 
 const styles = StyleSheet.create({});

@@ -23,7 +23,7 @@ function RootNavigation() {
     <NavigationContainer>
       {!user.token ? (
         <Stack.Navigator>
-          <Stack.Screen name="login" component={login} />
+          <Stack.Screen name="login" component={login} header="" />
         </Stack.Navigator>
       ) : (
         <Drawer.Navigator
