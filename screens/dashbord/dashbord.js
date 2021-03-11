@@ -8,7 +8,7 @@ export const dashbord = ({ navigation }) => {
   const { signOut } = useContext(AuthContext);
   return (
     <View style={{ flex: 1 }}>
-      <HeaderCustom navigation={navigation} />
+      <HeaderCustom navigation={navigation} title="DASHBORD" />
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Text>dashbord</Text>
         <Button onPress={() => navigation.goBack()} title="Go Back" />
