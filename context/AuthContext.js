@@ -74,7 +74,7 @@ export const AuthContextProvier = ({ children }) => {
     };
     try {
       const resp = await fetch(
-        "http://192.168.1.13:8080/api/auth",
+        `${process.env.REACT_APP_API_HOST}/api/auth`,
         requestOptions
       );
 
