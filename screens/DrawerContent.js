@@ -15,7 +15,6 @@ export function DrawerContent(props) {
                 <View style={styles.drawerContent}>
                     <Text style={styles.row, styles.title}>MENU</Text>
                     <DrawerItem 
-                        style={styles.drawerItem}
                         icon={() => (
                             <Icon
                                 name='desktop'
@@ -28,7 +27,6 @@ export function DrawerContent(props) {
                         labelStyle={styles.labelStyle}
                     />
                     <DrawerItem 
-                        style={styles.drawerItem}
                         icon={() => (
                             <Icon
                                 name='calendar-plus'
@@ -41,7 +39,6 @@ export function DrawerContent(props) {
                         labelStyle={styles.labelStyle}
                     />
                     <DrawerItem 
-                        style={styles.drawerItem}
                         icon={() => (
                             <Icon
                                 name='calendar-day'
@@ -54,7 +51,6 @@ export function DrawerContent(props) {
                         labelStyle={styles.labelStyle}
                     />
                     <DrawerItem 
-                        style={styles.drawerItem}
                         icon={() => (
                             <Icon
                                 name='users-cog'
@@ -67,7 +63,6 @@ export function DrawerContent(props) {
                         labelStyle={styles.labelStyle}
                     />
                     <DrawerItem 
-                        style={styles.drawerItem}
                         icon={() => (
                             <Icon
                                 name='user'
@@ -80,7 +75,6 @@ export function DrawerContent(props) {
                         labelStyle={styles.labelStyle}
                     />
                     <DrawerItem 
-                        style={styles.drawerItem}
                         icon={() => (
                             <Icon
                                 name='sc-telegram'
@@ -100,9 +94,6 @@ export function DrawerContent(props) {
 }
 
 const styles = StyleSheet.create({
-    drawerItem: {
-        paddingHorizontal: 25,
-    },
     drawerContent: {
         flex: 1,
     },
