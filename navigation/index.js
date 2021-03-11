@@ -22,7 +22,7 @@ function RootNavigation() {
   return (
     <NavigationContainer>
       {!user.token ? (
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="login" component={login} header="" />
         </Stack.Navigator>
       ) : (

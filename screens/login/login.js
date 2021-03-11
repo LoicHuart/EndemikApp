@@ -7,6 +7,7 @@ import {
   TextInput,
   ImageBackground,
   Image,
+  StatusBar,
 } from "react-native";
 import color from "../../constants/color";
 
@@ -29,6 +30,7 @@ export const login = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
+      <StatusBar animated={true} backgroundColor={color.COLORS.PRIMARY} />
       <ImageBackground source={image} style={styles.image}>
         <View style={{ alignItems: "center", flex: 3 }}>
           <Image

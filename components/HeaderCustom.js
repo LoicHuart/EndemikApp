@@ -2,7 +2,7 @@ import React from "react";
 import { Header, Icon } from "react-native-elements";
 import color from "../constants/color";
 
-export const HeaderCustom = ({ navigation }) => {
+export const HeaderCustom = ({ navigation, title }) => {
   return (
     <Header
       statusBarProps={{
@@ -17,7 +17,7 @@ export const HeaderCustom = ({ navigation }) => {
           onPress={() => navigation.openDrawer()}
         />
       }
-      centerComponent={{ text: "BARRE", style: { color: "#fff" } }}
+      centerComponent={{ text: title, style: { color: "#fff" } }}
       containerStyle={{
         backgroundColor: color.COLORS.PRIMARY,
         justifyContent: "space-around",
