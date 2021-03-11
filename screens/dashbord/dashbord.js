@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 export const dashbord = ({ navigation }) => {
   const { signOut } = useContext(AuthContext);
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Text>dashbord</Text>
