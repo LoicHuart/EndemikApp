@@ -1,24 +1,27 @@
 import React from "react";
-import { Header } from "react-native-elements";
-import { Entypo } from "@expo/vector-icons";
+import { Header, Icon } from "react-native-elements";
+import color from "../constants/color";
 
-export const HeaderCustom = (props) => {
+export const HeaderCustom = ({ navigation }) => {
   return (
     <Header
-      statusBarProps={{ barStyle: "light-content" }}
-      barStyle="light-content" // or directly
+      statusBarProps={{
+        barStyle: "light-content",
+        backgroundColor: color.COLORS.PRIMARY,
+      }}
       leftComponent={
-        <Entypo
-          name="menu"
-          size={24}
-          color="white"
-          onPress={props.navigation.openDrawer()}
+        <Icon
+          name="bars"
+          type="font-awesome-5"
+          color={color.COLORS.WHITE}
+          onPress={() => navigation.openDrawer()}
         />
       }
-      centerComponent={{ text: "MY TITLE", style: { color: "#fff" } }}
+      centerComponent={{ text: "BARRE", style: { color: "#fff" } }}
       containerStyle={{
-        backgroundColor: "#3D6DCC",
+        backgroundColor: color.COLORS.PRIMARY,
         justifyContent: "space-around",
+        paddingTop: 0,
       }}
     />
   );
