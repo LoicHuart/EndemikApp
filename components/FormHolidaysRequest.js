@@ -11,8 +11,8 @@ import RadioForm, {
 } from "react-native-simple-radio-button";
 
 export const FormHolidaysRequest = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState("16-02-2000");
+  const [endDate, setEndDate] = useState("16-02-2000");
   const [type, setType] = useState(0);
 
   var radio_props = [
@@ -35,7 +35,12 @@ export const FormHolidaysRequest = () => {
     >
       <Text style={{ fontWeight: "bold", fontSize: 18 }}>DEMANDE DE CONGÉ</Text>
       <Formik
-        initialValues={{ note: "", type: "rtt", startDate: "", endDate: "" }}
+        initialValues={{
+          note: "",
+          type: "rtt",
+          startDate: startDate,
+          endDate: startDate,
+        }}
         onSubmit={(values) => console.log(values)}
       >
         {({ handleChange, handleBlur, handleSubmit, values }) => (
