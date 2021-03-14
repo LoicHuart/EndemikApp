@@ -71,7 +71,7 @@ export const AuthContextProvier = ({ children }) => {
       headers: myHeaders,
       body: raw,
       redirect: "follow",
-    };
+    }
     try {
       const resp = await fetch(
         `http://192.168.1.13:8080/api/auth`,
