@@ -72,6 +72,7 @@ export const AuthContextProvier = ({ children }) => {
       body: raw,
       redirect: "follow",
     };
+
     try {
       const resp = await fetch(
         `http://${process.env.REACT_APP_API_HOST}/api/auth`,
