@@ -84,6 +84,20 @@ export function DrawerContent(props) {
           <DrawerItem
             icon={() => (
               <Icon
+                name="cogs"
+                type="font-awesome-5"
+                color={color.COLORS.DEFAULT}
+              />
+            )}
+            label="Gestion des Services"
+            onPress={() => {
+              props.navigation.navigate("servicesManagement");
+            }}
+            labelStyle={styles.labelStyle}
+          />
+          <DrawerItem
+            icon={() => (
+              <Icon
                 name="user"
                 type="font-awesome-5"
                 color={color.COLORS.DEFAULT}
