@@ -24,7 +24,7 @@ export const ListHolidays = () => {
 
     try {
       const resp = await fetch(
-        "http://192.168.1.13:8080/api/holidays?populate=1",
+        `http://${process.env.REACT_APP_API_HOST}/api/holidays?populate=1`,
         requestOptions
       );
 

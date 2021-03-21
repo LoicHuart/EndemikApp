@@ -77,7 +77,7 @@ export function DrawerContent(props) {
             )}
             label="Gestion des utilisateurs"
             onPress={() => {
-              props.navigation.navigate("usersManagement");
+              props.navigation.navigate("employeesManagement");
             }}
             labelStyle={styles.labelStyle}
           />
