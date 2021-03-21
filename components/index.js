@@ -3,7 +3,7 @@ export { ListHolidays } from "./ListHolidays";
 export { Card } from "./Card";
 
 export { FormHolidaysRequest } from "./FormHolidaysRequest";
-export { ListServices } from "./ListServices";
-export { CardService } from "./CardService";
+export { ListServices } from "./services/ListServices";
+export { CardService } from "./services/CardService";
 
 

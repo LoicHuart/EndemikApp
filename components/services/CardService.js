@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Avatar, Icon } from "react-native-elements"
-import color from "../constants/color"
+import color from "../../constants/color"
 
 export const CardService = ({item}) => {
     return (
