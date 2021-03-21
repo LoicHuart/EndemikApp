@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { HeaderCustom, ListServices, Card } from "../../components/";
-import { Button, Overlay  } from "react-native-elements"
+import React from "react"
+import { StyleSheet, Text, View } from "react-native"
+import { HeaderCustom, ListServices, Card, AddService } from "../../components/"
+import { Button, Overlay, Input } from "react-native-elements"
 import color from "../../constants/color"
 
 export const servicesManagement = ({ navigation }) => {
@@ -10,6 +10,7 @@ export const servicesManagement = ({ navigation }) => {
   const toggleOverlayAdd = () => {
     setOverlayAdd(!overlayAdd);
   };
+
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} title="GESTION DES SERVICES" />
@@ -27,7 +28,7 @@ export const servicesManagement = ({ navigation }) => {
           <ListServices/>
 
           <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
-            <Text>Hello from Overlay!</Text>
+            <AddService/>  
           </Overlay>
         </Card>
       </View>
