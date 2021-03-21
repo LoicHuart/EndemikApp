@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { StyleSheet, Text, View, Button, FlatList } from "react-native";
-import { CardService } from "./";
-
+import React, { useEffect } from "react"
+import { StyleSheet, Text, View, FlatList } from "react-native"
+import { CardService } from ".."
 
 export const ListServices = () => {
   const [services, setServices] = React.useState([]);
@@ -25,7 +24,7 @@ export const ListServices = () => {
     fetch(`http://${process.env.REACT_APP_API_HOST}/api/services?populate=1`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log(result)
+        // console.log(result)
         setServices(result);
       })
       .catch(error => console.log('error', error));
@@ -41,9 +40,6 @@ export const ListServices = () => {
 
   return (
     <View>
-      <Text style={{ marginBottom: 30, fontWeight: "bold" }}>
-        Liste des services :
-      </Text>
       <FlatList
         data={services}
         ListEmptyComponent={() => <Text>rien</Text>}

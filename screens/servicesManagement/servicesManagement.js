@@ -1,17 +1,50 @@
 import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { HeaderCustom, ListServices, Card } from "../../components/";
+import { Button, Overlay  } from "react-native-elements"
+import color from "../../constants/color"
+
 export const servicesManagement = ({ navigation }) => {
+  const [overlayAdd, setOverlayAdd] = React.useState(false)
+
+  const toggleOverlayAdd = () => {
+    setOverlayAdd(!overlayAdd);
+  };
   return (
     <View style={{ flex: 1 }}>
-      <HeaderCustom navigation={navigation} title="SERVICES MANAGEMENT" />
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <HeaderCustom navigation={navigation} title="GESTION DES SERVICES" />
+      <View>
         <Card>
+          <Text style={styles.title}>
+            Liste des services
+          </Text>
+          <Button 
+            title="Ajouter un service" 
+            buttonStyle={styles.button}
+            onPress={toggleOverlayAdd}
+          />
+        
           <ListServices/>
+
+          <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
+            <Text>Hello from Overlay!</Text>
+          </Overlay>
         </Card>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  title:{
+    marginBottom: 30, 
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20
+  },
+  button:{
+    backgroundColor: color.COLORS.SECONDARY,
+    alignSelf: 'flex-start',
+    alignSelf: 'center'
+  }
+});
