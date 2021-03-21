@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Button, FlatList } from "react-native";
+import { CardService } from "./";
+
 
 export const ListServices = () => {
   const [services, setServices] = React.useState([]);
@@ -48,10 +50,7 @@ export const ListServices = () => {
         refreshing={loading}
         onRefresh={() => displayServices()}
         renderItem={({ item }) => (
-          <Text>
-            {item._id}
-           
-          </Text>
+          <CardService item={item}/>
         )}
         keyExtractor={(item) => item._id}
       />

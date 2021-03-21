@@ -4,4 +4,6 @@ export { Card } from "./Card";
 
 export { FormHolidaysRequest } from "./FormHolidaysRequest";
 export { ListServices } from "./ListServices";
+export { CardService } from "./CardService";
+
 
