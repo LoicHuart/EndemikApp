@@ -1,4 +1,3 @@
-import { blue } from '@material-ui/core/colors'
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Avatar, Icon } from "react-native-elements"
@@ -8,19 +7,19 @@ export const CardService = ({item}) => {
     return (
         <View>
             <View style={styles.cardTop}>
-                <Text>Service : {item.name}</Text>
+                <Text style={{textAlign: 'center', fontWeight: "bold"}}>{item.name}</Text>
+                <Text>Manager : </Text>
                 <View style={{flexDirection: "row",alignItems: "center"}}>
                     <Avatar
                         rounded
                         source={{
-                            uri: 'https://randomuser.me/api/portraits/men/41.jpg',
+                            uri: `http://${process.env.REACT_APP_API_HOST}/uploads/${item.id_manager.photo_url}`,
                         }}
                         size="medium"
-                        title="test"
+                        title={item.id_manager.firstName[0] + item.id_manager.lastName[0]}
                     />
                     <Text>  {item.id_manager.firstName} {item.id_manager.lastName}</Text>
                 </View>
-
             </View>
             <View style={styles.cardBot}>
                 <View style={{flexDirection: "row",alignItems: "center", flex:1}}>
