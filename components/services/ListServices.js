@@ -5,14 +5,14 @@ import { CardService } from "./CardService"
 import { AuthContext } from "../../context/AuthContext";
 
 export const ListServices = () => {
-  const { user } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [services, setServices] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const displayServices = async () => {
     setLoading(true);
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${user.token}`);
+    myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify();
