@@ -19,10 +19,10 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 function RootNavigation() {
-  const { user } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   return (
     <NavigationContainer>
-      {!user.token ? (
+      {!token ? (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="login" component={login} header="" />
         </Stack.Navigator>

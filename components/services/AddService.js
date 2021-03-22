@@ -18,11 +18,10 @@ const SignupSchema = Yup.object().shape({
 });
 
 export const AddService = () => {
-    const { user } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
     const sendAddServices = async (value) => {
-        console.log(user.token);
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${user.token}`);
+        myHeaders.append("Authorization", `Bearer ${token}`);
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify(value);

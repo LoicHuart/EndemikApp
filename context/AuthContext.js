@@ -5,6 +5,8 @@ import jwt_decode from "jwt-decode";
 export const AuthContext = React.createContext();
 
 export const AuthContextProvier = ({ children }) => {
+  const [user, setUser] = React.useState([]);
+
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -12,31 +14,48 @@ export const AuthContextProvier = ({ children }) => {
           return {
             ...prevState,
             token: action.token,
-            service: action.service,
-            id: action.id,
+            user: action.id,
           };
         case "SIGN_IN":
           return {
             ...prevState,
             token: action.token,
-            service: action.service,
-            id: action.id,
+            user: action.id,
           };
         case "SIGN_OUT":
           return {
             ...prevState,
             token: null,
-            service: null,
-            id: null,
+            user: null,
           };
       }
     },
     {
       token: null,
-      service: null,
-      id: null,
+      user: null,
     }
   );
+
+  const getEmployeeById = ((id, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    fetch(`http://${process.env.REACT_APP_API_HOST}/api/employees/${id}?populate=1`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        // console.log(result);
+        setUser(result);
+      })
+      .catch(error => console.log('error', error));
+
+    
+  });
 
   useEffect(() => {
     const checkIfTokenExist = async () => {
@@ -45,11 +64,11 @@ export const AuthContextProvier = ({ children }) => {
         userToken = await AsyncStorage.getItem("token");
         if (userToken !== null) {
           var decoded = jwt_decode(userToken);
+          getEmployeeById(decoded._id, userToken)
           dispatch({
             type: "RESTORE_TOKEN",
             token: userToken,
-            service: decoded.service,
-            id: decoded.user_id,
+            user: user,
           });
         }
       } catch (e) {
@@ -88,11 +107,12 @@ export const AuthContextProvier = ({ children }) => {
 
       await AsyncStorage.setItem("token", respJSON.token);
       var decoded = jwt_decode(respJSON.token);
+      getEmployeeById(decoded._id, respJSON.token)
       dispatch({
         type: "SIGN_IN",
         token: respJSON.token,
-        service: decoded.service,
-        id: decoded.user_id,
+        user: user,
+
       });
       console.log("singIn");
       console.log(await AsyncStorage.getItem("token"));
@@ -112,7 +132,8 @@ export const AuthContextProvier = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        user: state,
+        token: state.token,
+        user: state.user,
         signIn: signIn,
         signOut: signOut,
       }}
