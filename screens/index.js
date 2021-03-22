@@ -5,3 +5,4 @@ export { login } from "./login/login";
 export { profil } from "./profil/profil";
 export { employeesManagement } from "./employeesManagement/employeesManagement";
 export { DrawerContent } from "./DrawerContent";
+export { servicesManagement } from "./servicesManagement/servicesManagement";

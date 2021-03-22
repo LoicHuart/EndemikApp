@@ -15,8 +15,8 @@ import { AuthContext } from "../../context/AuthContext";
 
 export const login = ({ navigation }) => {
   const { signIn, signOut } = useContext(AuthContext);
-  const [email, setEmail] = useState("test2@test.com");
-  const [password, setPassword] = useState("dTiXILJD");
+  const [email, setEmail] = useState("thetest22@truc.com");
+  const [password, setPassword] = useState("h1QHMRk1");
 
   const submit = () => {
     let data = {

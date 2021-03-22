@@ -11,6 +11,7 @@ import {
   profil,
   employeesManagement,
   DrawerContent,
+  servicesManagement,
 } from "../screens/";
 //drawer
 const Drawer = createDrawerNavigator();
@@ -45,6 +46,10 @@ function RootNavigation() {
           <Drawer.Screen
             name="employeesManagement"
             component={employeesManagement}
+          />
+          <Drawer.Screen
+            name="servicesManagement"
+            component={servicesManagement}
           />
         </Drawer.Navigator>
       )}

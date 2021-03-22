@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Button, FlatList } from "react-native";
 import { Card } from "./Card";
+import { Icon } from "react-native-elements";
 import { CardEmployee } from "./CardEmployee";
-import { Avatar } from "react-native-elements";
-import { ButtonGroup } from "react-native-elements";
+import { FontAwesome } from "@expo/vector-icons";
+
+import color from "../constants/color";
 
 export const ListEmployees = () => {
   const [employees, setEmployees] = React.useState([]);
@@ -52,59 +54,79 @@ export const ListEmployees = () => {
     setLoading(false);
   }, [employees]);
 
-  const convertTextToTitleCase = () => {
-    let camelCaseText = defaultText
-      .split(" ")
-      .map(function (word, index) {
-        // First character upper case else lower case
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-      })
-      .join(" ");
-    setDefaultText(camelCaseText);
-  };
-
-  /*   const component1 = () => <Text>Hello</Text>;
-  const component2 = () => <Text>World</Text>;
-  const component3 = () => <Text>ButtonGroup</Text>; */
-
   return (
     <View>
       <Card>
-        <Text style={{ marginBottom: 30, fontWeight: "bold" }}>
-          Liste des utilisateurs :
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              marginTop: 10,
+              marginBottom: 20,
+              fontWeight: "bold",
+              fontSize: 17,
+              flex: 0.9,
+            }}
+          >
+            Liste des utilisateurs :
+          </Text>
+          {/* <FontAwesome
+            name="user-plus"
+            onPress={() => console.log("addUser")}
+            size={15}
+            style={{
+              alignContent: "center",
+              flex: 0.2,
+            }}
+          /> */}
+          <Icon
+            raised
+            name="user-plus"
+            size={17}
+            type="font-awesome"
+            style={{
+              flex: 0.1,
+            }}
+            onPress={() => console.log("addUser")}
+          />
+        </View>
+
         <FlatList
           data={employees}
           ListEmptyComponent={() => <Text>rien</Text>}
           refreshing={loading}
           onRefresh={() => displayEmployees()}
-          renderItem={({ item }) => (
-            <CardEmployee style={{ width: 10000 }}>
-              <Avatar
-                size="medium"
-                rounded
-                source={{
-                  uri:
-                    "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
-                }}
-                title="MT"
-                onPress={() => console.log("Works!")}
-                activeOpacity={0.7}
-              />
-              <Text style={{ textTransform: "capitalize" }}>
-                {item.firstName}
-              </Text>
-              <Text>{item.lastName} </Text>
-              <Text> Tél : {item.tel_nb}</Text>
-              <Text> Mail : {item.mail}</Text>
-              {/*               <ButtonGroup
-                onPress={this.updateIndex}
-                selectedIndex={selectedIndex}
-                buttons={buttons}
-                containerStyle={{ height: 100 }}
-              /> */}
-            </CardEmployee>
-          )}
+          renderItem={({ item }) => <CardEmployee item={item} />}
+          // <CardEmployee style={{ width: 10000 }}>
+          //   <Avatar
+          //     size="medium"
+          //     rounded
+          //     source={{
+          //       uri:
+          //         "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
+          //     }}
+          //     title="MT"
+          //     onPress={() => console.log("Works!")}
+          //     activeOpacity={0.7}
+          //   />
+          //   <Text style={{ textTransform: "capitalize" }}>
+          //     {item.firstName}
+          //   </Text>
+          //   <Text>{item.lastName} </Text>
+          //   <Text> Tél : {item.tel_nb}</Text>
+          //   <Text> Mail : {item.mail}</Text>
+          //   {/*               <ButtonGroup
+          //     onPress={this.updateIndex}
+          //     selectedIndex={selectedIndex}
+          //     buttons={buttons}
+          //     containerStyle={{ height: 100 }}
+          //   /> */}
+          // </CardEmployee>
+
           keyExtractor={(item) => item._id}
         />
       </Card>
