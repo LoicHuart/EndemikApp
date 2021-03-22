@@ -10,10 +10,4 @@ export { FormAddUser } from "./FormAddUser";
 export { FormHolidaysRequest } from "./FormHolidaysRequest";
 export { ListServices } from "./services/ListServices";
 export { CardService } from "./services/CardService";
-<<<<<<< HEAD
 export { AddService } from "./services/AddService";
-
-
-
-=======
->>>>>>> duygu

@@ -1,14 +1,8 @@
-<<<<<<< HEAD
 import React, { useEffect, useContext } from "react"
 import { StyleSheet, Text, View, FlatList } from "react-native"
 
 import { CardService } from "./CardService"
 import { AuthContext } from "../../context/AuthContext";
-=======
-import React, { useEffect } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import { CardService } from "./CardService";
->>>>>>> duygu
 
 export const ListServices = () => {
   const { user } = useContext(AuthContext);
@@ -18,14 +12,7 @@ export const ListServices = () => {
   const displayServices = async () => {
     setLoading(true);
     var myHeaders = new Headers();
-<<<<<<< HEAD
     myHeaders.append("Authorization", `Bearer ${user.token}`);
-=======
-    myHeaders.append(
-      "Authorization",
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDI2NWMzNTlkMTZiODJhNmM4MDFmMGMiLCJpYXQiOjE2MTQ1MzQ1MTl9.IvVNv2189ezpH7wTvp9ACdG97WPn0Tlb5rigxKeKmGI"
-    );
->>>>>>> duygu
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify();
