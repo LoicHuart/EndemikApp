@@ -13,11 +13,13 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@react-native-async-storage/async-storage": "^1.14.1",
+    "@react-native-community/datetimepicker": "3.0.4",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/drawer": "^5.12.4",
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
     "babel-plugin-inline-dotenv": "^1.6.0",
+    "datetimepicker": "^0.1.39",
     "expo": "^40.0.1",
     "expo-status-bar": "~1.0.3",
     "formik": "^2.2.6",

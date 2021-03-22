@@ -77,9 +77,9 @@ export function DrawerContent(props) {
             )}
             label="Gestion des utilisateurs"
             onPress={() => {
-              props.navigation.navigate("usersManagement");
+              props.navigation.navigate("employeesManagement");
             }}
-            labelStyle={styles.labelStyle}
+            style={styles.labelStyle}
           />
           <DrawerItem
             icon={() => (
@@ -89,7 +89,7 @@ export function DrawerContent(props) {
                 color={color.COLORS.DEFAULT}
               />
             )}
-            label="Gestion des Services"
+            label="Gestion des services"
             onPress={() => {
               props.navigation.navigate("servicesManagement");
             }}
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   labelStyle: {
+    fontSize: 30,
     fontWeight: "bold",
     color: color.COLORS.DEFAULT,
   },

@@ -1,13 +1,12 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
-import { HeaderCustom } from "../../components/";
-export const usersManagement = ({ navigation }) => {
+import { HeaderCustom, ListEmployees, Card } from "../../components/";
+export const employeesManagement = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
-      <HeaderCustom navigation={navigation} title="USERS MANAGEMENT" />
+      <HeaderCustom navigation={navigation} title="Gestion des utililsateurs" />
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>usersManagement</Text>
-        <Button onPress={() => navigation.goBack()} title="Go Back" />
+        <ListEmployees />
       </View>
     </View>
   );

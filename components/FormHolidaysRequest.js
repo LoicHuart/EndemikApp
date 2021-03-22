@@ -17,7 +17,7 @@ export const FormHolidaysRequest = () => {
 
   var radio_props = [
     { label: "RTT", value: 0 },
-    { label: "Congé Payé", value: 1 },
+    { label: "Congé payé", value: 1 },
   ];
 
   return (
@@ -33,7 +33,9 @@ export const FormHolidaysRequest = () => {
         flex: 5,
       }}
     >
-      <Text style={{ fontWeight: "bold", fontSize: 18 }}>DEMANDE DE CONGÉ</Text>
+      <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
+        Nouvelle demande
+      </Text>
       <Formik
         initialValues={{
           note: "",

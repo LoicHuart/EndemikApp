@@ -1,24 +1,20 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import color from "../constants/color";
+import { Dimensions } from "react-native";
 
-export const Card = ({children}) => {
-    return (
-        <View style={styles.card}>
-            {children}
-        </View>
-    )
-}
+export const Card = ({ children }) => {
+  return <View style={styles.card}>{children}</View>;
+};
 
 const styles = StyleSheet.create({
-    card: {
-        marginVertical: 10,
-        marginHorizontal: 10,
-        backgroundColor: color.COLORS.DEFAULT,
-        padding: 40,
-        
-        borderRadius: 15,
-
-      }
-
-})
+  card: {
+    marginVertical: 10,
+    marginHorizontal: 10,
+    marginTop: 40,
+    backgroundColor: color.COLORS.LIGHTGREY,
+    width: Dimensions.get("window").width - 30,
+    borderRadius: 15,
+    padding: 15,
+  },
+});

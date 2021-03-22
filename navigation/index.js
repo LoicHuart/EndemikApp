@@ -9,7 +9,7 @@ import {
   holidaysRequest,
   login,
   profil,
-  usersManagement,
+  employeesManagement,
   DrawerContent,
   servicesManagement,
 } from "../screens/";
@@ -43,8 +43,14 @@ function RootNavigation() {
           />
           <Drawer.Screen name="holidaysRequest" component={holidaysRequest} />
           <Drawer.Screen name="profil" component={profil} />
-          <Drawer.Screen name="usersManagement" component={usersManagement} />
-          <Drawer.Screen name="servicesManagement" component={servicesManagement} />
+          <Drawer.Screen
+            name="employeesManagement"
+            component={employeesManagement}
+          />
+          <Drawer.Screen
+            name="servicesManagement"
+            component={servicesManagement}
+          />
         </Drawer.Navigator>
       )}
     </NavigationContainer>
