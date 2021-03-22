@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import color from "../constants/color";
+import color from "../../constants/color";
 import { Formik } from "formik";
 
 export const FormAddUser = ({ children }) => {

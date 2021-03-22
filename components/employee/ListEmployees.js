@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Button, FlatList } from "react-native";
-import { Card } from "./Card";
+import { Card } from "../Card";
 import { Icon } from "react-native-elements";
 import { CardEmployee } from "./CardEmployee";
 import { FontAwesome } from "@expo/vector-icons";
 
-import color from "../constants/color";
+import color from "../../constants/color";
 
 export const ListEmployees = () => {
   const [employees, setEmployees] = React.useState([]);

@@ -3,9 +3,9 @@ export { ListHolidays } from "./ListHolidays";
 
 export { Card } from "./Card";
 
-export { ListEmployees } from "./ListEmployees";
-export { CardEmployee } from "./CardEmployee";
-export { FormAddUser } from "./FormAddUser";
+export { ListEmployees } from "./employee/ListEmployees";
+export { CardEmployee } from "./employee/CardEmployee";
+export { FormAddUser } from "./employee/FormAddUser";
 
 export { FormHolidaysRequest } from "./FormHolidaysRequest";
 export { ListServices } from "./services/ListServices";

@@ -8,7 +8,7 @@ import {
   Text,
   Switch,
 } from "react-native";
-import color from "../constants/color";
+import color from "../../constants/color";
 import { FormAddUser } from "./FormAddUser";
 import { Avatar, Icon } from "react-native-elements";
 

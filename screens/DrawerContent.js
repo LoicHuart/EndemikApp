@@ -79,7 +79,7 @@ export function DrawerContent(props) {
             onPress={() => {
               props.navigation.navigate("employeesManagement");
             }}
-            style={styles.labelStyle}
+            labelStyle={styles.labelStyle}
           />
           <DrawerItem
             icon={() => (
@@ -133,8 +133,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   labelStyle: {
-    fontSize: 30,
+    fontSize: 15,
     fontWeight: "bold",
-    color: color.COLORS.DEFAULT,
+    color: color.COLORS.WHITE,
   },
 });
