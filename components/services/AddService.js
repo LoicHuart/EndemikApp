@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Input } from "react-native-elements"
 import { Formik } from 'formik'
@@ -8,17 +8,23 @@ import { AuthContext } from "../../context/AuthContext";
 
 const SignupSchema = Yup.object().shape({
     name: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
+        .min(2, '2 caractères minimum')
+        .max(50, '50 caractères maximum')
+        .required('Champ obligatoire'),
+    site: Yup.string()
+        .min(2, '2 caractères minimum')
+        .max(50, '50 caractères maximum')
         .required('Required'),
     id_manager: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
+        .min(2, '2 caractères minimum')
+        .max(50, '50 caractères maximum')
         .required('Required'),
 });
 
-export const AddService = () => {
+export const AddService = ({toggleOverlayAdd}) => {
     const { token } = useContext(AuthContext);
+    const [result, setResult] = React.useState('');
+
     const sendAddServices = async (value) => {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);
@@ -32,20 +38,30 @@ export const AddService = () => {
         body: raw,
         redirect: 'follow'
         };
-
-        fetch(`http://${process.env.REACT_APP_API_HOST}/api/services`, requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
+       
+        await fetch(`http://${process.env.REACT_APP_API_HOST}/api/services`, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                // console.log(result)
+                setResult(result)
+            })
             .catch(error => console.log('error', error));
     };
-    
+
+    useEffect(() => {
+        if(result._id) {
+            toggleOverlayAdd()
+        }
+    },[result]);
+
     return (
         <View>
             <Text style={styles.title}>Ajout d'un service</Text>
-
+            {result.error && (<Text style={styles.error}>{result.error}</Text>)}
             <Formik
                 initialValues={{ 
-                    name: '', 
+                    name: '',
+                    site: '',
                     id_manager: '',
                 }}
                 validationSchema={SignupSchema}
@@ -61,6 +77,13 @@ export const AddService = () => {
                     value={values.name}
                     placeholder='Nom'
                     errorMessage= {errors.name}
+                />
+                <Input 
+                    onChangeText={handleChange('site')}
+                    onBlur={handleBlur('site')}
+                    value={values.site}
+                    placeholder='site'
+                    errorMessage= {errors.site}
                 />
                 <Input 
                     onChangeText={handleChange('id_manager')}
@@ -90,5 +113,8 @@ const styles = StyleSheet.create({
         backgroundColor: color.COLORS.SECONDARY,
         alignSelf: 'flex-start',
         alignSelf: 'center'
+    },
+    error:{
+        color:color.COLORS.DANGER,
     }
 })
