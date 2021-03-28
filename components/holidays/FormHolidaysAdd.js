@@ -83,7 +83,7 @@ export const FormHolidaysAdd = () => {
       starting_date: holiday.startDate,
       ending_date: holiday.endDate,
       type: holiday.type,
-      id_requester_employee: "60525e4ad4679e76a88a43c1",
+      id_requester_employee: user._id,
     });
 
     var requestOptions = {

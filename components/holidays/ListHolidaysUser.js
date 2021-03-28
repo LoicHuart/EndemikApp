@@ -27,7 +27,7 @@ export const ListHolidaysUser = () => {
 
     try {
       const resp = await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/holidays/user/60525e4ad4679e76a88a43c1`,
+        `http://${process.env.REACT_APP_API_HOST}/api/holidays/user/${user._id}`,
         requestOptions
       );
 
