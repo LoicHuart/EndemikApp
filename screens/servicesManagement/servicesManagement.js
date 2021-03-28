@@ -13,7 +13,7 @@ export const servicesManagement = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <HeaderCustom navigation={navigation} title="Gestion des services" />
+      <HeaderCustom navigation={navigation} />
       <View>
         <Card>
           <Text style={screen.title}>Liste des services</Text>
@@ -26,7 +26,7 @@ export const servicesManagement = ({ navigation }) => {
           <ListServices />
 
           <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
-            <AddService/>  
+            <AddService toggleOverlayAdd={toggleOverlayAdd}/>  
           </Overlay>
         </Card>
       </View>
