@@ -161,6 +161,12 @@ export const FormHolidaysRequest = () => {
                       buttonWrapStyle={{ marginLeft: 10 }}
                     />
                     <RadioButtonLabel
+                      onPress={(value) => {
+                        setType(value);
+                        radio_props[0].value === value
+                          ? (values.type = radio_props[0].label)
+                          : (values.type = radio_props[1].label);
+                      }}
                       obj={obj}
                       index={i}
                       labelHorizontal={true}
@@ -180,7 +186,14 @@ export const FormHolidaysRequest = () => {
               value={values.note}
             />
             <View style={styles.row}>
-              <View>
+              <View style={{ flex: 1, marginTop: 4 }}>
+                <Icon
+                  name="calendar-alt"
+                  type="font-awesome-5"
+                  color={color.COLORS.GREY}
+                />
+              </View>
+              <View style={{ flex: 2, marginHorizontal: 6 }}>
                 <View>
                   <Button
                     onPress={showDatepickerStart}
@@ -198,7 +211,14 @@ export const FormHolidaysRequest = () => {
                   />
                 )}
               </View>
-              <View>
+              <View style={{ flex: 0.5, marginTop: 4 }}>
+                <Icon
+                  name="arrow-alt-circle-right"
+                  type="font-awesome-5"
+                  color={color.COLORS.GREY}
+                />
+              </View>
+              <View style={{ flex: 2, marginHorizontal: 6 }}>
                 <View>
                   <Button
                     onPress={showDatepickerEnd}
