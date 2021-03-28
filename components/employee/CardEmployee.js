@@ -9,7 +9,7 @@ import {
   Switch,
 } from "react-native";
 import color from "../../constants/color";
-import { FormAddUser } from "./FormAddUser";
+import { AddEmployee } from "./AddEmployee";
 import { Avatar, Icon } from "react-native-elements";
 
 export const CardEmployee = ({ item }) => {
