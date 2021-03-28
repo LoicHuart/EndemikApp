@@ -1,9 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Avatar, Icon } from "react-native-elements";
+import { Button } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import { Icon, Overlay } from "react-native-elements";
 import color from "../../constants/color";
+import { FormHolidaysUpdate } from "./FormHolidaysUpdate";
 
 export const CardHolidayUser = ({ item }) => {
+  const [showDetails, setShowDetails] = React.useState(false);
+  const [showUpdate, setShowUpdate] = React.useState(false);
+
   const formatDisplay = (date) => {
     date = new Date(date);
     let day = date.getDate();
@@ -18,46 +23,84 @@ export const CardHolidayUser = ({ item }) => {
 
     return day + "/" + month + "/" + date.getFullYear();
   };
+  const toggleShowDetails = () => {
+    setShowDetails(!showDetails);
+  };
+  const toggleShowUpdate = () => {
+    if (item.status == "en attente") {
+      setShowUpdate(!showUpdate);
+    }
+  };
+
   return (
     <View>
-      <View style={styles.card}>
-        <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-          Congée du {formatDisplay(item.starting_date)} au{" "}
-          {formatDisplay(item.ending_date)}
-        </Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={{ flex: 3 }}>{item.status}</Text>
-          {item.status == "en attente" && (
-            <Icon
-              name="question-circle"
-              type="font-awesome-5"
-              color={color.COLORS.GREY}
-              onPress={() => console.log(item._id)}
-            />
-          )}
-          {item.status == "prevalidée" && (
-            <Icon
-              name="play-circle"
-              type="font-awesome-5"
-              color={color.COLORS.WARNING}
-            />
-          )}
-          {item.status == "validée" && (
-            <Icon
-              name="check-circle"
-              type="font-awesome-5"
-              color={color.COLORS.SUCCESS}
-            />
-          )}
-          {item.status == "refusée" && (
-            <Icon
-              name="times-circle"
-              type="font-awesome-5"
-              color={color.COLORS.DANGER}
-            />
-          )}
+      <Pressable onPress={toggleShowDetails} onLongPress={toggleShowUpdate}>
+        <View style={styles.card}>
+          <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+            Congée du {formatDisplay(item.starting_date)} au{" "}
+            {formatDisplay(item.ending_date)}
+          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ flex: 3 }}>{item.status}</Text>
+            {item.status == "en attente" && (
+              <Icon
+                name="question-circle"
+                type="font-awesome-5"
+                color={color.COLORS.GREY}
+              />
+            )}
+            {item.status == "prevalidée" && (
+              <Icon
+                name="play-circle"
+                type="font-awesome-5"
+                color={color.COLORS.WARNING}
+              />
+            )}
+            {item.status == "validée" && (
+              <Icon
+                name="check-circle"
+                type="font-awesome-5"
+                color={color.COLORS.SUCCESS}
+              />
+            )}
+            {item.status == "refusée" && (
+              <Icon
+                name="times-circle"
+                type="font-awesome-5"
+                color={color.COLORS.DANGER}
+              />
+            )}
+          </View>
+          <Text style={{ flex: 3 }}>{item.type}</Text>
         </View>
-      </View>
+      </Pressable>
+      <Overlay isVisible={showDetails} onBackdropPress={toggleShowDetails}>
+        <Text>
+          {item.status}
+          {"\n"}
+          {item.note}
+          {"\n"}
+          {formatDisplay(item.starting_date)}
+          {"\n"}
+          {formatDisplay(item.ending_date)}
+          {"\n"}
+          {item.type}
+          {"\n"}
+          {formatDisplay(item.current_date)}
+        </Text>
+      </Overlay>
+      <Overlay
+        isVisible={showUpdate}
+        onBackdropPress={toggleShowUpdate}
+        fullScreen="true"
+      >
+        <FormHolidaysUpdate item={item} />
+        <Button
+          title="Retour"
+          color={color.COLORS.PRIMARY}
+          onPress={toggleShowUpdate}
+        ></Button>
+      </Overlay>
     </View>
   );
 };

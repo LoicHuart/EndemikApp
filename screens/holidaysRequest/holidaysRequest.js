@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import {
   HeaderCustom,
-  FormHolidaysRequest,
+  FormHolidaysAdd,
   ListHolidaysUser,
 } from "../../components/";
 export const holidaysRequest = ({ navigation }) => {
@@ -10,7 +10,7 @@ export const holidaysRequest = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} title="Demande de congé" />
       <View style={{ flex: 5 }}>
-        <FormHolidaysRequest />
+        <FormHolidaysAdd />
       </View>
 
       <View style={{ flex: 7 }}>

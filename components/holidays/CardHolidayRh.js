@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Avatar, Icon } from "react-native-elements";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import { Icon } from "react-native-elements";
 import color from "../../constants/color";
 
 export const CardHolidayRh = ({ item }) => {
@@ -18,8 +18,11 @@ export const CardHolidayRh = ({ item }) => {
 
     return day + "/" + month + "/" + date.getFullYear();
   };
+  const onPressFunction = () => {
+    console.log(item);
+  };
   return (
-    <View>
+    <Pressable onPress={onPressFunction}>
       <View style={styles.card}>
         <Text style={{ textAlign: "center", fontWeight: "bold" }}>
           Congée du {formatDisplay(item.starting_date)} au{" "}
@@ -36,7 +39,7 @@ export const CardHolidayRh = ({ item }) => {
           />
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

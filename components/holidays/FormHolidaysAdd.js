@@ -10,9 +10,8 @@ import RadioForm, {
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
-import { onChange } from "react-native-reanimated";
 
-export const FormHolidaysRequest = () => {
+export const FormHolidaysAdd = () => {
   const { user, token } = useContext(AuthContext);
   const today = new Date();
   const tomorrow = new Date(today);
@@ -65,9 +64,6 @@ export const FormHolidaysRequest = () => {
     let timestamp = new Date(selectedDate.nativeEvent.timestamp);
     console.log(timestamp);
     setEndDate(timestamp);
-    // return `${timestamp.getFullYear()}-${
-    //   timestamp.getMonth() + 1
-    // }-${timestamp.getDate()}`;
   };
 
   const showDatepickerStart = () => {
@@ -87,7 +83,7 @@ export const FormHolidaysRequest = () => {
       starting_date: holiday.startDate,
       ending_date: holiday.endDate,
       type: holiday.type,
-      id_requester_employee: "60525e4ad4679e76a88a43c1",
+      id_requester_employee: user._id,
     });
 
     var requestOptions = {
@@ -107,8 +103,8 @@ export const FormHolidaysRequest = () => {
   };
 
   const radio_props = [
-    { label: "RTT", value: 0 },
-    { label: "Congé payé", value: 1 },
+    { label: "RTT", value: 0, name: "rtt" },
+    { label: "Congés payés", value: 1, name: "congés payés" },
   ];
 
   return (
@@ -131,7 +127,7 @@ export const FormHolidaysRequest = () => {
           startDate: startDate,
           endDate: endDate,
         }}
-        onSubmit={(values, user) => addHoliday(values, user)}
+        onSubmit={(values) => addHoliday(values)}
       >
         {({ handleChange, handleBlur, handleSubmit, values }) => (
           <View>
@@ -146,9 +142,8 @@ export const FormHolidaysRequest = () => {
                       index={i}
                       onPress={(value) => {
                         setType(value);
-                        radio_props[0].value === value
-                          ? (values.type = radio_props[0].label)
-                          : (values.type = radio_props[1].label);
+                        values.type = radio_props[value].name;
+                        console.log(values.type);
                       }}
                       isSelected={type === i}
                       borderWidth={1}
@@ -161,6 +156,11 @@ export const FormHolidaysRequest = () => {
                       buttonWrapStyle={{ marginLeft: 10 }}
                     />
                     <RadioButtonLabel
+                      onPress={(value) => {
+                        setType(value);
+                        values.type = radio_props[value].name;
+                        console.log(values.type);
+                      }}
                       obj={obj}
                       index={i}
                       labelHorizontal={true}
@@ -180,7 +180,14 @@ export const FormHolidaysRequest = () => {
               value={values.note}
             />
             <View style={styles.row}>
-              <View>
+              <View style={{ flex: 1, marginTop: 4 }}>
+                <Icon
+                  name="calendar-alt"
+                  type="font-awesome-5"
+                  color={color.COLORS.GREY}
+                />
+              </View>
+              <View style={{ flex: 2, marginHorizontal: 6 }}>
                 <View>
                   <Button
                     onPress={showDatepickerStart}
@@ -195,10 +202,18 @@ export const FormHolidaysRequest = () => {
                     mode="date"
                     display="default"
                     onChange={onChangeStartDate}
+                    minimumDate={tomorrow}
                   />
                 )}
               </View>
-              <View>
+              <View style={{ flex: 0.5, marginTop: 4 }}>
+                <Icon
+                  name="arrow-alt-circle-right"
+                  type="font-awesome-5"
+                  color={color.COLORS.GREY}
+                />
+              </View>
+              <View style={{ flex: 2, marginHorizontal: 6 }}>
                 <View>
                   <Button
                     onPress={showDatepickerEnd}
@@ -213,6 +228,7 @@ export const FormHolidaysRequest = () => {
                     mode="date"
                     display="default"
                     onChange={onChangeEndDate}
+                    minimumDate={tomorrow}
                   />
                 )}
               </View>
