@@ -76,7 +76,6 @@ export const ListHolidaysUser = () => {
         renderItem={({ item }) => <CardHolidayUser item={item} />}
         keyExtractor={(item) => item._id}
       />
-      {/* <Button title="actualiser" onPress={() => displayHolidays()} /> */}
     </View>
   );
 };
