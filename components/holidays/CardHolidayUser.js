@@ -1,7 +1,6 @@
 import React from "react";
-import { Button } from "react-native";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { Icon, Overlay } from "react-native-elements";
+import { Icon, Overlay, Button } from "react-native-elements";
 import color from "../../constants/color";
 import { FormHolidaysUpdate } from "./FormHolidaysUpdate";
 
@@ -95,7 +94,7 @@ export const CardHolidayUser = ({ item }) => {
             title="Retour"
             color={color.COLORS.PRIMARY}
             onPress={toggleShowUpdate}
-          ></Button>
+          />
         </FormHolidaysUpdate>
       </Overlay>
     </View>
