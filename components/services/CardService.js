@@ -1,9 +1,28 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Avatar, Icon } from "react-native-elements"
 import color from "../../constants/color"
-
+import { AuthContext } from "../../context/AuthContext"
+import { Pressable } from "react-native";
 export const CardService = ({item}) => {
+    const { token } = useContext(AuthContext);
+
+    const deleteService = async (id) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", `Bearer ${token}`);
+
+        var requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch(`http://${process.env.REACT_APP_API_HOST}/api/services/${id}`, requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+    };
+
     return (
         <View>
             <View style={styles.cardTop}>
@@ -31,13 +50,16 @@ export const CardService = ({item}) => {
                             color= {color.COLORS.GREY}
                         />
                     </View>
-                    <View style= {{flex:0.5}}>
+                    <Pressable 
+                        style= {{flex:0.5}}
+                        onPress={() => deleteService(item._id)}
+                    >
                         <Icon
                             name='trash'
                             type='font-awesome-5'
                             color= {color.COLORS.GREY}
                         />
-                    </View>
+                    </Pressable>
                 </View>
             </View>
         </View>
