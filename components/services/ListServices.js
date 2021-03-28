@@ -10,7 +10,6 @@ export const ListServices = () => {
   const [loading, setLoading] = React.useState(true);
 
   const displayServices = async () => {
-    console.log(user)
     setLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);

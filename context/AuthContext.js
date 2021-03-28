@@ -1,12 +1,10 @@
-import React, { useEffect, createContext } from "react";
+import React, { useEffect, createContext, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
 
 export const AuthContext = React.createContext();
 
 export const AuthContextProvier = ({ children }) => {
-  const [user, setUser] = React.useState([]);
-
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -14,13 +12,13 @@ export const AuthContextProvier = ({ children }) => {
           return {
             ...prevState,
             token: action.token,
-            user: action.id,
+            user: action.user,
           };
         case "SIGN_IN":
           return {
             ...prevState,
             token: action.token,
-            user: action.id,
+            user: action.user,
           };
         case "SIGN_OUT":
           return {
@@ -36,7 +34,7 @@ export const AuthContextProvier = ({ children }) => {
     }
   );
 
-  const getEmployeeById = ((id, token) => {
+  const getEmployeeById = (async(id, token) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
@@ -46,15 +44,13 @@ export const AuthContextProvier = ({ children }) => {
       redirect: 'follow'
     };
 
-    fetch(`http://${process.env.REACT_APP_API_HOST}/api/employees/${id}?populate=1`, requestOptions)
+    return await fetch(`http://${process.env.REACT_APP_API_HOST}/api/employees/${id}?populate=1`, requestOptions)
       .then(response => response.json())
       .then(result => {
         // console.log(result);
-        setUser(result);
+        return result
       })
       .catch(error => console.log('error', error));
-
-    
   });
 
   useEffect(() => {
@@ -64,7 +60,17 @@ export const AuthContextProvier = ({ children }) => {
         userToken = await AsyncStorage.getItem("token");
         if (userToken !== null) {
           var decoded = jwt_decode(userToken);
-          getEmployeeById(decoded._id, userToken)
+          var user
+          await getEmployeeById(decoded._id, userToken)
+            .then(result => {
+              if (result) {
+                user = JSON.stringify(result)
+              }
+            })
+          if (!user) {
+            user = await AsyncStorage.getItem("user")
+          }
+            
           dispatch({
             type: "RESTORE_TOKEN",
             token: userToken,
@@ -104,18 +110,21 @@ export const AuthContextProvier = ({ children }) => {
         console.log("error");
         console.log(resp);
       }
+      
+      var decoded = jwt_decode(respJSON.token);
+      let user = await getEmployeeById(decoded._id, respJSON.token)
 
       await AsyncStorage.setItem("token", respJSON.token);
-      var decoded = jwt_decode(respJSON.token);
-      getEmployeeById(decoded._id, respJSON.token)
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+
       dispatch({
         type: "SIGN_IN",
         token: respJSON.token,
-        user: user,
-
+        user: JSON.stringify(user),
       });
       console.log("singIn");
       console.log(await AsyncStorage.getItem("token"));
+      console.log(await AsyncStorage.getItem("user"));
     } catch (error) {
       console.log("error", error);
     }
@@ -123,17 +132,20 @@ export const AuthContextProvier = ({ children }) => {
 
   const signOut = async () => {
     await AsyncStorage.setItem("token", "");
+    await AsyncStorage.setItem("user", "");
+
     dispatch({ type: "SIGN_OUT" });
 
     console.log("singOut");
     console.log(await AsyncStorage.getItem("token"));
+    console.log(await AsyncStorage.getItem("user"));
   };
 
   return (
     <AuthContext.Provider
       value={{
         token: state.token,
-        user: state.user,
+        user: JSON.parse(state.user),
         signIn: signIn,
         signOut: signOut,
       }}
