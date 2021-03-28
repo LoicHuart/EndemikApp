@@ -89,17 +89,14 @@ export const CardHolidayUser = ({ item }) => {
           {formatDisplay(item.current_date)}
         </Text>
       </Overlay>
-      <Overlay
-        isVisible={showUpdate}
-        onBackdropPress={toggleShowUpdate}
-        fullScreen="true"
-      >
-        <FormHolidaysUpdate item={item} />
-        <Button
-          title="Retour"
-          color={color.COLORS.PRIMARY}
-          onPress={toggleShowUpdate}
-        ></Button>
+      <Overlay isVisible={showUpdate} onBackdropPress={toggleShowUpdate}>
+        <FormHolidaysUpdate item={item} back={toggleShowUpdate}>
+          <Button
+            title="Retour"
+            color={color.COLORS.PRIMARY}
+            onPress={toggleShowUpdate}
+          ></Button>
+        </FormHolidaysUpdate>
       </Overlay>
     </View>
   );

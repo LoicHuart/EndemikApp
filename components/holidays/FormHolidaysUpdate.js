@@ -11,14 +11,16 @@ import RadioForm, {
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
 
-export const FormHolidaysUpdate = ({ item }) => {
+export const FormHolidaysUpdate = ({ item, children }) => {
   const { token } = useContext(AuthContext);
+
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
+
   const week = new Date(tomorrow);
   week.setDate(week.getDate() + 7);
-  console.log(item);
+
   const [startDate, setStartDate] = useState(new Date(item.starting_date));
   const [endDate, setEndDate] = useState(new Date(item.ending_date));
   const [type, setType] = useState(item.type === "rtt" ? 0 : 1);
@@ -118,18 +120,26 @@ export const FormHolidaysUpdate = ({ item }) => {
     <View
       style={{
         marginVertical: 20,
+
         backgroundColor: color.COLORS.DEFAULT,
         padding: 10,
         marginHorizontal: 40,
         borderRadius: 15,
       }}
     >
-      <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
+      <Text
+        style={{
+          fontWeight: "bold",
+          fontSize: 18,
+          textAlign: "center",
+          marginHorizontal: 39,
+        }}
+      >
         Modification de la demande
       </Text>
       <Formik
         initialValues={{
-          note: `Modification : ${item.note}`,
+          note: item.note,
           type: item.type,
           startDate: item.startDate,
           endDate: item.endDate,
@@ -255,7 +265,13 @@ export const FormHolidaysUpdate = ({ item }) => {
           </View>
         )}
       </Formik>
-      <Overlay isVisible={showConfirm} onBackdropPress={toggleShowConfirm}>
+      {children}
+      <Overlay
+        isVisible={showConfirm}
+        onBackdropPress={() => {
+          toggleShowConfirm();
+        }}
+      >
         <Icon
           name="check-circle"
           type="font-awesome-5"
