@@ -1,9 +1,9 @@
 import React, { useEffect, useContext } from "react";
 import { StyleSheet, Text, View, Button, FlatList } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
-import { CardHolidayRh } from "./CardHolidayRh";
+import { CardHolidayUser } from "./CardHolidayUser";
 
-export const ListHolidays = () => {
+export const ListHolidaysUser = () => {
   const { user, token } = useContext(AuthContext);
 
   const [holidays, setHolidays] = React.useState([]);
@@ -25,24 +25,17 @@ export const ListHolidays = () => {
 
     try {
       const resp = await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/holidays`,
+        `http://${process.env.REACT_APP_API_HOST}/api/holidays/user/60525e4ad4679e76a88a43c1`,
         requestOptions
       );
 
       const respJSON = await resp.json();
 
-      let array = [];
-      respJSON.forEach((item) => {
-        if (item.status == "prevalidée") {
-          array.push(item);
-        }
-      });
-
       if (!resp.ok) {
         console.log("error");
         console.log(resp);
       }
-      setHolidays(array);
+      setHolidays(respJSON);
     } catch (e) {
       console.log(e);
     }
@@ -64,7 +57,7 @@ export const ListHolidays = () => {
         ListEmptyComponent={() => <Text>rien</Text>}
         refreshing={loading}
         onRefresh={() => displayHolidays()}
-        renderItem={({ item }) => <CardHolidayRh item={item} />}
+        renderItem={({ item }) => <CardHolidayUser item={item} />}
         keyExtractor={(item) => item._id}
       />
       {/* <Button title="actualiser" onPress={() => displayHolidays()} /> */}

@@ -10,31 +10,64 @@ import RadioForm, {
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
+import { onChange } from "react-native-reanimated";
 
 export const FormHolidaysRequest = () => {
   const { user, token } = useContext(AuthContext);
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const week = new Date(tomorrow);
+  week.setDate(week.getDate() + 7);
 
-  const [startDate, setStartDate] = useState(Date.now());
-  const [endDate, setEndDate] = useState(Date.now());
+  const [startDate, setStartDate] = useState(tomorrow);
+  const [endDate, setEndDate] = useState(week);
   const [type, setType] = useState(0);
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
 
-  const format = (date) => {
+  const formatDisplay = (date) => {
     date = new Date(date);
-    return (
-      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-    );
+    let day = date.getDate();
+    if (day.toString().length < 2) {
+      day = "0" + day;
+    }
+
+    let month = date.getMonth() + 1;
+    if (month.toString().length < 2) {
+      month = "0" + month;
+    }
+
+    return day + "/" + month + "/" + date.getFullYear();
+  };
+  const formatAPI = (date) => {
+    date = new Date(date);
+    let day = date.getDate();
+    if (day.toString().length < 2) {
+      day = "0" + day;
+    }
+    let month = date.getMonth() + 1;
+    if (month.toString().length < 2) {
+      month = "0" + month;
+    }
+    return date.getFullYear() + "-" + month + "-" + day;
   };
 
   const onChangeStartDate = (selectedDate) => {
-    setStartDate(new Date(selectedDate.nativeEvent.timestamp));
     setShowStart(false);
+    let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+    console.log(timestamp);
+    setStartDate(timestamp);
   };
 
   const onChangeEndDate = (selectedDate) => {
-    setEndDate(new Date(selectedDate.nativeEvent.timestamp));
     setShowEnd(false);
+    let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+    console.log(timestamp);
+    setEndDate(timestamp);
+    // return `${timestamp.getFullYear()}-${
+    //   timestamp.getMonth() + 1
+    // }-${timestamp.getDate()}`;
   };
 
   const showDatepickerStart = () => {
@@ -44,17 +77,17 @@ export const FormHolidaysRequest = () => {
     setShowEnd(true);
   };
 
-  const addHoliday = (holiday, user) => {
+  const addHoliday = (holiday) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
-    console.log(holiday.starting_date);
+
     var raw = JSON.stringify({
       note: holiday.note,
-      starting_date: holiday.starting_date,
-      ending_date: holiday.ending_date,
+      starting_date: holiday.startDate,
+      ending_date: holiday.endDate,
       type: holiday.type,
-      id_requester_employee: user.id,
+      id_requester_employee: "60525e4ad4679e76a88a43c1",
     });
 
     var requestOptions = {
@@ -69,7 +102,7 @@ export const FormHolidaysRequest = () => {
       requestOptions
     )
       .then((response) => response.json())
-      //.then((result) => console.log(result))
+      .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
 
@@ -81,14 +114,11 @@ export const FormHolidaysRequest = () => {
   return (
     <View
       style={{
-        marginVertical: 50,
-        marginHorizontal: 10,
+        marginVertical: 20,
         backgroundColor: color.COLORS.DEFAULT,
         padding: 10,
         marginHorizontal: 40,
         borderRadius: 15,
-
-        flex: 5,
       }}
     >
       <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
@@ -96,10 +126,10 @@ export const FormHolidaysRequest = () => {
       </Text>
       <Formik
         initialValues={{
-          note: "",
+          note: "Demande de congées",
           type: "rtt",
           startDate: startDate,
-          endDate: startDate,
+          endDate: endDate,
         }}
         onSubmit={(values, user) => addHoliday(values, user)}
       >
@@ -154,7 +184,8 @@ export const FormHolidaysRequest = () => {
                 <View>
                   <Button
                     onPress={showDatepickerStart}
-                    title={format(startDate)}
+                    title={formatDisplay(startDate)}
+                    color={color.COLORS.PRIMARY}
                   />
                 </View>
                 {showStart && (
@@ -169,7 +200,11 @@ export const FormHolidaysRequest = () => {
               </View>
               <View>
                 <View>
-                  <Button onPress={showDatepickerEnd} title={format(endDate)} />
+                  <Button
+                    onPress={showDatepickerEnd}
+                    title={formatDisplay(endDate)}
+                    color={color.COLORS.PRIMARY}
+                  />
                 </View>
                 {showEnd && (
                   <DateTimePicker
@@ -181,13 +216,13 @@ export const FormHolidaysRequest = () => {
                   />
                 )}
               </View>
-
-              {/* <Text style={{ fontSize: 0 }} value={values.type} />
-              <Text style={{ fontSize: 0 }} value={values.startDate} />
-              <Text style={{ fontSize: 0 }} value={values.endDate} /> */}
             </View>
             <Button
-              onPress={handleSubmit}
+              onPress={async () => {
+                values.endDate = await formatAPI(endDate);
+                values.startDate = await formatAPI(startDate);
+                handleSubmit();
+              }}
               title="Submit"
               color={color.COLORS.PRIMARY}
             />

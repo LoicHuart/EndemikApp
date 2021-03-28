@@ -12,5 +12,9 @@ export default {
     WHITE: "#FFFFFF",
     BLACK: "#000000",
     LIGHTGREY: "#E4E4E4",
+    // VALIDATE: ,
+    // PREVALIDATE: ,
+    // REFUSE: ,
+    // WAIT: ,
   },
 };
