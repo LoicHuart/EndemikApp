@@ -2,6 +2,8 @@ import React, { useEffect, useContext } from "react";
 import { StyleSheet, Text, View, Button, FlatList } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import { CardHolidayUser } from "./CardHolidayUser";
+import { Icon } from "react-native-elements";
+import color from "../../constants/color";
 
 export const ListHolidaysUser = () => {
   const { user, token } = useContext(AuthContext);
@@ -51,10 +53,24 @@ export const ListHolidaysUser = () => {
 
   return (
     <View style={{ marginBottom: 50 }}>
-      <Text style={{ fontWeight: "bold" }}>Liste des congées en cours :</Text>
+      <Text style={{ fontWeight: "bold", marginBottom: 10 }}>Historique :</Text>
       <FlatList
         data={holidays}
-        ListEmptyComponent={() => <Text>rien</Text>}
+        ListEmptyComponent={() => (
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ margin: 10 }}>
+              Vous n'avez pas encore de demandes
+            </Text>
+            <Text style={{ color: color.COLORS.GREY }}>
+              Balayez vers le bas pour actualiser
+            </Text>
+            <Icon
+              name="angle-double-down"
+              type="font-awesome-5"
+              color={color.COLORS.GREY}
+            />
+          </View>
+        )}
         refreshing={loading}
         onRefresh={() => displayHolidays()}
         renderItem={({ item }) => <CardHolidayUser item={item} />}

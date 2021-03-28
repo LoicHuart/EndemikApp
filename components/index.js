@@ -1,6 +1,6 @@
 export { HeaderCustom } from "./HeaderCustom.js";
 export { ListHolidays } from "./holidays/ListHolidays";
-export { FormHolidaysRequest } from "./holidays/FormHolidaysRequest";
+export { FormHolidaysAdd } from "./holidays/FormHolidaysAdd";
 export { ListHolidaysUser } from "./holidays/ListHolidaysUser";
 export { CardHolidayUser } from "./holidays/CardHolidayUser";
 export { CardHolidayRh } from "./holidays/CardHolidayRh";
