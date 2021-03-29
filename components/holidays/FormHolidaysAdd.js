@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import { Formik } from "formik";
 import color from "../../constants/color";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Icon } from "react-native-elements";
+import { Icon, Button } from "react-native-elements";
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
@@ -184,16 +184,16 @@ export const FormHolidaysAdd = () => {
                 <Icon
                   name="calendar-alt"
                   type="font-awesome-5"
-                  color={color.COLORS.GREY}
+                  color={color.COLORS.PRIMARY}
                 />
               </View>
               <View style={{ flex: 2, marginHorizontal: 6 }}>
                 <View>
-                  <Button
-                    onPress={showDatepickerStart}
-                    title={formatDisplay(startDate)}
-                    color={color.COLORS.PRIMARY}
-                  />
+                  <Pressable onPress={showDatepickerStart}>
+                    <Text style={styles.inputDate}>
+                      {formatDisplay(startDate)}
+                    </Text>
+                  </Pressable>
                 </View>
                 {showStart && (
                   <DateTimePicker
@@ -215,11 +215,11 @@ export const FormHolidaysAdd = () => {
               </View>
               <View style={{ flex: 2, marginHorizontal: 6 }}>
                 <View>
-                  <Button
-                    onPress={showDatepickerEnd}
-                    title={formatDisplay(endDate)}
-                    color={color.COLORS.PRIMARY}
-                  />
+                  <Pressable onPress={showDatepickerEnd}>
+                    <Text style={styles.inputDate}>
+                      {formatDisplay(endDate)}
+                    </Text>
+                  </Pressable>
                 </View>
                 {showEnd && (
                   <DateTimePicker
@@ -239,8 +239,7 @@ export const FormHolidaysAdd = () => {
                 values.startDate = await formatAPI(startDate);
                 handleSubmit();
               }}
-              title="Submit"
-              color={color.COLORS.PRIMARY}
+              title="Valider"
             />
           </View>
         )}
@@ -257,6 +256,16 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     marginVertical: 5,
     backgroundColor: color.COLORS.WHITE,
+  },
+  inputDate: {
+    borderColor: "lightgray",
+    paddingHorizontal: 5,
+    borderWidth: 2,
+    borderStyle: "solid",
+    marginBottom: 2,
+    backgroundColor: color.COLORS.WHITE,
+    paddingVertical: 7,
+    alignSelf: "center",
   },
   row: {
     marginTop: 20,

@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import { Formik } from "formik";
 import color from "../../constants/color";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Icon, Overlay } from "react-native-elements";
+import { Icon, Overlay, Button } from "react-native-elements";
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
@@ -208,11 +208,11 @@ export const FormHolidaysUpdate = ({ item, children }) => {
               </View>
               <View style={{ flex: 2, marginHorizontal: 6 }}>
                 <View>
-                  <Button
-                    onPress={showDatepickerStart}
-                    title={formatDisplay(startDate)}
-                    color={color.COLORS.PRIMARY}
-                  />
+                  <Pressable onPress={showDatepickerStart}>
+                    <Text style={styles.inputDate}>
+                      {formatDisplay(startDate)}
+                    </Text>
+                  </Pressable>
                 </View>
                 {showStart && (
                   <DateTimePicker
@@ -234,11 +234,11 @@ export const FormHolidaysUpdate = ({ item, children }) => {
               </View>
               <View style={{ flex: 2, marginHorizontal: 6 }}>
                 <View>
-                  <Button
-                    onPress={showDatepickerEnd}
-                    title={formatDisplay(endDate)}
-                    color={color.COLORS.PRIMARY}
-                  />
+                  <Pressable onPress={showDatepickerEnd}>
+                    <Text style={styles.inputDate}>
+                      {formatDisplay(endDate)}
+                    </Text>
+                  </Pressable>
                 </View>
                 {showEnd && (
                   <DateTimePicker
@@ -260,12 +260,11 @@ export const FormHolidaysUpdate = ({ item, children }) => {
                 toggleShowConfirm();
               }}
               title="Mettre à jour"
-              color={color.COLORS.PRIMARY}
             />
           </View>
         )}
       </Formik>
-      {children}
+      <View style={styles.row}>{children}</View>
       <Overlay
         isVisible={showConfirm}
         onBackdropPress={() => {
@@ -291,6 +290,16 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     marginVertical: 5,
     backgroundColor: color.COLORS.WHITE,
+  },
+  inputDate: {
+    borderColor: "lightgray",
+    paddingHorizontal: 5,
+    borderWidth: 2,
+    borderStyle: "solid",
+    marginBottom: 2,
+    backgroundColor: color.COLORS.WHITE,
+    paddingVertical: 7,
+    alignSelf: "center",
   },
   row: {
     marginTop: 20,
