@@ -13,4 +13,8 @@ export const screen = StyleSheet.create({
         alignSelf: "flex-start",
         alignSelf: "center",
     },
+    overlay: {
+        padding: 15,
+        borderRadius: 10,
+    }
 });
