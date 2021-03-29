@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { Icon } from "react-native-elements";
+import { Icon, Overlay, Button } from "react-native-elements";
 import color from "../../constants/color";
+import { ValidatorFormRh } from "./ValidatorFormRh";
 
 export const CardHolidayRh = ({ item }) => {
+  const [showValidator, setShowValidator] = useState(false);
+
   const formatDisplay = (date) => {
     date = new Date(date);
     let day = date.getDate();
@@ -18,28 +21,33 @@ export const CardHolidayRh = ({ item }) => {
 
     return day + "/" + month + "/" + date.getFullYear();
   };
-  const onPressFunction = () => {
-    console.log(item);
+  const toggleShowValidator = () => {
+    setShowValidator(!showValidator);
   };
   return (
-    <Pressable onPress={onPressFunction}>
-      <View style={styles.card}>
-        <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-          Congée du {formatDisplay(item.starting_date)} au{" "}
-          {formatDisplay(item.ending_date)}
-        </Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={{ flex: 3 }}>{item.status}</Text>
+    <View>
+      <Pressable onPress={toggleShowValidator}>
+        <View style={styles.card}>
+          <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+            Congée du {formatDisplay(item.starting_date)} au{" "}
+            {formatDisplay(item.ending_date)}
+          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ flex: 3 }}>{item.status}</Text>
 
-          <Icon
-            name="play-circle"
-            type="font-awesome-5"
-            color={color.COLORS.WARNING}
-            onPress={() => console.log(item)}
-          />
+            <Icon
+              name="play-circle"
+              type="font-awesome-5"
+              color={color.COLORS.WARNING}
+              onPress={() => console.log(item)}
+            />
+          </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+      <Overlay isVisible={showValidator} onBackdropPress={toggleShowValidator}>
+        <ValidatorFormRh item={item} />
+      </Overlay>
+    </View>
   );
 };
 
@@ -56,5 +64,8 @@ const styles = StyleSheet.create({
   button: {
     borderTopColor: color.COLORS.GREY,
     borderWidth: 1,
+  },
+  row: {
+    flexDirection: "row",
   },
 });

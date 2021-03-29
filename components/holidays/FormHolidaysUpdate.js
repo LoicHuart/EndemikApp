@@ -86,7 +86,7 @@ export const FormHolidaysUpdate = ({ item, children }) => {
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      validation_date: Date.now(),
+      validation_date: null,
       note: holiday.note,
       starting_date: holiday.startDate,
       ending_date: holiday.endDate,
