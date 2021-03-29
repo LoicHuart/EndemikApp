@@ -101,31 +101,33 @@ export const AddService = ({toggleOverlayAdd}) => {
             >
             {({ handleChange, handleBlur, handleSubmit, values, errors}) => (
                 <View>
-                <Input 
-                    onChangeText={handleChange('name')}
-                    onBlur={handleBlur('name')}
-                    value={values.name}
-                    placeholder='Nom'
-                    errorMessage= {errors.name}
-                />
-                <Input 
-                    onChangeText={handleChange('site')}
-                    onBlur={handleBlur('site')}
-                    value={values.site}
-                    placeholder='site'
-                    errorMessage= {errors.site}
-                />
-                <DropDownPicker
-                    onChangeItem={item => values.id_manager = item.value}
-                    onBlur={item => values.id_manager = item.value}
-                    items={resultGetEmployees}
-                    value={values.id_manager}
-                    placeholder='Manager'
-                    containerStyle={{height: 40}}
-                    style={{backgroundColor: color.COLORS.DEFAULT}}
-                    dropDownStyle={{backgroundColor: color.COLORS.DEFAULT}}
-                />
-                <Button onPress={handleSubmit} title="Valider" buttonStyle={styles.button}/>
+                    <Input 
+                        onChangeText={handleChange('name')}
+                        onBlur={handleBlur('name')}
+                        value={values.name}
+                        placeholder='Nom'
+                        errorMessage= {errors.name}
+                    />
+                    <Input 
+                        onChangeText={handleChange('site')}
+                        onBlur={handleBlur('site')}
+                        value={values.site}
+                        placeholder='site'
+                        errorMessage= {errors.site}
+                    />
+                    <View style={styles.dropDown}>
+                        <DropDownPicker
+                            onChangeItem={item => values.id_manager = item.value}
+                            onBlur={item => values.id_manager = item.value}
+                            items={resultGetEmployees}
+                            value={values.id_manager}
+                            placeholder='Manager'
+                            containerStyle={{height: 40}}
+                            style={{backgroundColor: color.COLORS.DEFAULT}}
+                            dropDownStyle={{backgroundColor: color.COLORS.DEFAULT}}
+                        />
+                    </View>
+                    <Button onPress={handleSubmit} title="Valider" buttonStyle={styles.button}/>
                 </View>
             )}
             </Formik>
@@ -147,5 +149,9 @@ const styles = StyleSheet.create({
     },
     error:{
         color:color.COLORS.DANGER,
+    },
+    dropDown:{
+        margin:10,
+        
     }
 })
