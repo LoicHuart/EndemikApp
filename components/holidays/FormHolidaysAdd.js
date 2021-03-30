@@ -54,16 +54,18 @@ export const FormHolidaysAdd = () => {
 
   const onChangeStartDate = (selectedDate) => {
     setShowStart(false);
-    let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-    console.log(timestamp);
-    setStartDate(timestamp);
+    if (selectedDate.type !== "dismissed") {
+      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+      setStartDate(timestamp);
+    }
   };
 
   const onChangeEndDate = (selectedDate) => {
     setShowEnd(false);
-    let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-    console.log(timestamp);
-    setEndDate(timestamp);
+    if (selectedDate.type !== "dismissed") {
+      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+      setEndDate(timestamp);
+    }
   };
 
   const showDatepickerStart = () => {
@@ -92,7 +94,7 @@ export const FormHolidaysAdd = () => {
       body: raw,
       redirect: "follow",
     };
-    console.log(requestOptions);
+    //console.log(requestOptions);
     fetch(
       `http://${process.env.REACT_APP_API_HOST}/api/holidays`,
       requestOptions
