@@ -20,7 +20,7 @@ export const employeesManagement = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
-      <View style={{ width: Dimensions.get("window").width - 60 }}>
+      <View>
         <Card>
           <View
             style={{

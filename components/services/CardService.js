@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     cardTop: {
         marginTop: 10,
         marginHorizontal: 10,
-        backgroundColor: color.COLORS.WHITE,
+        backgroundColor: color.COLORS.LIGHTGREY,
         padding: 10,
         
         borderTopLeftRadius: 10,
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     cardBot: {
         marginBottom: 10,
         marginHorizontal: 10,
-        backgroundColor: color.COLORS.WHITE,
+        backgroundColor: color.COLORS.LIGHTGREY,
         padding: 5,
         
         borderBottomLeftRadius: 10,

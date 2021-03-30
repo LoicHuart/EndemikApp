@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import color from "../constants/color";
+import { Dimensions } from "react-native";
 
 export const screen = StyleSheet.create({
   title: {
@@ -16,6 +17,7 @@ export const screen = StyleSheet.create({
   overlay: {
     padding: 15,
     borderRadius: 10,
+    width: Dimensions.get("window").width - 70,
   },
   buttonSuccess: {
     marginTop: 10,
