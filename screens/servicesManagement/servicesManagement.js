@@ -25,8 +25,8 @@ export const servicesManagement = ({ navigation }) => {
 
           <ListServices />
 
-          <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
-            <AddService toggleOverlayAdd={toggleOverlayAdd}/>  
+          <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd} overlayStyle={screen.overlay}>
+            <AddService toggleOverlayAdd={toggleOverlayAdd} />  
           </Overlay>
         </Card>
       </View>
