@@ -60,27 +60,6 @@ export const CardEmployee = ({ item }) => {
             />
           </View>
           <View style={styles.icon}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text>Etes-vous sur de vouloir supprimer ce salarié ?</Text>
-                  <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                    <Text style={styles.textStyle}>Oui</Text>
-                  </Pressable>
-                  <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                    <Text style={styles.textStyle}>Annuler</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </Modal>
             <Icon
               name="trash"
               type="font-awesome-5"

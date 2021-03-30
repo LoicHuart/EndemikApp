@@ -5,8 +5,8 @@ import { Button, Input } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
-import { ceil, clockRunning } from "react-native-reanimated";
 import { Dimensions } from "react-native";
+import { screen } from "../../styles/screen";
 
 const SignupSchema = Yup.object().shape({
   firstname: Yup.string()
@@ -122,17 +122,28 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
       </Text>
       <Formik
         initialValues={{
-          lastname: "Pottier",
-          firstname: "Domitille",
-          mail: "dopitter@gmail.com",
-          tel: "0649826159",
-          date_birth: "1998-08-30",
-          role: "RH",
-          social_security_nb: "2980857403863",
-          postal_code: "51100",
-          street_nb: "27",
-          street: "rue des moulins",
-          city: "Reims",
+          lastname: "",
+          firstname: "",
+          mail: "",
+          tel: "",
+          date_birth: "",
+          role: "",
+          social_security_nb: "",
+          postal_code: "",
+          street_nb: "",
+          street: "",
+          city: "",
+          // lastname: "Pottier",
+          // firstname: "Domitille",
+          // mail: "dopitter@gmail.com",
+          // tel: "0649826159",
+          // date_birth: "1998-08-30",
+          // role: "RH",
+          // social_security_nb: "2980857403863",
+          // postal_code: "51100",
+          // street_nb: "27",
+          // street: "rue des moulins",
+          // city: "Reims",
         }}
         onSubmit={(values) => sendAddEmployee(values)}
         validationSchema={SignupSchema}
@@ -262,16 +273,16 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={styles.button}
-                  onPress={handleSubmit}
-                  title="Valider"
+                  buttonStyle={screen.buttonDanger}
+                  title="Annuler"
+                  onPress={() => toggleOverlayAdd()}
                 />
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={styles.button}
-                  title="Annuler"
-                  onPress={() => toggleOverlayAdd()}
+                  buttonStyle={screen.buttonSuccess}
+                  onPress={handleSubmit}
+                  title="Valider"
                 />
               </View>
             </View>
@@ -301,19 +312,5 @@ const styles = StyleSheet.create({
     //borderColor: "gray",
     // borderWidth: 1,
     // borderRadius: 10,
-  },
-  buttonSuccess: {
-    // alignSelf: "flex-start",
-    marginTop: 10,
-    width: 100,
-    alignSelf: "center",
-    backgroundColor: color.COLORS.SUCCESS,
-  },
-  buttonDanger: {
-    // alignSelf: "flex-start",
-    marginTop: 10,
-    width: 100,
-    alignSelf: "center",
-    backgroundColor: color.COLORS.DANGER,
   },
 });

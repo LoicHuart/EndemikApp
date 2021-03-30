@@ -17,4 +17,18 @@ export const screen = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
   },
+  buttonSuccess: {
+    marginTop: 10,
+    width: 100,
+    alignSelf: "center",
+    backgroundColor: color.COLORS.BUTTONSUCCESS,
+    color: color.COLORS.BLACK,
+  },
+  buttonDanger: {
+    marginTop: 10,
+    width: 100,
+    alignSelf: "center",
+    backgroundColor: color.COLORS.BUTTONDANGER,
+    color: color.COLORS.BLACK,
+  },
 });
