@@ -8,8 +8,8 @@ import {
 export const holidaysRequest = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
-      <HeaderCustom navigation={navigation} title="Demande de congé" />
-      <View style={{ flex: 1 }}>
+      <HeaderCustom navigation={navigation} />
+      <View style={{ flex: 5 }}>
         <FormHolidaysAdd />
       </View>
 
