@@ -29,6 +29,7 @@ export const FormHolidaysUpdate = ({ item, children }) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const formatDisplay = (date) => {
+    //console.log(date);
     date = new Date(date);
     let day = date.getDate();
     if (day.toString().length < 2) {
@@ -58,14 +59,14 @@ export const FormHolidaysUpdate = ({ item, children }) => {
   const onChangeStartDate = (selectedDate) => {
     setShowStart(false);
     let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-    console.log(timestamp);
+    //console.log(timestamp);
     setStartDate(timestamp);
   };
 
   const onChangeEndDate = (selectedDate) => {
     setShowEnd(false);
     let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-    console.log(timestamp);
+    //console.log(timestamp);
     setEndDate(timestamp);
   };
 
