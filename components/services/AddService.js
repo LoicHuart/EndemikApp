@@ -121,16 +121,18 @@ export const AddService = ({ toggleOverlayAdd }) => {
               placeholder="site"
               errorMessage={errors.site}
             />
-            <DropDownPicker
-              onChangeItem={(item) => (values.id_manager = item.value)}
-              onBlur={(item) => (values.id_manager = item.value)}
-              items={resultGetEmployees}
-              value={values.id_manager}
-              placeholder="Manager"
-              containerStyle={{ height: 40 }}
-              style={{ backgroundColor: color.COLORS.DEFAULT }}
-              dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-            />
+            <View style={styles.dropDown}>
+              <DropDownPicker
+                onChangeItem={(item) => (values.id_manager = item.value)}
+                onBlur={(item) => (values.id_manager = item.value)}
+                items={resultGetEmployees}
+                value={values.id_manager}
+                placeholder="Manager"
+                containerStyle={{ height: 40 }}
+                style={{ backgroundColor: color.COLORS.DEFAULT }}
+                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+              />
+            </View>
             <Button
               onPress={handleSubmit}
               title="Valider"
@@ -157,5 +159,8 @@ const styles = StyleSheet.create({
   },
   error: {
     color: color.COLORS.DANGER,
+  },
+  dropDown: {
+    margin: 10,
   },
 });

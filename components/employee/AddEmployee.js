@@ -28,7 +28,7 @@ const SignupSchema = Yup.object().shape({
     //   .min(10, "10 caractères minimum")
     //   .max(13, "13 caractères maximum")
     .required("Champ obligatoire"),
-  date_birth: Yup.date()
+  date_birth: Yup.string()
     // .min(8, "8 caractères minimum")
     // .max(8, "8 caractères maximum")
     .required("Champ obligatoire"),
@@ -50,7 +50,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const sendAddEmployee = async (values) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/text");
 
     var formdata = new FormData();
     formdata.append("title", values.title);
@@ -65,11 +64,11 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     formdata.append("street", values.street);
     formdata.append("city", values.city);
     formdata.append("arrival_date", "2000-12-20");
-    formdata.append("children_nb", "0");
+    formdata.append("children_nb", "5");
     formdata.append("id_service", "604fa5ac2415f0519465c99a");
     formdata.append("id_role", "603ea811b4a9d056a48fccd7");
-    formdata.append("photo", "");
-    formdata.append("active", "true");
+    formdata.append("holiday_balance.rtt", "0");
+    formdata.append("holiday_balance.congesPayes", "0");
 
     var requestOptions = {
       method: "POST",
@@ -78,16 +77,22 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
       redirect: "follow",
     };
 
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/employees`,
-      requestOptions
-    )
-      .then((response) => response.text())
-      .then((result) => {
-        // console.log(result);
-        setResultAddEmployee(result);
-      })
-      .catch((error) => console.log("error", error));
+    try {
+      const resp = await fetch(
+        `http://${process.env.REACT_APP_API_HOST}/api/employees`,
+        requestOptions
+      );
+
+      const respJSON = await resp.json();
+
+      if (!resp.ok) {
+        console.log("error");
+        console.log(resp);
+      }
+      console.log(respJSON);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -117,17 +122,17 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
       </Text>
       <Formik
         initialValues={{
-          lastname: "",
-          firstname: "",
-          mail: "",
-          tel: "",
-          date_birth: "",
-          role: "",
-          social_security_nb: "",
-          postal_code: "",
-          street_nb: "",
-          street: "",
-          city: "",
+          lastname: "Pottier",
+          firstname: "Domitille",
+          mail: "dopitter@gmail.com",
+          tel: "0649826159",
+          date_birth: "1998-08-30",
+          role: "RH",
+          social_security_nb: "2980857403863",
+          postal_code: "51100",
+          street_nb: "27",
+          street: "rue des moulins",
+          city: "Reims",
         }}
         onSubmit={(values) => sendAddEmployee(values)}
         validationSchema={SignupSchema}
@@ -263,7 +268,11 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 />
               </View>
               <View style={{ flex: 1 }}>
-                <Button buttonStyle={styles.button} title="Annuler" />
+                <Button
+                  buttonStyle={styles.button}
+                  title="Annuler"
+                  onPress={() => toggleOverlayAdd()}
+                />
               </View>
             </View>
           </View>
@@ -293,11 +302,18 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderRadius: 10,
   },
-  button: {
+  buttonSuccess: {
     // alignSelf: "flex-start",
     marginTop: 10,
     width: 100,
     alignSelf: "center",
-    color: color.COLORS.SUCCESS,
+    backgroundColor: color.COLORS.SUCCESS,
+  },
+  buttonDanger: {
+    // alignSelf: "flex-start",
+    marginTop: 10,
+    width: 100,
+    alignSelf: "center",
+    backgroundColor: color.COLORS.DANGER,
   },
 });

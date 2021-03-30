@@ -59,32 +59,6 @@ export const ListEmployees = () => {
         refreshing={loading}
         onRefresh={() => displayEmployees()}
         renderItem={({ item }) => <CardEmployee item={item} />}
-        // <CardEmployee style={{ width: 10000 }}>
-        //   <Avatar
-        //     size="medium"
-        //     rounded
-        //     source={{
-        //       uri:
-        //         "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
-        //     }}
-        //     title="MT"
-        //     onPress={() => console.log("Works!")}
-        //     activeOpacity={0.7}
-        //   />
-        //   <Text style={{ textTransform: "capitalize" }}>
-        //     {item.firstName}
-        //   </Text>
-        //   <Text>{item.lastName} </Text>
-        //   <Text> Tél : {item.tel_nb}</Text>
-        //   <Text> Mail : {item.mail}</Text>
-        //   {/*               <ButtonGroup
-        //     onPress={this.updateIndex}
-        //     selectedIndex={selectedIndex}
-        //     buttons={buttons}
-        //     containerStyle={{ height: 100 }}
-        //   /> */}
-        // </CardEmployee>
-
         keyExtractor={(item) => item._id}
       />
     </View>

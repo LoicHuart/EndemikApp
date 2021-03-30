@@ -9,6 +9,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { Icon, Overlay } from "react-native-elements";
 import color from "../../constants/color";
+import { screen } from "../../styles/screen";
 
 export const employeesManagement = ({ navigation }) => {
   const [overlayAdd, setOverlayAdd] = React.useState(false);
@@ -60,8 +61,12 @@ export const employeesManagement = ({ navigation }) => {
             />
           </View>
           <ListEmployees />
-          <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
-            <AddEmployee />
+          <Overlay
+            overlayStyle={screen.overlay}
+            isVisible={overlayAdd}
+            onBackdropPress={toggleOverlayAdd}
+          >
+            <AddEmployee toggleOverlayAdd={toggleOverlayAdd} />
           </Overlay>
         </Card>
       </View>

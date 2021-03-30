@@ -47,7 +47,7 @@ export const CardEmployee = ({ item }) => {
               name="edit"
               type="font-awesome-5"
               color={color.COLORS.GREY}
-              onPress={console.log("Edit")}
+              onPress={() => console.log("Edit")}
             />
           </View>
           <View style={styles.container}>
@@ -133,7 +133,11 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   icon: {
-    flex: 0.5,
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
   },
   modalView: {
     margin: 20,

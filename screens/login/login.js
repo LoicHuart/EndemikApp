@@ -9,13 +9,13 @@ import {
   StatusBar,
 } from "react-native";
 import color from "../../constants/color";
-import { login as loginStyle } from "../../styles/"
+import { login as loginStyle } from "../../styles/";
 import { AuthContext } from "../../context/AuthContext";
 
 export const login = ({ navigation }) => {
   const { signIn, signOut } = useContext(AuthContext);
-  const [email, setEmail] = useState("thetest22@truc.com");
-  const [password, setPassword] = useState("h1QHMRk1");
+  const [email, setEmail] = useState("ssf@test.com");
+  const [password, setPassword] = useState("GTZFjbS6");
 
   const submit = () => {
     let data = {
