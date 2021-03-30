@@ -13,9 +13,7 @@ export const holidaysRequest = ({ navigation }) => {
         <FormHolidaysAdd />
       </View>
 
-      <View style={{ flex: 7 }}>
-        <ListHolidaysUser />
-      </View>
+      <View style={{ flex: 1 }}>{/* <ListHolidaysUser /> */}</View>
     </View>
   );
 };

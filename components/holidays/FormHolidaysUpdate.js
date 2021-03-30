@@ -133,7 +133,7 @@ export const FormHolidaysUpdate = ({ item, children }) => {
           fontWeight: "bold",
           fontSize: 18,
           textAlign: "center",
-          marginHorizontal: 39,
+          //marginHorizontal: 39,
         }}
       >
         Modification de la demande
@@ -261,6 +261,7 @@ export const FormHolidaysUpdate = ({ item, children }) => {
                 toggleShowConfirm();
               }}
               title="Mettre à jour"
+              buttonStyle={{ backgroundColor: color.COLORS.PRIMARY }}
             />
           </View>
         )}
@@ -284,24 +285,13 @@ export const FormHolidaysUpdate = ({ item, children }) => {
 };
 
 const styles = StyleSheet.create({
-  input: {
-    borderColor: "lightgray",
-    paddingHorizontal: 5,
-    borderWidth: 2,
-    borderStyle: "solid",
-    marginVertical: 5,
-    backgroundColor: color.COLORS.WHITE,
-  },
   inputDate: {
-    borderColor: "lightgray",
+    borderBottomColor: "gray",
+    borderBottomWidth: 2,
     paddingHorizontal: 5,
-    borderWidth: 2,
     borderStyle: "solid",
-    marginBottom: 2,
-    backgroundColor: color.COLORS.WHITE,
-    paddingVertical: 7,
-    alignSelf: "center",
   },
+
   row: {
     marginTop: 20,
     flexDirection: "row",
