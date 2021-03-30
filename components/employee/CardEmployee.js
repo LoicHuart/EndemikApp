@@ -8,14 +8,19 @@ import {
   Text,
   Switch,
 } from "react-native";
-import color from "../constants/color";
-import { FormAddUser } from "./FormAddUser";
-import { Avatar, Icon } from "react-native-elements";
+import color from "../../constants/color";
+import { EditEmployee } from "./EditEmployee";
+import { Avatar, Icon, Overlay } from "react-native-elements";
 
 export const CardEmployee = ({ item }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  // const [overlayAdd, setOverlayAdd] = React.useState(false);
+
+  // const toggleOverlayAdd = () => {
+  //   setOverlayAdd(!overlayAdd);
+  // };
 
   return (
     <View style={styles.cardEmployee}>
@@ -47,35 +52,14 @@ export const CardEmployee = ({ item }) => {
           </View>
           <View style={styles.container}>
             <Switch
-              trackColor={{ false: "#808080", true: "#808080" }}
-              thumbColor={isEnabled ? "#D3D3D3" : "#D3D3D3"}
+              trackColor={{ false: color.COLORS.GREY, true: color.COLORS.GREY }}
+              thumbColor={isEnabled ? "#adf3ad" : "#f0bebd"}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
               value={isEnabled}
             />
           </View>
           <View style={styles.icon}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text>Etes-vous sur de vouloir supprimer ce salarié ?</Text>
-                  <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                    <Text style={styles.textStyle}>Oui</Text>
-                  </Pressable>
-                  <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                    <Text style={styles.textStyle}>Annuler</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </Modal>
             <Icon
               name="trash"
               type="font-awesome-5"
@@ -85,6 +69,9 @@ export const CardEmployee = ({ item }) => {
           </View>
         </View>
       </View>
+      {/* <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
+        <EditEmployee />
+      </Overlay> */}
     </View>
   );
 };
@@ -94,7 +81,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 10,
     backgroundColor: color.COLORS.WHITE,
-    borderColor: color.COLORS.GREY,
     // padding: 5,
 
     borderTopLeftRadius: 10,
@@ -126,7 +112,11 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   icon: {
-    flex: 0.5,
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
   },
   modalView: {
     margin: 20,

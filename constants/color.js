@@ -12,6 +12,9 @@ export default {
     WHITE: "#FFFFFF",
     BLACK: "#000000",
     LIGHTGREY: "#E4E4E4",
+    BUTTONSUCCESS: "#ADF3AD",
+    BUTTONDANGER: "#F0BEBD",
+
     // VALIDATE: ,
     // PREVALIDATE: ,
     // REFUSE: ,

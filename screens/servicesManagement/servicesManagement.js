@@ -1,8 +1,13 @@
-import React from "react"
-import { Text, View } from "react-native"
-import { HeaderCustom, ListServices, Card, AddService } from "../../components/"
-import { Button, Overlay, Input } from "react-native-elements"
-import { screen } from "../../styles/"
+import React from "react";
+import { Text, View } from "react-native";
+import {
+  HeaderCustom,
+  ListServices,
+  Card,
+  AddService,
+} from "../../components/";
+import { Button, Overlay, Input } from "react-native-elements";
+import { screen } from "../../styles/";
 
 export const servicesManagement = ({ navigation }) => {
   const [overlayAdd, setOverlayAdd] = React.useState(false);
@@ -25,8 +30,12 @@ export const servicesManagement = ({ navigation }) => {
 
           <ListServices />
 
-          <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd} overlayStyle={screen.overlay}>
-            <AddService toggleOverlayAdd={toggleOverlayAdd} />  
+          <Overlay
+            isVisible={overlayAdd}
+            onBackdropPress={toggleOverlayAdd}
+            overlayStyle={screen.overlay}
+          >
+            <AddService toggleOverlayAdd={toggleOverlayAdd} />
           </Overlay>
         </Card>
       </View>

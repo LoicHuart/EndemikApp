@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { DrawerItem, DrawerContentScrollView } from "@react-navigation/drawer";
 import { Icon } from "react-native-elements";
 import { FontAwesome } from "@expo/vector-icons";
-import { drawer } from "../styles/"
+import { drawer } from "../styles/";
 import color from "../constants/color";
 
 export function DrawerContent(props) {
@@ -79,7 +79,7 @@ export function DrawerContent(props) {
             onPress={() => {
               props.navigation.navigate("employeesManagement");
             }}
-            style={drawer.labelStyle}
+            labelStyle={drawer.labelStyle}
           />
           <DrawerItem
             icon={() => (
