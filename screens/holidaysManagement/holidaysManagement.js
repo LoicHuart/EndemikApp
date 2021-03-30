@@ -4,8 +4,8 @@ import { HeaderCustom, ListHolidays } from "../../components/";
 export const holidaysManagement = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
-      <HeaderCustom navigation={navigation} title="Gestion des congés" />
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <HeaderCustom navigation={navigation} />
+      <View style={{ flex: 1 }}>
         <ListHolidays />
       </View>
     </View>

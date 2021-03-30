@@ -1,4 +1,4 @@
-import React, { useEffect, createContext } from "react";
+import React, { useEffect, createContext, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
 
@@ -12,31 +12,46 @@ export const AuthContextProvier = ({ children }) => {
           return {
             ...prevState,
             token: action.token,
-            service: action.service,
-            id: action.id,
+            user: action.user,
           };
         case "SIGN_IN":
           return {
             ...prevState,
             token: action.token,
-            service: action.service,
-            id: action.id,
+            user: action.user,
           };
         case "SIGN_OUT":
           return {
             ...prevState,
             token: null,
-            service: null,
-            id: null,
+            user: null,
           };
       }
     },
     {
       token: null,
-      service: null,
-      id: null,
+      user: null,
     }
   );
+
+  const getEmployeeById = (async(id, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    return await fetch(`http://${process.env.REACT_APP_API_HOST}/api/employees/${id}?populate=1`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        // console.log(result);
+        return result
+      })
+      .catch(error => console.log('error', error));
+  });
 
   useEffect(() => {
     const checkIfTokenExist = async () => {
@@ -45,11 +60,21 @@ export const AuthContextProvier = ({ children }) => {
         userToken = await AsyncStorage.getItem("token");
         if (userToken !== null) {
           var decoded = jwt_decode(userToken);
+          var user
+          await getEmployeeById(decoded._id, userToken)
+            .then(result => {
+              if (result) {
+                user = JSON.stringify(result)
+              }
+            })
+          if (!user) {
+            user = await AsyncStorage.getItem("user")
+          }
+            
           dispatch({
             type: "RESTORE_TOKEN",
             token: userToken,
-            service: decoded.service,
-            id: decoded.user_id,
+            user: user,
           });
         }
       } catch (e) {
@@ -85,17 +110,21 @@ export const AuthContextProvier = ({ children }) => {
         console.log("error");
         console.log(resp);
       }
+      
+      var decoded = jwt_decode(respJSON.token);
+      let user = await getEmployeeById(decoded._id, respJSON.token)
 
       await AsyncStorage.setItem("token", respJSON.token);
-      var decoded = jwt_decode(respJSON.token);
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+
       dispatch({
         type: "SIGN_IN",
         token: respJSON.token,
-        service: decoded.service,
-        id: decoded.user_id,
+        user: JSON.stringify(user),
       });
       console.log("singIn");
       console.log(await AsyncStorage.getItem("token"));
+      console.log(await AsyncStorage.getItem("user"));
     } catch (error) {
       console.log("error", error);
     }
@@ -103,16 +132,20 @@ export const AuthContextProvier = ({ children }) => {
 
   const signOut = async () => {
     await AsyncStorage.setItem("token", "");
+    await AsyncStorage.setItem("user", "");
+
     dispatch({ type: "SIGN_OUT" });
 
     console.log("singOut");
     console.log(await AsyncStorage.getItem("token"));
+    console.log(await AsyncStorage.getItem("user"));
   };
 
   return (
     <AuthContext.Provider
       value={{
-        user: state,
+        token: state.token,
+        user: JSON.parse(state.user),
         signIn: signIn,
         signOut: signOut,
       }}

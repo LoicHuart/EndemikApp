@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 10,
     marginHorizontal: 10,
-    marginTop: 20,
+    marginTop: 15,
     backgroundColor: color.COLORS.LIGHTGREY,
     width: Dimensions.get("window").width - 30,
     borderRadius: 15,

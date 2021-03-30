@@ -1,18 +1,18 @@
 import React, { useEffect, useContext } from "react"
 import { StyleSheet, Text, View, FlatList } from "react-native"
-
+import { Dimensions} from 'react-native'
 import { CardService } from "./CardService"
 import { AuthContext } from "../../context/AuthContext";
 
 export const ListServices = () => {
-  const { user } = useContext(AuthContext);
+  const { token, user } = useContext(AuthContext);
   const [services, setServices] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const displayServices = async () => {
     setLoading(true);
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${user.token}`);
+    myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify();
@@ -53,6 +53,7 @@ export const ListServices = () => {
         onRefresh={() => displayServices()}
         renderItem={({ item }) => <CardService item={item} />}
         keyExtractor={(item) => item._id}
+        style={{height:Dimensions.get('window').height-210}}
       />
     </View>
   );

@@ -9,13 +9,18 @@ import {
   Switch,
 } from "react-native";
 import color from "../../constants/color";
-import { AddEmployee } from "./AddEmployee";
-import { Avatar, Icon } from "react-native-elements";
+import { EditEmployee } from "./EditEmployee";
+import { Avatar, Icon, Overlay } from "react-native-elements";
 
 export const CardEmployee = ({ item }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  // const [overlayAdd, setOverlayAdd] = React.useState(false);
+
+  // const toggleOverlayAdd = () => {
+  //   setOverlayAdd(!overlayAdd);
+  // };
 
   return (
     <View style={styles.cardEmployee}>
@@ -42,13 +47,13 @@ export const CardEmployee = ({ item }) => {
               name="edit"
               type="font-awesome-5"
               color={color.COLORS.GREY}
-              onPress={() => console.log("Edit")}
+              onPress={console.log("Edit")}
             />
           </View>
           <View style={styles.container}>
             <Switch
-              trackColor={{ false: "#808080", true: "#808080" }}
-              thumbColor={isEnabled ? "#D3D3D3" : "#D3D3D3"}
+              trackColor={{ false: color.COLORS.GREY, true: color.COLORS.GREY }}
+              thumbColor={isEnabled ? "#adf3ad" : "#f0bebd"}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
               value={isEnabled}
@@ -85,6 +90,9 @@ export const CardEmployee = ({ item }) => {
           </View>
         </View>
       </View>
+      {/* <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
+        <EditEmployee />
+      </Overlay> */}
     </View>
   );
 };
@@ -94,7 +102,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 10,
     backgroundColor: color.COLORS.WHITE,
-    borderColor: color.COLORS.GREY,
     // padding: 5,
 
     borderTopLeftRadius: 10,

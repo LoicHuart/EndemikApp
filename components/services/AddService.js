@@ -1,28 +1,32 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  id_manager: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
+    .min(2, "2 caractères minimum")
+    .max(50, "50 caractères maximum")
+    .required("Champ obligatoire"),
+  site: Yup.string()
+    .min(2, "2 caractères minimum")
+    .max(50, "50 caractères maximum")
+    .required("Champ obligatoire"),
+  id_manager: Yup.string().required("Champ obligatoire"),
 });
 
-export const AddService = () => {
-  const { user } = useContext(AuthContext);
+export const AddService = ({ toggleOverlayAdd }) => {
+  const { token } = useContext(AuthContext);
+  const [resultAddService, setResultAddService] = React.useState("");
+  const [resultGetEmployees, setResultGetEmployees] = React.useState([]);
+
   const sendAddServices = async (value) => {
-    console.log(user.token);
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${user.token}`);
+    myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify(value);
@@ -33,29 +37,73 @@ export const AddService = () => {
       body: raw,
       redirect: "follow",
     };
-
-    fetch(
+    await fetch(
       `http://${process.env.REACT_APP_API_HOST}/api/services`,
       requestOptions
     )
-      .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((response) => response.json())
+      .then((result) => {
+        // console.log(result)
+        setResultAddService(result);
+      })
       .catch((error) => console.log("error", error));
   };
+
+  const getAllEmployee = async () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify();
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    await fetch(
+      `http://${process.env.REACT_APP_API_HOST}/api/employees`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        let array = [];
+        result.forEach((elem) => {
+          array.push({
+            label: `${elem.firstName} ${elem.lastName}`,
+            value: elem._id,
+          });
+        });
+        setResultGetEmployees(array);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  useEffect(() => {
+    if (resultAddService._id) {
+      toggleOverlayAdd();
+    } else {
+      getAllEmployee();
+    }
+  }, [resultAddService]);
 
   return (
     <View>
       <Text style={styles.title}>Ajout d'un service</Text>
+      {resultAddService.error && (
+        <Text style={styles.error}>{resultAddService.error}</Text>
+      )}
 
       <Formik
         initialValues={{
           name: "",
+          site: "",
           id_manager: "",
         }}
         validationSchema={SignupSchema}
-        onSubmit={(values) => {
-          sendAddServices(values);
-        }}
+        onSubmit={(values) => sendAddServices(values)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
@@ -67,12 +115,22 @@ export const AddService = () => {
               errorMessage={errors.name}
             />
             <Input
-              onChangeText={handleChange("id_manager")}
-              onBlur={handleBlur("id_manager")}
+              onChangeText={handleChange("site")}
+              onBlur={handleBlur("site")}
+              value={values.site}
+              placeholder="site"
+              errorMessage={errors.site}
+            />
+            <DropDownPicker
+              onChangeItem={(item) => (values.id_manager = item.value)}
+              onBlur={(item) => (values.id_manager = item.value)}
+              items={resultGetEmployees}
               value={values.id_manager}
               placeholder="Manager"
+              containerStyle={{ height: 40 }}
+              style={{ backgroundColor: color.COLORS.DEFAULT }}
+              dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
             />
-
             <Button
               onPress={handleSubmit}
               title="Valider"
@@ -96,5 +154,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.COLORS.SECONDARY,
     alignSelf: "flex-start",
     alignSelf: "center",
+  },
+  error: {
+    color: color.COLORS.DANGER,
   },
 });
