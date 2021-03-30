@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Formik } from "formik";
 import color from "../../constants/color";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Icon, Button } from "react-native-elements";
+import { Icon, Button, Input } from "react-native-elements";
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
@@ -124,7 +124,7 @@ export const FormHolidaysAdd = () => {
       </Text>
       <Formik
         initialValues={{
-          note: "Demande de congées",
+          note: "Demande de congés",
           type: "rtt",
           startDate: startDate,
           endDate: endDate,
@@ -175,7 +175,7 @@ export const FormHolidaysAdd = () => {
             </View>
 
             <Text>Note</Text>
-            <TextInput
+            <Input
               style={styles.input}
               onChangeText={handleChange("note")}
               onBlur={handleBlur("note")}
@@ -242,6 +242,7 @@ export const FormHolidaysAdd = () => {
                 handleSubmit();
               }}
               title="Valider"
+              buttonStyle={{ backgroundColor: color.COLORS.PRIMARY }}
             />
           </View>
         )}
@@ -251,23 +252,13 @@ export const FormHolidaysAdd = () => {
 };
 
 const styles = StyleSheet.create({
-  input: {
-    borderColor: "lightgray",
-    paddingHorizontal: 5,
-    borderWidth: 2,
-    borderStyle: "solid",
-    marginVertical: 5,
-    backgroundColor: color.COLORS.WHITE,
-  },
   inputDate: {
-    borderColor: "lightgray",
+    borderBottomColor: "gray",
+    borderBottomWidth: 1,
     paddingHorizontal: 5,
-    borderWidth: 2,
     borderStyle: "solid",
-    marginBottom: 2,
-    backgroundColor: color.COLORS.WHITE,
-    paddingVertical: 7,
     alignSelf: "center",
+    marginTop: 7,
   },
   row: {
     marginTop: 20,

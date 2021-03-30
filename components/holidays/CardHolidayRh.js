@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Icon, Overlay, Button } from "react-native-elements";
 import color from "../../constants/color";
 import { ValidatorFormRh } from "./ValidatorFormRh";
-
+import { screen } from "../../styles";
 export const CardHolidayRh = ({ item }) => {
   const [showValidator, setShowValidator] = useState(false);
 
@@ -28,23 +28,32 @@ export const CardHolidayRh = ({ item }) => {
     <View>
       <Pressable onPress={toggleShowValidator}>
         <View style={styles.card}>
+          <Text>Fait le {formatDisplay(item.current_date)}</Text>
+          <Text>
+            Par {item.id_requester_employee.firstName}{" "}
+            {item.id_requester_employee.lastName}{" "}
+          </Text>
+          <Text>Type: {item.type}</Text>
           <Text style={{ textAlign: "center", fontWeight: "bold" }}>
             Congée du {formatDisplay(item.starting_date)} au{" "}
             {formatDisplay(item.ending_date)}
           </Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ flex: 3 }}>{item.status}</Text>
 
-            <Icon
+          <Text style={styles.status}>{item.status}</Text>
+
+          {/* <Icon
               name="play-circle"
               type="font-awesome-5"
               color={color.COLORS.WARNING}
               onPress={() => console.log(item)}
-            />
-          </View>
+            /> */}
         </View>
       </Pressable>
-      <Overlay isVisible={showValidator} onBackdropPress={toggleShowValidator}>
+      <Overlay
+        isVisible={showValidator}
+        onBackdropPress={toggleShowValidator}
+        overlayStyle={screen.overlay}
+      >
         <ValidatorFormRh item={item} />
       </Overlay>
     </View>
@@ -60,6 +69,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: color.COLORS.GREY,
     borderWidth: 1,
+    alignItems: "center",
   },
   button: {
     borderTopColor: color.COLORS.GREY,
@@ -67,5 +77,13 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
+  },
+  status: {
+    padding: 10,
+    backgroundColor: color.COLORS.WARNING,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: color.COLORS.GREY,
+    color: color.COLORS.WHITE,
   },
 });
