@@ -11,7 +11,8 @@ export default {
     GREY: "#999999",
     WHITE: "#FFFFFF",
     BLACK: "#000000",
-    LIGHTGREY: "#E4E4E4",
+    // LIGHTGREY: "#E9E9E9",
+    LIGHTGREY: "#F9F9F9",
     BUTTONSUCCESS: "#ADF3AD",
     BUTTONDANGER: "#F0BEBD",
 

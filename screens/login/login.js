@@ -2,15 +2,16 @@ import React, { useState, useContext } from "react";
 import {
   Text,
   View,
-  Button,
-  TextInput,
-  ImageBackground,
   Image,
   StatusBar,
+  ImageBackground,
 } from "react-native";
 import color from "../../constants/color";
 import { login as loginStyle } from "../../styles/";
 import { AuthContext } from "../../context/AuthContext";
+import { Button, Input, Icon } from "react-native-elements"
+
+
 
 export const login = ({ navigation }) => {
   const { signIn, signOut } = useContext(AuthContext);
@@ -24,51 +25,58 @@ export const login = ({ navigation }) => {
     };
     signIn(data);
   };
-  const image = {
-    uri: "https://zupimages.net/up/21/10/p7y5.png",
-  };
   return (
     <View style={loginStyle.container}>
       <StatusBar animated={true} backgroundColor={color.COLORS.PRIMARY} />
-      <ImageBackground source={image} style={loginStyle.image}>
-        <View style={{ alignItems: "center", flex: 3 }}>
+      <ImageBackground source={require("../../assets/background-login.png")} style={loginStyle.image}>
+        <View style={{ alignItems: "center", flex: 2, paddingTop:50}}>
           <Image
             style={{ width: 300, height: 100, margin: 0 }}
             source={require("../../assets/logo-endemik.png")}
           ></Image>
         </View>
         <Text style={loginStyle.title}>Connexion</Text>
-        <View style={loginStyle.form}>
-          <TextInput
-            style={loginStyle.input}
+        <View style={loginStyle.card}>
+          <Input
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
+            leftIcon={
+              <Icon
+                name='envelope'
+                type='font-awesome'
+                color={color.COLORS.GREY}
+                style={{width:35}}
+              />
+            }
           />
-          <TextInput
-            style={loginStyle.input}
+          <Input
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            leftIcon={
+              <Icon
+                name='unlock-alt'
+                type='font-awesome'
+                color={color.COLORS.GREY}
+                style={{width:35}}
+              />
+            }
           />
-
-          <View style={{ height: 5 }}></View>
           <Button
-            style={loginStyle.button}
+            buttonStyle={loginStyle.button}
             color={color.COLORS.PRIMARY}
-            title="Sign in"
+            title="Se connecter"
             onPress={submit}
           />
-          <View style={{ height: 20 }}></View>
-          <Text
-            onPress={() => {
-              console.log("mdp forget");
-            }}
-          >
-            mdp oublié{" "}
+
+          <Text onPress={() => console.log("mdp forget")} style={loginStyle.mdp}>
+            Mot de passe oublié
           </Text>
+
         </View>
+      
         <View style={{ flex: 3 }}></View>
       </ImageBackground>
     </View>

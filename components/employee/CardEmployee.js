@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   cardEmployee: {
     marginVertical: 10,
     marginHorizontal: 10,
-    backgroundColor: color.COLORS.WHITE,
+    backgroundColor: color.COLORS.LIGHTGREY,
     // padding: 5,
 
     borderTopLeftRadius: 10,
