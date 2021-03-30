@@ -11,7 +11,7 @@ export default {
     GREY: "#999999",
     WHITE: "#FFFFFF",
     BLACK: "#000000",
-    LIGHTGREY: "#E4E4E4",
+    LIGHTGREY: "#E9E9E9",
     // VALIDATE: ,
     // PREVALIDATE: ,
     // REFUSE: ,
