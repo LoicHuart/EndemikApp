@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
-
+import { toggleShowPopUp } from "./CardHoliday";
 import { screen } from "../../styles";
 import color from "../../constants/color";
+import { AuthContext } from "../../context/AuthContext";
 
-export const PopUpnAnswer = ({ item }) => {
+export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
   const { token } = useContext(AuthContext);
 
   const acceptHoliday = (holiday) => {
@@ -53,7 +54,7 @@ export const PopUpnAnswer = ({ item }) => {
       `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/${item._id}`,
       requestOptions
     )
-      .then((response) => response.json())
+      .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
@@ -65,14 +66,20 @@ export const PopUpnAnswer = ({ item }) => {
       <View style={{ margin: 5 }}>
         <Button
           title="Accepter"
-          onPress={acceptHoliday}
+          onPress={() => {
+            // acceptHoliday();
+            toggleShowPopUp();
+          }}
           buttonStyle={styles.buttonValidate}
         />
       </View>
       <View style={{ margin: 5 }}>
         <Button
           title="Refuser"
-          onPress={refuseHoliday}
+          onPress={() => {
+            // refuseHoliday();
+            toggleShowPopUp();
+          }}
           buttonStyle={styles.buttonRefuse}
         />
       </View>

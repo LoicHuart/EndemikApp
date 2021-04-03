@@ -4,6 +4,7 @@ import { Icon, Overlay, Button } from "react-native-elements";
 import color from "../../constants/color";
 import { PopUpAnswer } from "./PopUpAnswer";
 import { screen } from "../../styles";
+
 export const CardHoliday = ({ item, gestion }) => {
   const [showValidator, setShowValidator] = useState(false);
 
@@ -21,12 +22,12 @@ export const CardHoliday = ({ item, gestion }) => {
 
     return day + "/" + month + "/" + date.getFullYear();
   };
-  const toggleShowValidator = () => {
+  const toggleShowPopUp = () => {
     setShowValidator(!showValidator);
   };
   return (
     <View>
-      <Pressable onPress={toggleShowValidator}>
+      <Pressable onPress={toggleShowPopUp}>
         <View style={styles.card}>
           <Text>Fait le {formatDisplay(item.current_date)}</Text>
           <Text>
@@ -51,10 +52,10 @@ export const CardHoliday = ({ item, gestion }) => {
       </Pressable>
       <Overlay
         isVisible={showValidator}
-        onBackdropPress={toggleShowValidator}
+        onBackdropPress={toggleShowPopUp}
         overlayStyle={screen.overlay}
       >
-        <PopUpAnswer item={item} />
+        <PopUpAnswer item={item} toggleShowPopUp={toggleShowPopUp} />
       </Overlay>
     </View>
   );

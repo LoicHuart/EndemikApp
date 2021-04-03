@@ -1,13 +1,14 @@
-import React, { useEffect, useContext } from "react";
-import { StyleSheet, Text, View, Button, FlatList } from "react-native";
-import { AuthContext } from "../../context/AuthContext";
-import { CardHolidayRh } from "./CardHolidayRh";
+import React, { useEffect } from "react";
+import { StyleSheet, Text, View, FlatList } from "react-native";
+import { Icon, Overlay, Button } from "react-native-elements";
+import { CardHoliday } from "./CardHoliday";
+import color from "../../constants/color";
 
 export const ListHolidays = ({ user, status, token }) => {
   const [holidays, setHolidays] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
-  if (!user) {
+  if (user === undefined) {
     const displayHolidays = async (status) => {
       setLoading(true);
       var myHeaders = new Headers();
@@ -22,7 +23,24 @@ export const ListHolidays = ({ user, status, token }) => {
         redirect: "follow",
       };
 
-      if (!status) {
+      if (status === undefined) {
+        try {
+          const resp = await fetch(
+            `http://${process.env.REACT_APP_API_HOST}/api/holidays/?populate=1`,
+            requestOptions
+          );
+
+          const respJSON = await resp.json();
+
+          if (!resp.ok) {
+            console.log("error");
+            console.log(resp);
+          }
+          setHolidays(respJSON);
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
         try {
           const resp = await fetch(
             `http://${process.env.REACT_APP_API_HOST}/api/holidays/?populate=1`,
@@ -46,23 +64,6 @@ export const ListHolidays = ({ user, status, token }) => {
         } catch (e) {
           console.log(e);
         }
-      } else {
-        try {
-          const resp = await fetch(
-            `http://${process.env.REACT_APP_API_HOST}/api/holidays/?populate=1`,
-            requestOptions
-          );
-
-          const respJSON = await resp.json();
-
-          if (!resp.ok) {
-            console.log("error");
-            console.log(resp);
-          }
-          setHolidays(respJSON);
-        } catch (e) {
-          console.log(e);
-        }
       }
     };
 
@@ -82,7 +83,7 @@ export const ListHolidays = ({ user, status, token }) => {
           ListEmptyComponent={() => <Text>rien</Text>}
           refreshing={loading}
           onRefresh={() => displayHolidays(status)}
-          renderItem={({ item }) => <CardHolidayRh item={item} />}
+          renderItem={({ item }) => <CardHoliday item={item} />}
           keyExtractor={(item) => item._id}
         />
         {/* <Button title="actualiser" onPress={() => displayHolidays()} /> */}
@@ -153,7 +154,7 @@ export const ListHolidays = ({ user, status, token }) => {
           )}
           refreshing={loading}
           onRefresh={() => displayHolidays()}
-          renderItem={({ item }) => <CardHolidayUser item={item} />}
+          renderItem={({ item }) => <CardHoliday item={item} />}
           keyExtractor={(item) => item._id}
         />
       </View>
