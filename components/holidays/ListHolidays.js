@@ -3,73 +3,162 @@ import { StyleSheet, Text, View, Button, FlatList } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import { CardHolidayRh } from "./CardHolidayRh";
 
-export const ListHolidays = () => {
-  const { user, token } = useContext(AuthContext);
-
+export const ListHolidays = ({ user, status, token }) => {
   const [holidays, setHolidays] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
-  const displayHolidays = async () => {
-    setLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
+  if (!user) {
+    const displayHolidays = async (status) => {
+      setLoading(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
 
-    var raw = "";
+      var raw = "";
 
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
+      var requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      if (!status) {
+        try {
+          const resp = await fetch(
+            `http://${process.env.REACT_APP_API_HOST}/api/holidays/?populate=1`,
+            requestOptions
+          );
+
+          const respJSON = await resp.json();
+
+          let array = [];
+          respJSON.forEach((item) => {
+            if (item.status == status) {
+              array.push(item);
+            }
+          });
+
+          if (!resp.ok) {
+            console.log("error");
+            console.log(resp);
+          }
+          setHolidays(array);
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        try {
+          const resp = await fetch(
+            `http://${process.env.REACT_APP_API_HOST}/api/holidays/?populate=1`,
+            requestOptions
+          );
+
+          const respJSON = await resp.json();
+
+          if (!resp.ok) {
+            console.log("error");
+            console.log(resp);
+          }
+          setHolidays(respJSON);
+        } catch (e) {
+          console.log(e);
+        }
+      }
     };
 
-    try {
-      const resp = await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/holidays/?populate=1`,
-        requestOptions
-      );
+    useEffect(() => {
+      displayHolidays(status);
+    }, []);
 
-      const respJSON = await resp.json();
+    useEffect(() => {
+      setLoading(false);
+    }, [holidays]);
 
-      let array = [];
-      respJSON.forEach((item) => {
-        if (item.status == "prevalidée") {
-          array.push(item);
+    return (
+      <View style={{ marginBottom: 50 }}>
+        <Text style={{ fontWeight: "bold" }}>Liste des congées en cours :</Text>
+        <FlatList
+          data={holidays}
+          ListEmptyComponent={() => <Text>rien</Text>}
+          refreshing={loading}
+          onRefresh={() => displayHolidays(status)}
+          renderItem={({ item }) => <CardHolidayRh item={item} />}
+          keyExtractor={(item) => item._id}
+        />
+        {/* <Button title="actualiser" onPress={() => displayHolidays()} /> */}
+      </View>
+    );
+  } else {
+    const displayHolidays = async () => {
+      setLoading(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      var raw = "";
+
+      var requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      try {
+        const resp = await fetch(
+          `http://${process.env.REACT_APP_API_HOST}/api/holidays/user/${user._id}`,
+          requestOptions
+        );
+
+        const respJSON = await resp.json();
+
+        if (!resp.ok) {
+          console.log("error");
+          console.log(resp);
         }
-      });
-
-      if (!resp.ok) {
-        console.log("error");
-        console.log(resp);
+        setHolidays(respJSON);
+      } catch (e) {
+        console.log(e);
       }
-      setHolidays(array);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+    };
 
-  useEffect(() => {
-    displayHolidays();
-  }, []);
+    useEffect(() => {
+      displayHolidays();
+    }, []);
 
-  useEffect(() => {
-    setLoading(false);
-  }, [holidays]);
+    useEffect(() => {
+      setLoading(false);
+    }, [holidays]);
 
-  return (
-    <View style={{ marginBottom: 50 }}>
-      <Text style={{ fontWeight: "bold" }}>Liste des congées en cours :</Text>
-      <FlatList
-        data={holidays}
-        ListEmptyComponent={() => <Text>rien</Text>}
-        refreshing={loading}
-        onRefresh={() => displayHolidays()}
-        renderItem={({ item }) => <CardHolidayRh item={item} />}
-        keyExtractor={(item) => item._id}
-      />
-      {/* <Button title="actualiser" onPress={() => displayHolidays()} /> */}
-    </View>
-  );
+    return (
+      <View style={{ marginBottom: 50 }}>
+        <Text style={{ fontWeight: "bold", marginBottom: 10 }}>
+          Historique :
+        </Text>
+        <FlatList
+          data={holidays}
+          ListEmptyComponent={() => (
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ margin: 10 }}>
+                Vous n'avez pas encore de demandes
+              </Text>
+              <Text style={{ color: color.COLORS.GREY }}>
+                Balayez vers le bas pour actualiser
+              </Text>
+              <Icon
+                name="angle-double-down"
+                type="font-awesome-5"
+                color={color.COLORS.GREY}
+              />
+            </View>
+          )}
+          refreshing={loading}
+          onRefresh={() => displayHolidays()}
+          renderItem={({ item }) => <CardHolidayUser item={item} />}
+          keyExtractor={(item) => item._id}
+        />
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({});

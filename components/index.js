@@ -4,7 +4,7 @@ export { FormHolidaysAdd } from "./holidays/FormHolidaysAdd";
 export { ListHolidaysUser } from "./holidays/ListHolidaysUser";
 export { CardHolidayUser } from "./holidays/CardHolidayUser";
 export { CardHolidayRh } from "./holidays/CardHolidayRh";
-export { ValidatorFormRh } from "./holidays/ValidatorFormRh";
+export { PopUpnAnswer } from "./holidays/PopUpAnswer";
 
 export { Card } from "./Card";
 

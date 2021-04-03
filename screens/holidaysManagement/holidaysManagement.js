@@ -1,12 +1,15 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { HeaderCustom, ListHolidays } from "../../components/";
+import { AuthContext } from "../../context/AuthContext";
+
 export const holidaysManagement = ({ navigation }) => {
+  const { user, token } = React.useContext(AuthContext);
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} title="Gestion des congés" />
       <View style={{ flex: 1 }}>
-        <ListHolidays />
+        <ListHolidays token={token} />
       </View>
     </View>
   );

@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
-import { AuthContext } from "../../context/AuthContext";
+
 import { screen } from "../../styles";
 import color from "../../constants/color";
 
-export const ValidatorFormRh = ({ item }) => {
+export const PopUpnAnswer = ({ item }) => {
   const { token } = useContext(AuthContext);
 
   const acceptHoliday = (holiday) => {

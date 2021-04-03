@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Icon, Overlay, Button } from "react-native-elements";
 import color from "../../constants/color";
-import { ValidatorFormRh } from "./ValidatorFormRh";
+import { PopUpAnswer } from "./PopUpAnswer";
 import { screen } from "../../styles";
-export const CardHolidayRh = ({ item }) => {
+export const CardHoliday = ({ item, gestion }) => {
   const [showValidator, setShowValidator] = useState(false);
 
   const formatDisplay = (date) => {
@@ -54,7 +54,7 @@ export const CardHolidayRh = ({ item }) => {
         onBackdropPress={toggleShowValidator}
         overlayStyle={screen.overlay}
       >
-        <ValidatorFormRh item={item} />
+        <PopUpAnswer item={item} />
       </Overlay>
     </View>
   );
