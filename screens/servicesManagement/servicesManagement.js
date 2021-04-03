@@ -39,24 +39,13 @@ export const servicesManagement = ({ navigation }) => {
             >
               Liste des services :
             </Text>
-            {/* <FontAwesome
-            name="user-plus"
-            onPress={() => console.log("addUser")}
-            size={15}
-            style={{
-              alignContent: "center",
-              flex: 0.2,
-            }}
-          /> */}
             <Icon
               raised
+              reverse
               name="plus"
               size={17}
               type="font-awesome"
-              color={color.COLORS.GREY}
-              style={{
-                flex: 0.1,
-              }}
+              color={color.COLORS.PRIMARY}
               onPress={toggleOverlayAdd}
             />
           </View>

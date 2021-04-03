@@ -23,30 +23,38 @@ export const AddService = ({ toggleOverlayAdd }) => {
   const { token } = useContext(AuthContext);
   const [resultAddService, setResultAddService] = React.useState("");
   const [resultGetEmployees, setResultGetEmployees] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [heightDropdown, setHeightDropdown] = React.useState(40);
+
 
   const sendAddServices = async (value) => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
+    if(!loading) {
+      setLoading(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify(value);
+      var raw = JSON.stringify(value);
 
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/services`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        // console.log(result)
-        setResultAddService(result);
-      })
-      .catch((error) => console.log("error", error));
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      await fetch(
+        `http://${process.env.REACT_APP_API_HOST}/api/services`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          // console.log(result)
+          setResultAddService(result);
+        })
+        .catch((error) => console.log("error", error));
+    } else {
+      console.log("loading")
+    }
   };
 
   const getAllEmployee = async () => {
@@ -82,11 +90,15 @@ export const AddService = ({ toggleOverlayAdd }) => {
   };
 
   useEffect(() => {
-    if (resultAddService._id) {
+    if (resultAddService._id && !loading) {
       toggleOverlayAdd();
     } else {
       getAllEmployee();
     }
+  }, [resultAddService]);
+
+  useEffect(() => {
+    setLoading(false);
   }, [resultAddService]);
 
   return (
@@ -94,6 +106,9 @@ export const AddService = ({ toggleOverlayAdd }) => {
       <Text style={styles.title}>Ajout d'un service</Text>
       {resultAddService.error && (
         <Text style={styles.error}>{resultAddService.error}</Text>
+      )}
+      {resultAddService._id && (
+        <Text style={styles.sucess}>Service Ajouté</Text>
       )}
 
       <Formik
@@ -121,22 +136,32 @@ export const AddService = ({ toggleOverlayAdd }) => {
               placeholder="site"
               errorMessage={errors.site}
             />
-            <View style={styles.dropDown}>
+            <View style={{margin: 10,height: heightDropdown}}>
               <DropDownPicker
                 onChangeItem={(item) => (values.id_manager = item.value)}
                 onBlur={(item) => (values.id_manager = item.value)}
                 items={resultGetEmployees}
                 value={values.id_manager}
                 placeholder="Manager"
+
+                searchable={true}
+                searchablePlaceholder="Rechercher"
+                searchableError={() => <Text>Aucun résultat</Text>}
+
                 containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
-                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT}}
+                onOpen={() => setHeightDropdown(300) }
+                onClose={() => setHeightDropdown(40) }
+                dropDownMaxHeight={heightDropdown-40}
               />
             </View>
             <Button
               onPress={handleSubmit}
               title="Valider"
-              buttonStyle={styles.button}
+              buttonStyle={loading?'':styles.button}
+              loading={loading?true:false}
+              type={loading?'clear':'solid'}
             />
           </View>
         )}
@@ -153,7 +178,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   button: {
-    backgroundColor: color.COLORS.SECONDARY,
+    backgroundColor: color.COLORS.PRIMARY,
     alignSelf: "flex-start",
     alignSelf: "center",
   },
@@ -163,4 +188,8 @@ const styles = StyleSheet.create({
   dropDown: {
     margin: 10,
   },
+  sucess: {
+    color: color.COLORS.SUCCESS,
+
+  }
 });
