@@ -24,6 +24,8 @@ export const AddService = ({ toggleOverlayAdd }) => {
   const [resultAddService, setResultAddService] = React.useState("");
   const [resultGetEmployees, setResultGetEmployees] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [heightDropdown, setHeightDropdown] = React.useState(40);
+
 
   const sendAddServices = async (value) => {
     if(!loading) {
@@ -134,7 +136,7 @@ export const AddService = ({ toggleOverlayAdd }) => {
               placeholder="site"
               errorMessage={errors.site}
             />
-            <View style={styles.dropDown}>
+            <View style={{margin: 10,height: heightDropdown}}>
               <DropDownPicker
                 onChangeItem={(item) => (values.id_manager = item.value)}
                 onBlur={(item) => (values.id_manager = item.value)}
@@ -149,6 +151,9 @@ export const AddService = ({ toggleOverlayAdd }) => {
                 containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT}}
+                onOpen={() => setHeightDropdown(300) }
+                onClose={() => setHeightDropdown(40) }
+                dropDownMaxHeight={heightDropdown-40}
               />
             </View>
             <Button
