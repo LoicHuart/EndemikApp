@@ -53,7 +53,7 @@ export const ListServices = () => {
         onRefresh={() => displayServices()}
         renderItem={({ item }) => <CardService item={item} />}
         keyExtractor={(item) => item._id}
-        style={{height:Dimensions.get('window').height-210}}
+        style={{height:Dimensions.get('window').height-150}}
       />
     </View>
   );

@@ -12,9 +12,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 10,
     marginTop: 15,
-    backgroundColor: color.COLORS.LIGHTGREY,
+    backgroundColor: color.COLORS.WHITE,
     width: Dimensions.get("window").width - 30,
     borderRadius: 15,
     padding: 15,
+    alignSelf: "center",
   },
 });

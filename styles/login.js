@@ -1,16 +1,8 @@
 import { StyleSheet } from 'react-native';
 import color from "../constants/color";
+import { Dimensions } from "react-native";
 
 export const login = StyleSheet.create({
-    input: {
-        borderColor: "lightgray",
-        paddingVertical: 10,
-        paddingHorizontal: 5,
-        borderWidth: 2,
-        borderStyle: "solid",
-        marginVertical: 5,
-        backgroundColor: color.COLORS.WHITE,
-    },
     form: {
         marginVertical: 50,
         marginHorizontal: 10,
@@ -24,7 +16,7 @@ export const login = StyleSheet.create({
         textAlign: "center",
         color: color.COLORS.WHITE,
         fontSize: 30,
-        flex: 2,
+        flex: 1,
     },
     image: {
         flex: 1,
@@ -36,6 +28,29 @@ export const login = StyleSheet.create({
         flexDirection: "column",
     },
     button: {
-        borderRadius: 30,
+        backgroundColor: color.COLORS.SECONDARY,
+        alignSelf: "flex-start",
+        alignSelf: "center",
     },
+    card: {
+        alignSelf: "flex-start",
+        alignSelf: "center",
+        marginVertical: 10,
+        marginHorizontal: 10,
+        marginTop: 15,
+        backgroundColor: "#F5F5F5",
+        width: Dimensions.get("window").width - 70,
+        borderRadius: 15,
+        padding: 15,
+    },
+    
+    image: {
+        flex: 1,
+        resizeMode: "cover",
+        justifyContent: "center",
+    },
+    mdp:{
+        marginTop:20,
+        fontSize:12
+    }
 });

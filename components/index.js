@@ -8,9 +8,10 @@ export { PopUpnAnswer } from "./holidays/PopUpAnswer";
 
 export { Card } from "./Card";
 
-export { ListEmployees } from "./ListEmployees";
-export { CardEmployee } from "./CardEmployee";
-export { FormAddUser } from "./FormAddUser";
+export { ListEmployees } from "./employee/ListEmployees";
+export { CardEmployee } from "./employee/CardEmployee";
+export { AddEmployee } from "./employee/AddEmployee";
+/* export { EditEmployee } from "./employee/EditEmployee"; */
 
 export { ListServices } from "./services/ListServices";
 export { CardService } from "./services/CardService";

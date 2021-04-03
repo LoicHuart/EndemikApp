@@ -7,7 +7,7 @@ export const holidaysManagement = ({ navigation }) => {
   const { user, token } = React.useContext(AuthContext);
   return (
     <View style={{ flex: 1 }}>
-      <HeaderCustom navigation={navigation} title="Gestion des congés" />
+      <HeaderCustom navigation={navigation} />
       <View style={{ flex: 1 }}>
         <ListHolidays token={token} />
       </View>
