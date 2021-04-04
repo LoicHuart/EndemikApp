@@ -1,13 +1,16 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Avatar, Icon } from "react-native-elements"
 import color from "../../constants/color"
 import { AuthContext } from "../../context/AuthContext"
 import { Pressable } from "react-native";
-export const CardService = ({item}) => {
+export const CardService = ({item, refreshService}) => {
     const { token } = useContext(AuthContext);
+    const [loading, setLoading] = React.useState(true);
+    const [resultDeleteService, setResultDeleteService] = React.useState([]);
 
     const deleteService = async (id) => {
+        setLoading(true);
         var myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);
 
@@ -19,9 +22,24 @@ export const CardService = ({item}) => {
 
         fetch(`http://${process.env.REACT_APP_API_HOST}/api/services/${id}`, requestOptions)
             .then(response => response.text())
-            .then(result => console.log(result))
+            .then(result => {
+                console.log(result)
+                setResultDeleteService(result);
+            })
             .catch(error => console.log('error', error));
     };
+
+    useEffect(() => {
+        setLoading(false);
+    }, [resultDeleteService]);
+    
+    useEffect(() => {
+    // console.log(loading)
+    // console.log(resultDeleteService)
+    if (!resultDeleteService.error && !loading) {
+        refreshService();
+    }
+    }, [loading]);
 
     return (
         <View>

@@ -90,16 +90,18 @@ export const AddService = ({ toggleOverlayAdd }) => {
   };
 
   useEffect(() => {
+    setLoading(false);
+  }, [resultAddService]);
+
+  useEffect(() => {
+    // console.log(loading)
+    // console.log(resultAddService._id)
     if (resultAddService._id && !loading) {
       toggleOverlayAdd();
     } else {
       getAllEmployee();
     }
-  }, [resultAddService]);
-
-  useEffect(() => {
-    setLoading(false);
-  }, [resultAddService]);
+  }, [loading]);
 
   return (
     <View>

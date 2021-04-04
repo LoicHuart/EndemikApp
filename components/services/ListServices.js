@@ -4,8 +4,8 @@ import { Dimensions} from 'react-native'
 import { CardService } from "./CardService"
 import { AuthContext } from "../../context/AuthContext";
 
-export const ListServices = () => {
-  const { token, user } = useContext(AuthContext);
+export const ListServices = ({refresh}) => {
+  const { token } = useContext(AuthContext);
   const [services, setServices] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -44,6 +44,10 @@ export const ListServices = () => {
     setLoading(false);
   }, [services]);
 
+  useEffect(() => {
+    displayServices()
+  }, [refresh]);
+
   return (
     <View>
       <FlatList
@@ -51,7 +55,7 @@ export const ListServices = () => {
         ListEmptyComponent={() => <Text>rien</Text>}
         refreshing={loading}
         onRefresh={() => displayServices()}
-        renderItem={({ item }) => <CardService item={item} />}
+        renderItem={({ item }) => <CardService item={item} refreshService={displayServices}/>}
         keyExtractor={(item) => item._id}
         style={{height:Dimensions.get('window').height-150}}
       />
