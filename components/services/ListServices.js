@@ -4,7 +4,7 @@ import { Dimensions} from 'react-native'
 import { CardService } from "./CardService"
 import { AuthContext } from "../../context/AuthContext";
 
-export const ListServices = () => {
+export const ListServices = ({refresh}) => {
   const { token, user } = useContext(AuthContext);
   const [services, setServices] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -43,6 +43,10 @@ export const ListServices = () => {
   useEffect(() => {
     setLoading(false);
   }, [services]);
+
+  useEffect(() => {
+    displayServices()
+  }, [refresh]);
 
   return (
     <View>

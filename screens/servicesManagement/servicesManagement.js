@@ -12,9 +12,12 @@ import color from "../../constants/color";
 
 export const servicesManagement = ({ navigation }) => {
   const [overlayAdd, setOverlayAdd] = React.useState(false);
+  const [refreshService, setRefreshService] = React.useState(false);
+
 
   const toggleOverlayAdd = () => {
     setOverlayAdd(!overlayAdd);
+    setRefreshService(!refreshService)
   };
 
   return (
@@ -50,7 +53,7 @@ export const servicesManagement = ({ navigation }) => {
             />
           </View>
 
-          <ListServices />
+          <ListServices refresh={refreshService}/>
 
           <Overlay
             isVisible={overlayAdd}
