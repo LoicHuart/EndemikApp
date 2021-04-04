@@ -25,7 +25,7 @@ export const servicesManagement = ({ navigation }) => {
       <HeaderCustom navigation={navigation} />
       <View>
         <Card>
-        <View
+          <View
             style={{
               flexDirection: "row",
               alignItems: "center",
