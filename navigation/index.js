@@ -12,6 +12,7 @@ import {
   employeesManagement,
   DrawerContent,
   servicesManagement,
+  TabsHolidaysContent,
 } from "../screens/";
 //drawer
 const Drawer = createDrawerNavigator();
@@ -41,7 +42,10 @@ function RootNavigation() {
             name="holidaysManagement"
             component={holidaysManagement}
           />
-          <Drawer.Screen name="holidaysRequest" component={holidaysRequest} />
+          <Drawer.Screen
+            name="TabsHolidaysContent"
+            component={TabsHolidaysContent}
+          />
           <Drawer.Screen name="profil" component={profil} />
           <Drawer.Screen
             name="employeesManagement"

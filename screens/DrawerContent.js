@@ -49,7 +49,7 @@ export function DrawerContent(props) {
             )}
             label="Demande de congé"
             onPress={() => {
-              props.navigation.navigate("holidaysRequest");
+              props.navigation.navigate("TabsHolidaysContent");
             }}
             labelStyle={drawer.labelStyle}
           />
