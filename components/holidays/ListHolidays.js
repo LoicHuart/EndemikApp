@@ -4,7 +4,7 @@ import { Icon, Overlay, Button } from "react-native-elements";
 import { CardHoliday } from "./CardHoliday";
 import color from "../../constants/color";
 
-export const ListHolidays = ({ user, status, token }) => {
+export const ListHolidays = ({ user, status, token, gestion }) => {
   const [holidays, setHolidays] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -83,7 +83,9 @@ export const ListHolidays = ({ user, status, token }) => {
           ListEmptyComponent={() => <Text>rien</Text>}
           refreshing={loading}
           onRefresh={() => displayHolidays(status)}
-          renderItem={({ item }) => <CardHoliday item={item} />}
+          renderItem={({ item }) => (
+            <CardHoliday item={item} gestion={gestion} />
+          )}
           keyExtractor={(item) => item._id}
         />
         {/* <Button title="actualiser" onPress={() => displayHolidays()} /> */}
@@ -154,7 +156,9 @@ export const ListHolidays = ({ user, status, token }) => {
           )}
           refreshing={loading}
           onRefresh={() => displayHolidays()}
-          renderItem={({ item }) => <CardHoliday item={item} />}
+          renderItem={({ item }) => (
+            <CardHoliday item={item} gestion={gestion} />
+          )}
           keyExtractor={(item) => item._id}
         />
       </View>

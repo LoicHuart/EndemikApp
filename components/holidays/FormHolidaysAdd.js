@@ -16,11 +16,9 @@ export const FormHolidaysAdd = () => {
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  const week = new Date(tomorrow);
-  week.setDate(week.getDate() + 7);
 
   const [startDate, setStartDate] = useState(tomorrow);
-  const [endDate, setEndDate] = useState(week);
+  const [endDate, setEndDate] = useState(tomorrow);
   const [type, setType] = useState(0);
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);

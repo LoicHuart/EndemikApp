@@ -14,19 +14,15 @@ export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      status: "validée",
-    });
-
     var requestOptions = {
-      method: "PUT",
+      method: "GET",
       headers: myHeaders,
-      body: raw,
+      body: "",
       redirect: "follow",
     };
 
     fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/${item._id}`,
+      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/validée/${item._id}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -39,19 +35,15 @@ export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      status: "refusée",
-    });
-
     var requestOptions = {
-      method: "PUT",
+      method: "GET",
       headers: myHeaders,
-      body: raw,
+      body: "",
       redirect: "follow",
     };
 
     fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/${item._id}`,
+      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/refusée/${item._id}`,
       requestOptions
     )
       .then((response) => response.text())
@@ -67,7 +59,7 @@ export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
         <Button
           title="Accepter"
           onPress={() => {
-            // acceptHoliday();
+            acceptHoliday();
             toggleShowPopUp();
           }}
           buttonStyle={styles.buttonValidate}
@@ -77,7 +69,7 @@ export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
         <Button
           title="Refuser"
           onPress={() => {
-            // refuseHoliday();
+            refuseHoliday();
             toggleShowPopUp();
           }}
           buttonStyle={styles.buttonRefuse}

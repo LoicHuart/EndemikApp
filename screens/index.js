@@ -6,3 +6,4 @@ export { profil } from "./profil/profil";
 export { employeesManagement } from "./employeesManagement/employeesManagement";
 export { DrawerContent } from "./DrawerContent";
 export { servicesManagement } from "./servicesManagement/servicesManagement";
+export { TabsHolidaysContent } from "./holidaysRequest/TabsHolidaysContent";

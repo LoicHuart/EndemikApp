@@ -266,20 +266,6 @@ export const FormHolidaysUpdate = ({ item, children }) => {
           </View>
         )}
       </Formik>
-      <View style={styles.row}>{children}</View>
-      <Overlay
-        isVisible={showConfirm}
-        onBackdropPress={() => {
-          toggleShowConfirm();
-        }}
-      >
-        <Icon
-          name="check-circle"
-          type="font-awesome-5"
-          color={color.COLORS.SUCCESS}
-        />
-        <Text>La demande a été mise à jour ! </Text>
-      </Overlay>
     </View>
   );
 };
