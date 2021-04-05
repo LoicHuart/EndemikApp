@@ -32,13 +32,9 @@ export const servicesManagement = ({ navigation }) => {
             }}
           >
             <Text
-              style={{
-                marginTop: 10,
-                marginBottom: 20,
-                fontWeight: "bold",
-                fontSize: 17,
+              style={[screen.h2,{
                 flex: 0.9,
-              }}
+              }]}
             >
               Liste des services :
             </Text>

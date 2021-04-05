@@ -4,7 +4,7 @@ import { Avatar, Icon, Overlay } from "react-native-elements"
 import color from "../../constants/color"
 import { Pressable } from "react-native";
 import { screen } from "../../styles/";
-import { ValideRefuseService } from "../../components/";
+import { ValideRefuseService } from "./ValideRefuseService";
 
 export const CardService = ({item, refreshService}) => {
     const [overlayDelete, setOverlayDelete] = React.useState(false);
