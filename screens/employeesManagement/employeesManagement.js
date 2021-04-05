@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, Dimensions } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import {
   HeaderCustom,
   ListEmployees,
@@ -50,10 +50,11 @@ export const employeesManagement = ({ navigation }) => {
           /> */}
             <Icon
               raised
+              reverse
               name="user-plus"
               size={17}
               type="font-awesome"
-              color={color.COLORS.GREY}
+              color={color.COLORS.PRIMARY}
               style={{
                 flex: 0.1,
               }}
@@ -66,7 +67,9 @@ export const employeesManagement = ({ navigation }) => {
             isVisible={overlayAdd}
             onBackdropPress={toggleOverlayAdd}
           >
-            <AddEmployee toggleOverlayAdd={toggleOverlayAdd} />
+            <ScrollView>
+              <AddEmployee toggleOverlayAdd={toggleOverlayAdd} />
+            </ScrollView>
           </Overlay>
         </Card>
       </View>

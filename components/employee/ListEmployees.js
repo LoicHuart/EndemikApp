@@ -1,5 +1,12 @@
 import React, { useEffect, useContext } from "react";
-import { StyleSheet, Text, View, Button, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  FlatList,
+  Dimensions,
+} from "react-native";
 import { CardEmployee } from "./CardEmployee";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -58,6 +65,7 @@ export const ListEmployees = (refresh) => {
     <View>
       <FlatList
         data={employees}
+        style={{ height: Dimensions.get("window").height - 150 }}
         ListEmptyComponent={() => <Text>rien</Text>}
         refreshing={loading}
         onRefresh={() => displayEmployees()}

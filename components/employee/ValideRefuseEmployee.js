@@ -7,11 +7,11 @@ import { AuthContext } from "../../context/AuthContext";
 
 export const ValideRefuseEmployee = ({ itemId, text, toggleOverlay }) => {
   const { token } = useContext(AuthContext);
-  //   const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(true);
   const [resultDeleteEmployee, setResultDeleteEmployee] = React.useState([]);
 
   const deleteEmployee = async (id) => {
-    // setLoading(true);
+    setLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
@@ -37,16 +37,20 @@ export const ValideRefuseEmployee = ({ itemId, text, toggleOverlay }) => {
   };
 
   useEffect(() => {
-    // setLoading(false);
+    setLoading(false);
   }, [resultDeleteEmployee]);
 
   useEffect(() => {
     // console.log(loading)
     // console.log(resultDeleteEmployee)
-    if (resultDeleteEmployee.message && !resultDeleteEmployee.error) {
+    if (
+      resultDeleteEmployee.message &&
+      !resultDeleteEmployee.error &&
+      !loading
+    ) {
       toggleOverlay();
     }
-  });
+  }, [loading]);
 
   return (
     <View>

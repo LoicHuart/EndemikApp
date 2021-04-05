@@ -21,18 +21,19 @@ export const screen = StyleSheet.create({
   },
   overlay: {
     padding: 15,
+    margin: 15,
     borderRadius: 10,
     width: Dimensions.get("window").width - 70,
   },
   buttonSuccess: {
-    marginTop: 10,
+    margin: 20,
     width: 100,
     alignSelf: "center",
     backgroundColor: color.COLORS.BUTTONSUCCESS,
     color: color.COLORS.BLACK,
   },
   buttonDanger: {
-    marginTop: 10,
+    margin: 20,
     width: 100,
     alignSelf: "center",
     backgroundColor: color.COLORS.BUTTONDANGER,

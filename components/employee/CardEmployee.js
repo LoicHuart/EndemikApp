@@ -1,13 +1,5 @@
-import React, { useState } from "react";
-import {
-  Alert,
-  Modal,
-  Pressable,
-  StyleSheet,
-  View,
-  Text,
-  Switch,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { Pressable, StyleSheet, View, Text, Switch } from "react-native";
 import color from "../../constants/color";
 import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
@@ -15,9 +7,13 @@ import { Avatar, Icon, Overlay } from "react-native-elements";
 import { ValideRefuseEmployee } from "./ValideRefuseEmployee";
 
 export const CardEmployee = ({ item, refreshEmployee }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const [isEnabled, setIsEnabled] = useState(item.active);
+  // console.log(item.active);
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled);
+    //requete API
+    console.log(isEnabled);
+  };
 
   const [overlayDelete, setOverlayDelete] = React.useState(false);
 
@@ -25,6 +21,26 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
     setOverlayDelete(!overlayDelete);
     refreshEmployee();
   };
+
+  const formatDisplay = (date) => {
+    date = new Date(date);
+    let day = date.getDate();
+    if (day.toString().length < 2) {
+      day = "0" + day;
+    }
+
+    let month = date.getMonth() + 1;
+    if (month.toString().length < 2) {
+      month = "0" + month;
+    }
+
+    return day + "/" + month + "/" + date.getFullYear();
+  };
+
+  useEffect(() => {
+    setIsEnabled(item.active);
+  });
+
   // const [overlayAdd, setOverlayAdd] = React.useState(false);
 
   // const toggleOverlayAdd = () => {
@@ -63,21 +79,16 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
             <Switch
               trackColor={{ false: color.COLORS.GREY, true: color.COLORS.GREY }}
               thumbColor={isEnabled ? "#adf3ad" : "#f0bebd"}
-              ios_backgroundColor="#3e3e3e"
+              ios_backgroundColor={color.COLORS.GREY}
               onValueChange={toggleSwitch}
               value={isEnabled}
             />
           </View>
-          <Pressable
-            style={{ flex: 0.5 }}
-            // onPress={() => deleteService(item._id)}
-            onPress={toggleOverlayDelete}
-          >
+          <Pressable style={{ flex: 1 }} onPress={toggleOverlayDelete}>
             <Icon
               name="trash"
               type="font-awesome-5"
               color={color.COLORS.GREY}
-              // onPress={() => setModalVisible(true)}
             />
           </Pressable>
         </View>
