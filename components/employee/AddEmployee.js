@@ -330,6 +330,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 searchableError={() => <Text>Aucun résultat</Text>}
                 containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
+                labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
                 onOpen={() => setHeightDropdown(300)}
                 onClose={() => setHeightDropdown(40)}
