@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Formik } from "formik";
 import color from "../../constants/color";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Icon, Overlay, Button } from "react-native-elements";
+import { Icon, Overlay, Button, Input } from "react-native-elements";
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
@@ -189,8 +189,7 @@ export const FormHolidaysUpdate = ({ item, toggleShowPopUp }) => {
             </View>
 
             <Text>Note</Text>
-            <TextInput
-              style={styles.input}
+            <Input
               onChangeText={handleChange("note")}
               onBlur={handleBlur("note")}
               value={values.note}

@@ -21,7 +21,7 @@ export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
     };
 
     fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/validée/${item._id}`,
+      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/validé/${item._id}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -42,7 +42,7 @@ export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
     };
 
     fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/refusée/${item._id}`,
+      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/refusé/${item._id}`,
       requestOptions
     )
       .then((response) => response.text())
