@@ -12,9 +12,12 @@ import color from "../../constants/color";
 
 export const servicesManagement = ({ navigation }) => {
   const [overlayAdd, setOverlayAdd] = React.useState(false);
+  const [refreshService, setRefreshService] = React.useState(false);
+
 
   const toggleOverlayAdd = () => {
     setOverlayAdd(!overlayAdd);
+    setRefreshService(!refreshService)
   };
 
   return (
@@ -22,7 +25,7 @@ export const servicesManagement = ({ navigation }) => {
       <HeaderCustom navigation={navigation} />
       <View>
         <Card>
-        <View
+          <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -39,29 +42,18 @@ export const servicesManagement = ({ navigation }) => {
             >
               Liste des services :
             </Text>
-            {/* <FontAwesome
-            name="user-plus"
-            onPress={() => console.log("addUser")}
-            size={15}
-            style={{
-              alignContent: "center",
-              flex: 0.2,
-            }}
-          /> */}
             <Icon
               raised
+              reverse
               name="plus"
               size={17}
               type="font-awesome"
-              color={color.COLORS.GREY}
-              style={{
-                flex: 0.1,
-              }}
+              color={color.COLORS.PRIMARY}
               onPress={toggleOverlayAdd}
             />
           </View>
 
-          <ListServices />
+          <ListServices refresh={refreshService}/>
 
           <Overlay
             isVisible={overlayAdd}

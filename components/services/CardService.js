@@ -1,26 +1,17 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Avatar, Icon } from "react-native-elements"
+import { Avatar, Icon, Overlay } from "react-native-elements"
 import color from "../../constants/color"
-import { AuthContext } from "../../context/AuthContext"
 import { Pressable } from "react-native";
-export const CardService = ({item}) => {
-    const { token } = useContext(AuthContext);
+import { screen } from "../../styles/";
+import { ValideRefuseService } from "../../components/";
 
-    const deleteService = async (id) => {
-        var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${token}`);
+export const CardService = ({item, refreshService}) => {
+    const [overlayDelete, setOverlayDelete] = React.useState(false);
 
-        var requestOptions = {
-            method: 'DELETE',
-            headers: myHeaders,
-            redirect: 'follow'
-        };
-
-        fetch(`http://${process.env.REACT_APP_API_HOST}/api/services/${id}`, requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
+    const toggleOverlayDelete = () => {
+        setOverlayDelete(!overlayDelete);
+        refreshService();
     };
 
     return (
@@ -52,7 +43,8 @@ export const CardService = ({item}) => {
                     </View>
                     <Pressable 
                         style= {{flex:0.5}}
-                        onPress={() => deleteService(item._id)}
+                        // onPress={() => deleteService(item._id)}
+                        onPress={toggleOverlayDelete}
                     >
                         <Icon
                             name='trash'
@@ -62,6 +54,14 @@ export const CardService = ({item}) => {
                     </Pressable>
                 </View>
             </View>
+
+            <Overlay
+                isVisible={overlayDelete}
+                onBackdropPress={toggleOverlayDelete}
+                overlayStyle={screen.overlay}
+            >
+                <ValideRefuseService itemId={item._id} text={"Voulez-vous supprimer ce service ?"} toggleOverlay={toggleOverlayDelete} />
+          </Overlay>
         </View>
     )
 }
