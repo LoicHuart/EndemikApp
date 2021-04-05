@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { StyleSheet, Text, View, Button, FlatList } from "react-native";
 import { CardEmployee } from "./CardEmployee";
+import { AuthContext } from "../../context/AuthContext";
 
 import color from "../../constants/color";
 
-export const ListEmployees = () => {
+export const ListEmployees = (refresh) => {
+  const { token } = useContext(AuthContext);
   const [employees, setEmployees] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const displayEmployees = async () => {
     setLoading(true);
     var myHeaders = new Headers();
-    myHeaders.append(
-      "Authorization",
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDI2NWMzNTlkMTZiODJhNmM4MDFmMGMiLCJpYXQiOjE2MTQ1MzQ1MTl9.IvVNv2189ezpH7wTvp9ACdG97WPn0Tlb5rigxKeKmGI"
-    );
+    myHeaders.append("Authorization", `Bearer ${token}`);
 
     var raw = "";
 
@@ -51,6 +50,10 @@ export const ListEmployees = () => {
     setLoading(false);
   }, [employees]);
 
+  useEffect(() => {
+    displayEmployees();
+  }, [refresh]);
+
   return (
     <View>
       <FlatList
@@ -58,7 +61,9 @@ export const ListEmployees = () => {
         ListEmptyComponent={() => <Text>rien</Text>}
         refreshing={loading}
         onRefresh={() => displayEmployees()}
-        renderItem={({ item }) => <CardEmployee item={item} />}
+        renderItem={({ item }) => (
+          <CardEmployee item={item} refreshEmployee={displayEmployees} />
+        )}
         keyExtractor={(item) => item._id}
       />
     </View>

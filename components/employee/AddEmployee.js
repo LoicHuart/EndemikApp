@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
 import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const SignupSchema = Yup.object().shape({
   firstname: Yup.string()
@@ -46,6 +47,8 @@ const SignupSchema = Yup.object().shape({
 export const AddEmployee = ({ toggleOverlayAdd }) => {
   const { token } = useContext(AuthContext);
   const [resultAddEmployee, setResultAddEmployee] = React.useState("");
+  const [resultGetServices, setResultGetServices] = React.useState([]);
+  const [heightDropdown, setHeightDropdown] = React.useState(40);
 
   const sendAddEmployee = async (values) => {
     var myHeaders = new Headers();
@@ -77,29 +80,74 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
       redirect: "follow",
     };
 
-    try {
-      const resp = await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees`,
-        requestOptions
-      );
+    await fetch(
+      `http://${process.env.REACT_APP_API_HOST}/api/employees`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        // console.log(result)
+        setResultAddEmployee(result);
+      })
+      .catch((error) => console.log("error", error));
 
-      const respJSON = await resp.json();
+    // try {
+    //   const resp = await fetch(
+    //     `http://${process.env.REACT_APP_API_HOST}/api/employees`,
+    //     requestOptions
+    //   );
 
-      if (!resp.ok) {
-        console.log("error");
-        console.log(resp);
-      }
-      console.log(respJSON);
-    } catch (e) {
-      console.log(e);
-    }
+    //   const respJSON = await resp.json();
+
+    //   if (!resp.ok) {
+    //     console.log("error");
+    //     console.log(resp);
+    //   }
+    //   console.log(respJSON);
+    // } catch (e) {
+    //   console.log(e);
+    // }
+  };
+
+  const getAllService = async () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = "";
+
+    // console.log(raw);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    await fetch(
+      `http://${process.env.REACT_APP_API_HOST}/api/services?populate=1`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        let array = [];
+        result.forEach((elem) => {
+          array.push({
+            label: `${elem.name}`,
+            value: elem._id,
+          });
+        });
+        setResultGetServices(array);
+      })
+      .catch((error) => console.log("error : ", error));
   };
 
   useEffect(() => {
     if (resultAddEmployee._id) {
       toggleOverlayAdd();
     } else {
-      console.log("Else");
+      getAllService();
     }
   }, [resultAddEmployee]);
 
@@ -269,6 +317,24 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   </View>
                 </View>
               </View>
+            </View>
+            <View style={{ margin: 10, height: heightDropdown }}>
+              <DropDownPicker
+                onChangeItem={(item) => (values.id_role = item.value)}
+                onBlur={(item) => (values.id_role = item.value)}
+                items={resultGetServices}
+                value={values.id_service}
+                placeholder="Service"
+                searchable={true}
+                searchablePlaceholder="Rechercher"
+                searchableError={() => <Text>Aucun résultat</Text>}
+                containerStyle={{ height: 40 }}
+                style={{ backgroundColor: color.COLORS.DEFAULT }}
+                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+                onOpen={() => setHeightDropdown(300)}
+                onClose={() => setHeightDropdown(40)}
+                dropDownMaxHeight={heightDropdown - 40}
+              />
             </View>
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>

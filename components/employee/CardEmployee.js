@@ -9,13 +9,22 @@ import {
   Switch,
 } from "react-native";
 import color from "../../constants/color";
+import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
 import { Avatar, Icon, Overlay } from "react-native-elements";
+import { ValideRefuseEmployee } from "./ValideRefuseEmployee";
 
-export const CardEmployee = ({ item }) => {
+export const CardEmployee = ({ item, refreshEmployee }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const [overlayDelete, setOverlayDelete] = React.useState(false);
+
+  const toggleOverlayDelete = () => {
+    setOverlayDelete(!overlayDelete);
+    refreshEmployee();
+  };
   // const [overlayAdd, setOverlayAdd] = React.useState(false);
 
   // const toggleOverlayAdd = () => {
@@ -59,16 +68,31 @@ export const CardEmployee = ({ item }) => {
               value={isEnabled}
             />
           </View>
-          <View style={styles.icon}>
+          <Pressable
+            style={{ flex: 0.5 }}
+            // onPress={() => deleteService(item._id)}
+            onPress={toggleOverlayDelete}
+          >
             <Icon
               name="trash"
               type="font-awesome-5"
               color={color.COLORS.GREY}
-              onPress={() => setModalVisible(true)}
+              // onPress={() => setModalVisible(true)}
             />
-          </View>
+          </Pressable>
         </View>
       </View>
+      <Overlay
+        isVisible={overlayDelete}
+        onBackdropPress={toggleOverlayDelete}
+        overlayStyle={screen.overlay}
+      >
+        <ValideRefuseEmployee
+          itemId={item._id}
+          text={"Voulez-vous supprimer cet utilisateur ?"}
+          toggleOverlay={toggleOverlayDelete}
+        />
+      </Overlay>
       {/* <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
         <EditEmployee />
       </Overlay> */}

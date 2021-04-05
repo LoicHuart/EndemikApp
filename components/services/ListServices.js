@@ -1,10 +1,10 @@
-import React, { useEffect, useContext } from "react"
-import { StyleSheet, Text, View, FlatList } from "react-native"
-import { Dimensions} from 'react-native'
-import { CardService } from "./CardService"
+import React, { useEffect, useContext } from "react";
+import { StyleSheet, Text, View, FlatList } from "react-native";
+import { Dimensions } from "react-native";
+import { CardService } from "./CardService";
 import { AuthContext } from "../../context/AuthContext";
 
-export const ListServices = ({refresh}) => {
+export const ListServices = ({ refresh }) => {
   const { token } = useContext(AuthContext);
   const [services, setServices] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -45,7 +45,7 @@ export const ListServices = ({refresh}) => {
   }, [services]);
 
   useEffect(() => {
-    displayServices()
+    displayServices();
   }, [refresh]);
 
   return (
@@ -55,9 +55,11 @@ export const ListServices = ({refresh}) => {
         ListEmptyComponent={() => <Text>rien</Text>}
         refreshing={loading}
         onRefresh={() => displayServices()}
-        renderItem={({ item }) => <CardService item={item} refreshService={displayServices}/>}
+        renderItem={({ item }) => (
+          <CardService item={item} refreshService={displayServices} />
+        )}
         keyExtractor={(item) => item._id}
-        style={{height:Dimensions.get('window').height-150}}
+        style={{ height: Dimensions.get("window").height - 150 }}
       />
     </View>
   );
