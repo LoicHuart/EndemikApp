@@ -3,11 +3,16 @@ import color from "../constants/color";
 import { Dimensions } from "react-native";
 
 export const screen = StyleSheet.create({
-  title: {
-    marginBottom: 30,
+  h1: {
+    margin: 10,
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 20,
+  },
+  h2: {
+    margin: 10,
+    fontWeight: "bold",
+    fontSize: 17,
   },
   button: {
     backgroundColor: color.COLORS.SECONDARY,
