@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
-import { AuthContext } from "../../context/AuthContext";
 import { screen } from "../../styles";
 import color from "../../constants/color";
+import { AuthContext } from "../../context/AuthContext";
 
-export const ValidatorFormRh = ({ item }) => {
+export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
   const { token } = useContext(AuthContext);
 
   const acceptHoliday = (holiday) => {
@@ -13,19 +13,15 @@ export const ValidatorFormRh = ({ item }) => {
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      status: "validée",
-    });
-
     var requestOptions = {
-      method: "PUT",
+      method: "GET",
       headers: myHeaders,
-      body: raw,
+      body: "",
       redirect: "follow",
     };
 
     fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/${item._id}`,
+      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/validée/${item._id}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -38,22 +34,18 @@ export const ValidatorFormRh = ({ item }) => {
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      status: "refusée",
-    });
-
     var requestOptions = {
-      method: "PUT",
+      method: "GET",
       headers: myHeaders,
-      body: raw,
+      body: "",
       redirect: "follow",
     };
 
     fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/${item._id}`,
+      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/refusée/${item._id}`,
       requestOptions
     )
-      .then((response) => response.json())
+      .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
@@ -65,14 +57,20 @@ export const ValidatorFormRh = ({ item }) => {
       <View style={{ margin: 5 }}>
         <Button
           title="Accepter"
-          onPress={acceptHoliday}
+          onPress={() => {
+            acceptHoliday();
+            toggleShowPopUp();
+          }}
           buttonStyle={styles.buttonValidate}
         />
       </View>
       <View style={{ margin: 5 }}>
         <Button
           title="Refuser"
-          onPress={refuseHoliday}
+          onPress={() => {
+            refuseHoliday();
+            toggleShowPopUp();
+          }}
           buttonStyle={styles.buttonRefuse}
         />
       </View>

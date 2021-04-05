@@ -3,27 +3,32 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Formik } from "formik";
 import color from "../../constants/color";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Icon, Button, Input } from "react-native-elements";
+import { Icon, Button, Input, Overlay } from "react-native-elements";
+import { screen } from "../../styles";
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
+import { PopUpConfirm } from "./PopUpConfirm";
 
 export const FormHolidaysAdd = () => {
   const { user, token } = useContext(AuthContext);
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  const week = new Date(tomorrow);
-  week.setDate(week.getDate() + 7);
 
   const [startDate, setStartDate] = useState(tomorrow);
-  const [endDate, setEndDate] = useState(week);
+  const [endDate, setEndDate] = useState(tomorrow);
   const [type, setType] = useState(0);
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const toggleShowPopUp = () => {
+    setShowConfirm(!showConfirm);
+  };
 
   const formatDisplay = (date) => {
     date = new Date(date);
@@ -240,6 +245,7 @@ export const FormHolidaysAdd = () => {
                 values.endDate = await formatAPI(endDate);
                 values.startDate = await formatAPI(startDate);
                 handleSubmit();
+                toggleShowPopUp();
               }}
               title="Valider"
               buttonStyle={{ backgroundColor: color.COLORS.PRIMARY }}
@@ -247,6 +253,15 @@ export const FormHolidaysAdd = () => {
           </View>
         )}
       </Formik>
+      <Overlay
+        isVisible={showConfirm}
+        onBackdropPress={toggleShowPopUp}
+        overlayStyle={screen.overlay}
+      >
+        <Pressable onPress={toggleShowPopUp}>
+          <PopUpConfirm />
+        </Pressable>
+      </Overlay>
     </View>
   );
 };
