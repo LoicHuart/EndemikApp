@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
-import { toggleShowPopUp } from "./CardHoliday";
 import { screen } from "../../styles";
 import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { Icon, Overlay, Button } from "react-native-elements";
+import { Overlay } from "react-native-elements";
 import color from "../../constants/color";
 import { PopUpAnswer } from "./PopUpAnswer";
 import { screen } from "../../styles";
@@ -27,20 +27,26 @@ export const CardHoliday = ({ item, gestion }) => {
     setShowValidator(!showValidator);
   };
 
-  const overlay = (gestion) => {
+  const overlay = () => {
     if (gestion) {
       return <PopUpAnswer item={item} toggleShowPopUp={toggleShowPopUp} />;
     } else {
-      return <FormHolidaysUpdate toggleShowPopUp={toggleShowPopUp} />;
+      if (item.status === "en attente") {
+        return (
+          <FormHolidaysUpdate item={item} toggleShowPopUp={toggleShowPopUp} />
+        );
+      } else {
+        return (
+          <View>
+            <Text>{item.status}</Text>
+            <Text>{item.note}</Text>
+            <Text>{formatDisplay(item.starting_date)}</Text>
+            <Text>{formatDisplay(item.ending_date)}</Text>
+          </View>
+        );
+      }
     }
   };
-  if (route.name === "Demandes") {
-    iconName = focused ? "calendar-plus" : "calendar-plus";
-    iconColor = focused ? color.COLORS.PRIMARY : color.COLORS.GREY;
-  } else if (route.name === "Historique") {
-    iconName = focused ? "history" : "history";
-    iconColor = focused ? color.COLORS.PRIMARY : color.COLORS.GREY;
-  }
 
   return (
     <View>
@@ -71,7 +77,9 @@ export const CardHoliday = ({ item, gestion }) => {
         isVisible={showValidator}
         onBackdropPress={toggleShowPopUp}
         overlayStyle={screen.overlay}
-      ></Overlay>
+      >
+        {overlay()}
+      </Overlay>
     </View>
   );
 };

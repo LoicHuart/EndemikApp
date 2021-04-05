@@ -11,7 +11,7 @@ import RadioForm, {
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
 
-export const FormHolidaysUpdate = ({ item, children }) => {
+export const FormHolidaysUpdate = ({ item, toggleShowPopUp }) => {
   const { token } = useContext(AuthContext);
 
   const today = new Date();
@@ -26,7 +26,6 @@ export const FormHolidaysUpdate = ({ item, children }) => {
   const [type, setType] = useState(item.type === "rtt" ? 0 : 1);
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
 
   const formatDisplay = (date) => {
     //console.log(date);
@@ -120,11 +119,8 @@ export const FormHolidaysUpdate = ({ item, children }) => {
   return (
     <View
       style={{
-        marginVertical: 20,
-
         backgroundColor: color.COLORS.DEFAULT,
-        padding: 10,
-        marginHorizontal: 40,
+
         borderRadius: 15,
       }}
     >
@@ -258,7 +254,7 @@ export const FormHolidaysUpdate = ({ item, children }) => {
                 values.endDate = await formatAPI(endDate);
                 values.startDate = await formatAPI(startDate);
                 handleSubmit();
-                toggleShowConfirm();
+                toggleShowPopUp();
               }}
               title="Mettre à jour"
               buttonStyle={{ backgroundColor: color.COLORS.PRIMARY }}
