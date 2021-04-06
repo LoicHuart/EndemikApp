@@ -9,7 +9,7 @@ export const holidaysManagement = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
       <View style={{ flex: 1 }}>
-        <ListHolidays token={token} status="prevalidée" gestion={true} />
+        <ListHolidays token={token} status="prevalidé" gestion={true} />
       </View>
     </View>
   );

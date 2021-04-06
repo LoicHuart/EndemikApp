@@ -27,9 +27,8 @@ export const AddService = ({ toggleOverlayAdd }) => {
   const [loading, setLoading] = React.useState(true);
   const [heightDropdown, setHeightDropdown] = React.useState(40);
 
-
   const sendAddServices = async (value) => {
-    if(!loading) {
+    if (!loading) {
       setLoading(true);
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${token}`);
@@ -54,7 +53,7 @@ export const AddService = ({ toggleOverlayAdd }) => {
         })
         .catch((error) => console.log("error", error));
     } else {
-      console.log("loading")
+      console.log("loading");
     }
   };
 
@@ -139,36 +138,67 @@ export const AddService = ({ toggleOverlayAdd }) => {
               placeholder="site"
               errorMessage={errors.site}
             />
-            <View style={{margin: 10,height: heightDropdown}}>
+            <View style={{ margin: 10, height: heightDropdown }}>
               <DropDownPicker
                 onChangeItem={(item) => (values.id_manager = item.value)}
                 onBlur={(item) => (values.id_manager = item.value)}
                 items={resultGetEmployees}
                 value={values.id_manager}
                 placeholder="Manager"
-
                 searchable={true}
                 searchablePlaceholder="Rechercher"
                 searchableError={() => <Text>Aucun résultat</Text>}
-
                 containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
-                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT}}
-                onOpen={() => setHeightDropdown(300) }
-                onClose={() => setHeightDropdown(40) }
-                dropDownMaxHeight={heightDropdown-40}
+                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+                onOpen={() => setHeightDropdown(300)}
+                onClose={() => setHeightDropdown(40)}
+                dropDownMaxHeight={heightDropdown - 40}
               />
             </View>
             <Button
               onPress={handleSubmit}
               title="Valider"
+<<<<<<< HEAD
               buttonStyle={loading?'':screen.button}
               loading={loading?true:false}
               type={loading?'clear':'solid'}
+=======
+              buttonStyle={loading ? "" : styles.button}
+              loading={loading ? true : false}
+              type={loading ? "clear" : "solid"}
+>>>>>>> dev
             />
           </View>
         )}
       </Formik>
     </View>
   );
+<<<<<<< HEAD
 };
+=======
+};
+
+const styles = StyleSheet.create({
+  title: {
+    marginBottom: 30,
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 20,
+  },
+  button: {
+    backgroundColor: color.COLORS.PRIMARY,
+    alignSelf: "flex-start",
+    alignSelf: "center",
+  },
+  error: {
+    color: color.COLORS.DANGER,
+  },
+  dropDown: {
+    margin: 10,
+  },
+  sucess: {
+    color: color.COLORS.SUCCESS,
+  },
+});
+>>>>>>> dev
