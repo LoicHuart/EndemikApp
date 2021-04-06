@@ -159,46 +159,13 @@ export const AddService = ({ toggleOverlayAdd }) => {
             <Button
               onPress={handleSubmit}
               title="Valider"
-<<<<<<< HEAD
               buttonStyle={loading?'':screen.button}
               loading={loading?true:false}
               type={loading?'clear':'solid'}
-=======
-              buttonStyle={loading ? "" : styles.button}
-              loading={loading ? true : false}
-              type={loading ? "clear" : "solid"}
->>>>>>> dev
             />
           </View>
         )}
       </Formik>
     </View>
   );
-<<<<<<< HEAD
 };
-=======
-};
-
-const styles = StyleSheet.create({
-  title: {
-    marginBottom: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  button: {
-    backgroundColor: color.COLORS.PRIMARY,
-    alignSelf: "flex-start",
-    alignSelf: "center",
-  },
-  error: {
-    color: color.COLORS.DANGER,
-  },
-  dropDown: {
-    margin: 10,
-  },
-  sucess: {
-    color: color.COLORS.SUCCESS,
-  },
-});
->>>>>>> dev
