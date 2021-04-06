@@ -92,10 +92,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 0,
 
     },
-    button: {
-        borderTopColor: color.COLORS.GREY,
-        borderWidth: 1,
-    },
     firstName: {
       textTransform: "capitalize",
       marginRight: 5,
@@ -106,5 +102,4 @@ const styles = StyleSheet.create({
       textAlign: 'center', 
       fontWeight: "bold"
     }
-
 })

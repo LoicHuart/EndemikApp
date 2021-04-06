@@ -6,7 +6,7 @@ import {
   Card,
   AddService,
 } from "../../components/";
-import { Button, Overlay, Input, Icon } from "react-native-elements";
+import { Overlay, Icon } from "react-native-elements";
 import { screen } from "../../styles/";
 import color from "../../constants/color";
 
