@@ -1,11 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
 import DropDownPicker from "react-native-dropdown-picker";
+import { screen } from "../../styles/";
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -104,12 +105,12 @@ export const AddService = ({ toggleOverlayAdd }) => {
 
   return (
     <View>
-      <Text style={styles.title}>Ajout d'un service</Text>
+      <Text style={screen.h1}>Ajout d'un service</Text>
       {resultAddService.error && (
-        <Text style={styles.error}>{resultAddService.error}</Text>
+        <Text style={screen.error}>{resultAddService.error}</Text>
       )}
       {resultAddService._id && (
-        <Text style={styles.sucess}>Service Ajouté</Text>
+        <Text style={screen.sucess}>Service Ajouté</Text>
       )}
 
       <Formik
@@ -158,15 +159,24 @@ export const AddService = ({ toggleOverlayAdd }) => {
             <Button
               onPress={handleSubmit}
               title="Valider"
+<<<<<<< HEAD
+              buttonStyle={loading?'':screen.button}
+              loading={loading?true:false}
+              type={loading?'clear':'solid'}
+=======
               buttonStyle={loading ? "" : styles.button}
               loading={loading ? true : false}
               type={loading ? "clear" : "solid"}
+>>>>>>> dev
             />
           </View>
         )}
       </Formik>
     </View>
   );
+<<<<<<< HEAD
+};
+=======
 };
 
 const styles = StyleSheet.create({
@@ -191,3 +201,4 @@ const styles = StyleSheet.create({
     color: color.COLORS.SUCCESS,
   },
 });
+>>>>>>> dev

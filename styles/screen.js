@@ -7,7 +7,7 @@ export const screen = StyleSheet.create({
     margin: 10,
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 20,
+    fontSize: 17,
   },
   h2: {
     margin: 10,
@@ -15,9 +15,7 @@ export const screen = StyleSheet.create({
     fontSize: 17,
   },
   button: {
-    backgroundColor: color.COLORS.SECONDARY,
-    alignSelf: "flex-start",
-    alignSelf: "center",
+    backgroundColor: color.COLORS.PRIMARY,
   },
   overlay: {
     padding: 15,
@@ -25,17 +23,17 @@ export const screen = StyleSheet.create({
     width: Dimensions.get("window").width - 70,
   },
   buttonSuccess: {
-    marginTop: 10,
-    width: 100,
-    alignSelf: "center",
+    margin: 10,
     backgroundColor: color.COLORS.BUTTONSUCCESS,
-    color: color.COLORS.BLACK,
   },
   buttonDanger: {
-    marginTop: 10,
-    width: 100,
-    alignSelf: "center",
+    margin: 10,
     backgroundColor: color.COLORS.BUTTONDANGER,
-    color: color.COLORS.BLACK,
   },
+  error: {
+    color: color.COLORS.DANGER,
+  },
+  sucess: {
+    color: color.COLORS.SUCCESS,
+  }
 });
