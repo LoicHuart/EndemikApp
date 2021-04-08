@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Formik } from "formik";
 import color from "../../constants/color";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Icon, Button, Input, Overlay } from "react-native-elements";
+import { Icon, Button, Input } from "react-native-elements";
 import { screen } from "../../styles";
 import RadioForm, {
   RadioButton,
@@ -12,6 +12,7 @@ import RadioForm, {
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
 import { PopUpConfirm } from "./PopUpConfirm";
+import { Card } from "../Card";
 
 export const FormHolidaysAdd = () => {
   const { user, token } = useContext(AuthContext);
@@ -25,10 +26,8 @@ export const FormHolidaysAdd = () => {
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  const toggleShowPopUp = () => {
-    setShowConfirm(!showConfirm);
-  };
+  const [loading, setLoading] = useState(true);
+  const [resultAddHoliday, setResultAddHoliday] = useState("");
 
   const formatDisplay = (date) => {
     date = new Date(date);
@@ -80,34 +79,52 @@ export const FormHolidaysAdd = () => {
     setShowEnd(true);
   };
 
-  const addHoliday = (holiday) => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
+  const addHoliday = async (holiday) => {
+    if (!loading) {
+      setLoading(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      note: holiday.note,
-      starting_date: holiday.startDate,
-      ending_date: holiday.endDate,
-      type: holiday.type,
-      id_requester_employee: user._id,
-    });
+      var raw = JSON.stringify({
+        note: holiday.note,
+        starting_date: holiday.startDate,
+        ending_date: holiday.endDate,
+        type: holiday.type,
+        id_requester_employee: user._id,
+      });
 
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    //console.log(requestOptions);
-    fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      //console.log(requestOptions);
+      fetch(
+        `http://${process.env.REACT_APP_API_HOST}/api/holidays`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          setResultAddHoliday(result);
+        })
+        .catch((error) => console.log("error", error));
+    } else {
+      console.log("Loading");
+    }
   };
+
+  useEffect(() => {
+    setLoading(false);
+  }, [resultAddHoliday]);
+
+  useEffect(() => {
+    if (resultAddHoliday._id && !loading) {
+      setShowConfirm(true);
+    }
+  }, [loading]);
 
   const radio_props = [
     { label: "RTT", value: 0, name: "rtt" },
@@ -115,153 +132,147 @@ export const FormHolidaysAdd = () => {
   ];
 
   return (
-    <View
-      style={{
-        marginVertical: 20,
-        backgroundColor: color.COLORS.DEFAULT,
-        padding: 10,
-        marginHorizontal: 40,
-        borderRadius: 15,
-      }}
-    >
-      <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
-        Nouvelle demande
-      </Text>
-      <Formik
-        initialValues={{
-          note: "Demande de congés",
-          type: "rtt",
-          startDate: startDate,
-          endDate: endDate,
-        }}
-        onSubmit={(values) => addHoliday(values)}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
-          <View>
-            <View style={styles.row}>
-              <RadioForm formHorizontal={true} animation={true}>
-                {/* To create radio buttons, loop through your array of options */}
-                {radio_props.map((obj, i) => (
-                  <RadioButton labelHorizontal={true} key={i}>
-                    {/*  You can set RadioButtonLabel before RadioButtonInput */}
-                    <RadioButtonInput
-                      obj={obj}
-                      index={i}
-                      onPress={(value) => {
-                        setType(value);
-                        values.type = radio_props[value].name;
-                        console.log(values.type);
-                      }}
-                      isSelected={type === i}
-                      borderWidth={1}
-                      buttonInnerColor={color.COLORS.PRIMARY}
-                      buttonOuterColor={
-                        type === i ? color.COLORS.PRIMARY : color.COLORS.GREY
-                      }
-                      buttonSize={15}
-                      buttonOuterSize={23}
-                      buttonWrapStyle={{ marginLeft: 10 }}
-                    />
-                    <RadioButtonLabel
-                      onPress={(value) => {
-                        setType(value);
-                        values.type = radio_props[value].name;
-                        console.log(values.type);
-                      }}
-                      obj={obj}
-                      index={i}
-                      labelHorizontal={true}
-                      labelStyle={{ fontSize: 15, color: color.COLORS.BLACK }}
-                      labelWrapStyle={{}}
-                    />
-                  </RadioButton>
-                ))}
-              </RadioForm>
-            </View>
+    <View>
+      <Card>
+        <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
+          Nouvelle demande
+        </Text>
+        <Formik
+          initialValues={{
+            note: "Demande de congés",
+            type: "rtt",
+            startDate: startDate,
+            endDate: endDate,
+          }}
+          onSubmit={(values) => addHoliday(values)}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values }) => (
+            <View>
+              <View style={styles.row}>
+                <RadioForm formHorizontal={true} animation={true}>
+                  {/* To create radio buttons, loop through your array of options */}
+                  {radio_props.map((obj, i) => (
+                    <RadioButton labelHorizontal={true} key={i}>
+                      {/*  You can set RadioButtonLabel before RadioButtonInput */}
+                      <RadioButtonInput
+                        obj={obj}
+                        index={i}
+                        onPress={(value) => {
+                          setType(value);
+                          values.type = radio_props[value].name;
+                          console.log(values.type);
+                        }}
+                        isSelected={type === i}
+                        borderWidth={1}
+                        buttonInnerColor={color.COLORS.PRIMARY}
+                        buttonOuterColor={
+                          type === i ? color.COLORS.PRIMARY : color.COLORS.GREY
+                        }
+                        buttonSize={15}
+                        buttonOuterSize={23}
+                        buttonWrapStyle={{ marginLeft: 10 }}
+                      />
+                      <RadioButtonLabel
+                        onPress={(value) => {
+                          setType(value);
+                          values.type = radio_props[value].name;
+                          console.log(values.type);
+                        }}
+                        obj={obj}
+                        index={i}
+                        labelHorizontal={true}
+                        labelStyle={{ fontSize: 15, color: color.COLORS.BLACK }}
+                        labelWrapStyle={{}}
+                      />
+                    </RadioButton>
+                  ))}
+                </RadioForm>
+              </View>
 
-            <Text>Note</Text>
-            <Input
-              style={styles.input}
-              onChangeText={handleChange("note")}
-              onBlur={handleBlur("note")}
-              value={values.note}
-            />
-            <View style={styles.row}>
-              <View style={{ flex: 1, marginTop: 4 }}>
-                <Icon
-                  name="calendar-alt"
-                  type="font-awesome-5"
-                  color={color.COLORS.PRIMARY}
-                />
-              </View>
-              <View style={{ flex: 2, marginHorizontal: 6 }}>
-                <View>
-                  <Pressable onPress={showDatepickerStart}>
-                    <Text style={styles.inputDate}>
-                      {formatDisplay(startDate)}
-                    </Text>
-                  </Pressable>
-                </View>
-                {showStart && (
-                  <DateTimePicker
-                    testID="dateTimePickerStart"
-                    value={startDate}
-                    mode="date"
-                    display="default"
-                    onChange={onChangeStartDate}
-                    minimumDate={tomorrow}
+              <Text>Note</Text>
+              <Input
+                style={styles.input}
+                onChangeText={handleChange("note")}
+                onBlur={handleBlur("note")}
+                value={values.note}
+              />
+              <View style={styles.row}>
+                <View style={{ flex: 1, marginTop: 4 }}>
+                  <Icon
+                    name="calendar-alt"
+                    type="font-awesome-5"
+                    color={color.COLORS.PRIMARY}
                   />
-                )}
-              </View>
-              <View style={{ flex: 0.5, marginTop: 4 }}>
-                <Icon
-                  name="arrow-alt-circle-right"
-                  type="font-awesome-5"
-                  color={color.COLORS.GREY}
-                />
-              </View>
-              <View style={{ flex: 2, marginHorizontal: 6 }}>
-                <View>
-                  <Pressable onPress={showDatepickerEnd}>
-                    <Text style={styles.inputDate}>
-                      {formatDisplay(endDate)}
-                    </Text>
-                  </Pressable>
                 </View>
-                {showEnd && (
-                  <DateTimePicker
-                    testID="dateTimePickerEnd"
-                    value={endDate}
-                    mode="date"
-                    display="default"
-                    onChange={onChangeEndDate}
-                    minimumDate={tomorrow}
+                <View style={{ flex: 2, marginHorizontal: 6 }}>
+                  <View>
+                    <Pressable onPress={showDatepickerStart}>
+                      <Text style={styles.inputDate}>
+                        {formatDisplay(startDate)}
+                      </Text>
+                    </Pressable>
+                  </View>
+                  {showStart && (
+                    <DateTimePicker
+                      testID="dateTimePickerStart"
+                      value={startDate}
+                      mode="date"
+                      display="default"
+                      onChange={onChangeStartDate}
+                      minimumDate={tomorrow}
+                    />
+                  )}
+                </View>
+                <View style={{ flex: 0.5, marginTop: 4 }}>
+                  <Icon
+                    name="arrow-alt-circle-right"
+                    type="font-awesome-5"
+                    color={color.COLORS.GREY}
                   />
-                )}
+                </View>
+                <View style={{ flex: 2, marginHorizontal: 6 }}>
+                  <View>
+                    <Pressable onPress={showDatepickerEnd}>
+                      <Text style={styles.inputDate}>
+                        {formatDisplay(endDate)}
+                      </Text>
+                    </Pressable>
+                  </View>
+                  {showEnd && (
+                    <DateTimePicker
+                      testID="dateTimePickerEnd"
+                      value={endDate}
+                      mode="date"
+                      display="default"
+                      onChange={onChangeEndDate}
+                      minimumDate={tomorrow}
+                    />
+                  )}
+                </View>
               </View>
+              <Button
+                onPress={async () => {
+                  values.endDate = await formatAPI(endDate);
+                  values.startDate = await formatAPI(startDate);
+                  handleSubmit();
+                }}
+                title="Valider"
+                buttonStyle={loading ? "" : screen.button}
+                loading={loading ? true : false}
+                type={loading ? "clear" : "solid"}
+              />
             </View>
-            <Button
-              onPress={async () => {
-                values.endDate = await formatAPI(endDate);
-                values.startDate = await formatAPI(startDate);
-                handleSubmit();
-                toggleShowPopUp();
-              }}
-              title="Valider"
-              buttonStyle={{ backgroundColor: color.COLORS.PRIMARY }}
-            />
-          </View>
-        )}
-      </Formik>
-      <Overlay
-        isVisible={showConfirm}
-        onBackdropPress={toggleShowPopUp}
-        overlayStyle={screen.overlay}
+          )}
+        </Formik>
+      </Card>
+      <Pressable
+        onPress={() => setShowConfirm(false)}
+        style={{ opacity: showConfirm ? 100 : 0 }}
       >
-        <Pressable onPress={toggleShowPopUp}>
+        <Card>
           <PopUpConfirm />
-        </Pressable>
-      </Overlay>
+        </Card>
+      </Pressable>
     </View>
   );
 };

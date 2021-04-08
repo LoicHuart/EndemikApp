@@ -6,7 +6,7 @@ import { PopUpAnswer } from "./PopUpAnswer";
 import { screen } from "../../styles";
 import { FormHolidaysUpdate } from "./FormHolidaysUpdate";
 
-export const CardHoliday = ({ item, gestion }) => {
+export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
   const [showValidator, setShowValidator] = useState(false);
 
   const formatDisplay = (date) => {
@@ -25,6 +25,7 @@ export const CardHoliday = ({ item, gestion }) => {
   };
   const toggleShowPopUp = () => {
     setShowValidator(!showValidator);
+    refreshHolidays(item.status);
   };
 
   const overlay = () => {
