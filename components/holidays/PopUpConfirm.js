@@ -6,7 +6,7 @@ import color from "../../constants/color";
 
 export const PopUpConfirm = () => {
   return (
-    <View>
+    <View style={{ marginTop: 30, marginBottom: 20 }}>
       <Icon
         style={styles.row}
         name="check-circle"
@@ -20,9 +20,8 @@ export const PopUpConfirm = () => {
 
 const styles = StyleSheet.create({
   row: {
-    marginTop: 20,
     flexDirection: "row",
-    marginBottom: 20,
+    marginBottom: 10,
     alignSelf: "center",
   },
 });

@@ -1,9 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Formik } from "formik";
 import color from "../../constants/color";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Icon, Overlay, Button, Input } from "react-native-elements";
+import { Icon, Button, Input } from "react-native-elements";
+import { screen } from "../../styles";
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
@@ -26,6 +27,12 @@ export const FormHolidaysUpdate = ({ item, toggleShowPopUp }) => {
   const [type, setType] = useState(item.type === "rtt" ? 0 : 1);
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [resultUpdateHoliday, setResultUpdateHoliday] = useState("");
+
+  useEffect(() => {
+    setLoading(false);
+  }, [resultUpdateHoliday]);
 
   const formatDisplay = (date) => {
     //console.log(date);
@@ -76,40 +83,50 @@ export const FormHolidaysUpdate = ({ item, toggleShowPopUp }) => {
     setShowEnd(true);
   };
 
-  const toggleShowConfirm = () => {
-    setShowConfirm(!showConfirm);
-  };
-
   const updateHoliday = (holiday) => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
+    if (!loading) {
+      setLoading(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      validation_date: null,
-      note: holiday.note,
-      starting_date: holiday.startDate,
-      ending_date: holiday.endDate,
-      current_date: Date.now(),
-      type: holiday.type,
-    });
-    console.log(raw);
+      var raw = JSON.stringify({
+        validation_date: null,
+        note: holiday.note,
+        starting_date: holiday.startDate,
+        ending_date: holiday.endDate,
+        current_date: Date.now(),
+        type: holiday.type,
+      });
+      console.log(raw);
 
-    var requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    console.log(item._id);
-    fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/${item._id}`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
+      var requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      console.log(item._id);
+      fetch(
+        `http://${process.env.REACT_APP_API_HOST}/api/holidays/${item._id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          setResultUpdateHoliday(result);
+        })
+        .catch((error) => console.log("error", error));
+    } else {
+      console.log("Loading");
+    }
   };
+
+  useEffect(() => {
+    if (resultUpdateHoliday.message && !resultUpdateHoliday.error && !loading) {
+      toggleShowPopUp();
+    }
+  }, [loading]);
 
   const radio_props = [
     { label: "RTT", value: 0, name: "rtt" },
@@ -253,10 +270,11 @@ export const FormHolidaysUpdate = ({ item, toggleShowPopUp }) => {
                 values.endDate = await formatAPI(endDate);
                 values.startDate = await formatAPI(startDate);
                 handleSubmit();
-                toggleShowPopUp();
               }}
               title="Mettre à jour"
-              buttonStyle={{ backgroundColor: color.COLORS.PRIMARY }}
+              buttonStyle={loading ? "" : screen.button}
+              loading={loading ? true : false}
+              type={loading ? "clear" : "solid"}
             />
           </View>
         )}
