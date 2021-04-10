@@ -1,8 +1,8 @@
 export { HeaderCustom } from "./HeaderCustom.js";
 export { ListHolidays } from "./holidays/ListHolidays";
-export { FormHolidaysAdd } from "./holidays/FormHolidaysAdd";
+export { AddHoliday } from "./holidays/AddHoliday";
 export { CardHoliday } from "./holidays/CardHoliday";
-export { PopUpAnswer } from "./holidays/PopUpAnswer";
+export { ValidateRefuseHoliday } from "./holidays/ValidateRefuseHoliday";
 
 export { Card } from "./Card";
 
@@ -13,7 +13,7 @@ export { AddEmployee } from "./employee/AddEmployee";
 
 export { ListServices } from "./services/ListServices";
 export { CardService } from "./services/CardService";
-export { FormService } from "./services/FormService";
+export { AddService } from "./services/AddService";
 export { ValideRefuseService } from "./services/ValideRefuseService";
 export { EditService } from "./services/EditService";
 

@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Formik } from "formik";
 import color from "../../constants/color";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Icon, Button, Input, Overlay } from "react-native-elements";
+import { Icon, Button, Input } from "react-native-elements";
 import { screen } from "../../styles";
 import RadioForm, {
   RadioButton,
@@ -11,26 +11,31 @@ import RadioForm, {
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
-import { PopUpConfirm } from "./PopUpConfirm";
 
-export const FormHolidaysAdd = () => {
-  const { user, token } = useContext(AuthContext);
+export const UpdateHoliday = ({ item, toggleShowPopUp }) => {
+  const { token } = useContext(AuthContext);
+
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const [startDate, setStartDate] = useState(tomorrow);
-  const [endDate, setEndDate] = useState(tomorrow);
-  const [type, setType] = useState(0);
+  const week = new Date(tomorrow);
+  week.setDate(week.getDate() + 7);
+
+  const [startDate, setStartDate] = useState(new Date(item.starting_date));
+  const [endDate, setEndDate] = useState(new Date(item.ending_date));
+  const [type, setType] = useState(item.type === "rtt" ? 0 : 1);
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [resultUpdateHoliday, setResultUpdateHoliday] = useState("");
 
-  const toggleShowPopUp = () => {
-    setShowConfirm(!showConfirm);
-  };
+  useEffect(() => {
+    setLoading(false);
+  }, [resultUpdateHoliday]);
 
   const formatDisplay = (date) => {
+    //console.log(date);
     date = new Date(date);
     let day = date.getDate();
     if (day.toString().length < 2) {
@@ -59,18 +64,16 @@ export const FormHolidaysAdd = () => {
 
   const onChangeStartDate = (selectedDate) => {
     setShowStart(false);
-    if (selectedDate.type !== "dismissed") {
-      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-      setStartDate(timestamp);
-    }
+    let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+    //console.log(timestamp);
+    setStartDate(timestamp);
   };
 
   const onChangeEndDate = (selectedDate) => {
     setShowEnd(false);
-    if (selectedDate.type !== "dismissed") {
-      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-      setEndDate(timestamp);
-    }
+    let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+    //console.log(timestamp);
+    setEndDate(timestamp);
   };
 
   const showDatepickerStart = () => {
@@ -80,34 +83,50 @@ export const FormHolidaysAdd = () => {
     setShowEnd(true);
   };
 
-  const addHoliday = (holiday) => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
+  const updateHoliday = (holiday) => {
+    if (!loading) {
+      setLoading(true);
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      note: holiday.note,
-      starting_date: holiday.startDate,
-      ending_date: holiday.endDate,
-      type: holiday.type,
-      id_requester_employee: user._id,
-    });
+      var raw = JSON.stringify({
+        validation_date: null,
+        note: holiday.note,
+        starting_date: holiday.startDate,
+        ending_date: holiday.endDate,
+        current_date: Date.now(),
+        type: holiday.type,
+      });
+      console.log(raw);
 
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    //console.log(requestOptions);
-    fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
+      var requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      console.log(item._id);
+      fetch(
+        `http://${process.env.REACT_APP_API_HOST}/api/holidays/${item._id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          setResultUpdateHoliday(result);
+        })
+        .catch((error) => console.log("error", error));
+    } else {
+      console.log("Loading");
+    }
   };
+
+  useEffect(() => {
+    if (resultUpdateHoliday.message && !resultUpdateHoliday.error && !loading) {
+      toggleShowPopUp();
+    }
+  }, [loading]);
 
   const radio_props = [
     { label: "RTT", value: 0, name: "rtt" },
@@ -117,24 +136,31 @@ export const FormHolidaysAdd = () => {
   return (
     <View
       style={{
-        marginVertical: 20,
         backgroundColor: color.COLORS.DEFAULT,
-        padding: 10,
-        marginHorizontal: 40,
+
         borderRadius: 15,
       }}
     >
-      <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
-        Nouvelle demande
+      <Text
+        style={{
+          fontWeight: "bold",
+          fontSize: 18,
+          textAlign: "center",
+          //marginHorizontal: 39,
+        }}
+      >
+        Modification de la demande
       </Text>
       <Formik
         initialValues={{
-          note: "Demande de congés",
-          type: "rtt",
-          startDate: startDate,
-          endDate: endDate,
+          note: item.note,
+          type: item.type,
+          startDate: item.startDate,
+          endDate: item.endDate,
         }}
-        onSubmit={(values) => addHoliday(values)}
+        onSubmit={(values) => {
+          updateHoliday(values);
+        }}
       >
         {({ handleChange, handleBlur, handleSubmit, values }) => (
           <View>
@@ -181,7 +207,6 @@ export const FormHolidaysAdd = () => {
 
             <Text>Note</Text>
             <Input
-              style={styles.input}
               onChangeText={handleChange("note")}
               onBlur={handleBlur("note")}
               value={values.note}
@@ -191,7 +216,7 @@ export const FormHolidaysAdd = () => {
                 <Icon
                   name="calendar-alt"
                   type="font-awesome-5"
-                  color={color.COLORS.PRIMARY}
+                  color={color.COLORS.GREY}
                 />
               </View>
               <View style={{ flex: 2, marginHorizontal: 6 }}>
@@ -245,23 +270,15 @@ export const FormHolidaysAdd = () => {
                 values.endDate = await formatAPI(endDate);
                 values.startDate = await formatAPI(startDate);
                 handleSubmit();
-                toggleShowPopUp();
               }}
-              title="Valider"
-              buttonStyle={{ backgroundColor: color.COLORS.PRIMARY }}
+              title="Mettre à jour"
+              buttonStyle={loading ? "" : screen.button}
+              loading={loading ? true : false}
+              type={loading ? "clear" : "solid"}
             />
           </View>
         )}
       </Formik>
-      <Overlay
-        isVisible={showConfirm}
-        onBackdropPress={toggleShowPopUp}
-        overlayStyle={screen.overlay}
-      >
-        <Pressable onPress={toggleShowPopUp}>
-          <PopUpConfirm />
-        </Pressable>
-      </Overlay>
     </View>
   );
 };
@@ -269,12 +286,11 @@ export const FormHolidaysAdd = () => {
 const styles = StyleSheet.create({
   inputDate: {
     borderBottomColor: "gray",
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     paddingHorizontal: 5,
     borderStyle: "solid",
-    alignSelf: "center",
-    marginTop: 7,
   },
+
   row: {
     marginTop: 20,
     flexDirection: "row",

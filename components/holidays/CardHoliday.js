@@ -1,13 +1,133 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { Overlay } from "react-native-elements";
+import { Overlay, Icon } from "react-native-elements";
 import color from "../../constants/color";
-import { PopUpAnswer } from "./PopUpAnswer";
+import { ValidateRefuseHoliday } from "./ValidateRefuseHoliday";
 import { screen } from "../../styles";
-import { FormHolidaysUpdate } from "./FormHolidaysUpdate";
+import { UpdateHoliday } from "./UpdateHoliday";
+import { CancelHoliday } from "./CancelHoliday";
+import { date } from "yup/lib/locale";
 
-export const CardHoliday = ({ item, gestion }) => {
+export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
   const [showValidator, setShowValidator] = useState(false);
+
+  const capitalize = (str) => {
+    if (str.toUpperCase() === "RTT") {
+      return "RTT";
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  const displayStatus = () => {
+    switch (item.status) {
+      case "en attente":
+        return (
+          <View
+            style={{
+              backgroundColor: color.COLORS.WAIT,
+              flex: 1,
+              borderTopLeftRadius: 9,
+              borderBottomLeftRadius: 9,
+              flexDirection: "column",
+            }}
+          >
+            <View style={{ flex: 1, marginTop: 30 }}>
+              <Icon
+                name="hourglass"
+                type="font-awesome-5"
+                color={color.COLORS.WHITE}
+              />
+            </View>
+
+            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
+          </View>
+        );
+
+      case "prevalidé":
+        return (
+          <View
+            style={{
+              backgroundColor: color.COLORS.PREVALIDATE,
+              flex: 1,
+              borderTopLeftRadius: 9,
+              borderBottomLeftRadius: 9,
+            }}
+          >
+            <View style={{ flex: 1, marginTop: 30 }}>
+              <Icon
+                name="play-circle"
+                type="font-awesome-5"
+                color={color.COLORS.WHITE}
+              />
+            </View>
+            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
+          </View>
+        );
+
+      case "validé":
+        return (
+          <View
+            style={{
+              backgroundColor: color.COLORS.VALIDATE,
+              flex: 1,
+              borderTopLeftRadius: 9,
+              borderBottomLeftRadius: 9,
+            }}
+          >
+            <View style={{ flex: 1, marginTop: 30 }}>
+              <Icon
+                name="check-circle"
+                type="font-awesome-5"
+                color={color.COLORS.WHITE}
+              />
+            </View>
+            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
+          </View>
+        );
+
+      case "refusé":
+        return (
+          <View
+            style={{
+              backgroundColor: color.COLORS.REFUSE,
+              flex: 1,
+              borderTopLeftRadius: 9,
+              borderBottomLeftRadius: 9,
+            }}
+          >
+            <View style={{ flex: 1, marginTop: 30 }}>
+              <Icon
+                name="times-circle"
+                type="font-awesome-5"
+                color={color.COLORS.WHITE}
+              />
+            </View>
+            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
+          </View>
+        );
+      case "annulé":
+        return (
+          <View
+            style={{
+              backgroundColor: color.COLORS.CANCEL,
+              flex: 1,
+              borderTopLeftRadius: 9,
+              borderBottomLeftRadius: 9,
+              flexDirection: "column",
+            }}
+          >
+            <View style={{ flex: 1, marginTop: 30 }}>
+              <Icon
+                name="ban"
+                type="font-awesome-5"
+                color={color.COLORS.WHITE}
+              />
+            </View>
+            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
+          </View>
+        );
+    }
+  };
 
   const formatDisplay = (date) => {
     date = new Date(date);
@@ -22,23 +142,41 @@ export const CardHoliday = ({ item, gestion }) => {
     }
 
     return day + "/" + month + "/" + date.getFullYear();
+    z;
   };
-  const toggleShowPopUp = () => {
-    setShowValidator(!showValidator);
+  const toggleShowPopUp = async () => {
+    await setShowValidator(!showValidator);
+    if (
+      (item.status === "en attente" ||
+        item.status === "prevalidé" ||
+        item.status === "validé") &&
+      showValidator
+    ) {
+      refreshHolidays(item.status);
+    }
   };
 
   const overlay = () => {
     if (gestion) {
-      return <PopUpAnswer item={item} toggleShowPopUp={toggleShowPopUp} />;
+      return (
+        <ValidateRefuseHoliday item={item} toggleShowPopUp={toggleShowPopUp} />
+      );
     } else {
       if (item.status === "en attente") {
-        return (
-          <FormHolidaysUpdate item={item} toggleShowPopUp={toggleShowPopUp} />
-        );
+        return <UpdateHoliday item={item} toggleShowPopUp={toggleShowPopUp} />;
       } else {
+        if (
+          (item.status === "prevalidé" || item.status === "validé") &&
+          Date.now() < new Date(item.starting_date)
+        ) {
+          return (
+            <CancelHoliday item={item} toggleShowPopUp={toggleShowPopUp} />
+          );
+        }
         return (
           <View>
-            <Text>{item.status}</Text>
+            <Text>{capitalize(item.status)}</Text>
+            <Text>{capitalize(item.type)}</Text>
             <Text>{item.note}</Text>
             <Text>{formatDisplay(item.starting_date)}</Text>
             <Text>{formatDisplay(item.ending_date)}</Text>
@@ -47,30 +185,52 @@ export const CardHoliday = ({ item, gestion }) => {
       }
     }
   };
+  const requester = () => {
+    if (item.id_requester_employee.firstName) {
+      return (
+        <Text>
+          Par {item.id_requester_employee.firstName}{" "}
+          {item.id_requester_employee.lastName}{" "}
+        </Text>
+      );
+    }
+  };
 
   return (
     <View>
       <Pressable onPress={toggleShowPopUp}>
         <View style={styles.card}>
-          <Text>Fait le {formatDisplay(item.current_date)}</Text>
-          <Text>
-            Par {item.id_requester_employee.firstName}{" "}
-            {item.id_requester_employee.lastName}{" "}
-          </Text>
-          <Text>Type: {item.type}</Text>
-          <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-            Congée du {formatDisplay(item.starting_date)} au{" "}
-            {formatDisplay(item.ending_date)}
-          </Text>
-
-          <Text style={styles.status}>{item.status}</Text>
-
-          {/* <Icon
-              name="play-circle"
-              type="font-awesome-5"
-              color={color.COLORS.WARNING}
-              onPress={() => console.log(item)}
-            /> */}
+          {displayStatus()}
+          <View style={{ flex: 4 }}>
+            <Text style={{ alignSelf: "flex-end", marginRight: 5 }}>
+              {formatDisplay(item.current_date)}
+            </Text>
+            {requester()}
+            <Text style={styles.type}>{capitalize(item.type)}</Text>
+            <View style={styles.dates}>
+              <View style={{ alignSelf: "center", flex: 2 }}>
+                <Icon
+                  name="calendar-alt"
+                  type="font-awesome-5"
+                  color={color.COLORS.GREY}
+                />
+              </View>
+              <Text style={{ alignSelf: "center", flex: 4 }}>
+                {formatDisplay(item.starting_date)}
+              </Text>
+              <View style={{ alignSelf: "center", flex: 2 }}>
+                <Icon
+                  name="arrow-alt-circle-right"
+                  type="font-awesome-5"
+                  color={color.COLORS.GREY}
+                />
+              </View>
+              <Text style={{ alignSelf: "center", flex: 4 }}>
+                {formatDisplay(item.ending_date)}
+              </Text>
+              <View style={{ flex: 3 }}></View>
+            </View>
+          </View>
         </View>
       </Pressable>
       <Overlay
@@ -89,25 +249,31 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 10,
     backgroundColor: color.COLORS.WHITE,
-    padding: 10,
     borderRadius: 10,
     borderColor: color.COLORS.GREY,
     borderWidth: 1,
-    alignItems: "center",
+    flexDirection: "row",
+    height: 100,
   },
   button: {
     borderTopColor: color.COLORS.GREY,
     borderWidth: 1,
   },
-  row: {
+  dates: {
+    marginTop: 10,
+    alignContent: "flex-start",
     flexDirection: "row",
   },
-  status: {
-    padding: 10,
-    backgroundColor: color.COLORS.WARNING,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: color.COLORS.GREY,
+  column: {
+    flexDirection: "column",
+  },
+
+  textStatus: {
     color: color.COLORS.WHITE,
+    alignSelf: "center",
+    flex: 1,
+  },
+  type: {
+    marginLeft: 10,
   },
 });

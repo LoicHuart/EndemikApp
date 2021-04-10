@@ -6,14 +6,6 @@ import { holidaysHistory } from "./HistoryHolidays";
 import { Icon, Button, Input } from "react-native-elements";
 import color from "../../constants/color";
 
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
 const Tab = createBottomTabNavigator();
 
 export const TabsHolidaysContent = () => {

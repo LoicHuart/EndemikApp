@@ -1,14 +1,13 @@
 import React, { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
-import { screen } from "../../styles";
 import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
 
-export const PopUpAnswer = ({ item, toggleShowPopUp }) => {
+export const ValidateRefuseHoliday = ({ item, toggleShowPopUp }) => {
   const { token } = useContext(AuthContext);
 
-  const acceptHoliday = (holiday) => {
+  const acceptHoliday = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");

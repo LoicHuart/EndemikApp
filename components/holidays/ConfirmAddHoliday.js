@@ -4,7 +4,7 @@ import { Icon } from "react-native-elements";
 
 import color from "../../constants/color";
 
-export const PopUpConfirm = () => {
+export const ConfirmAddHoliday = () => {
   return (
     <View>
       <Icon
@@ -20,9 +20,7 @@ export const PopUpConfirm = () => {
 
 const styles = StyleSheet.create({
   row: {
-    marginTop: 20,
     flexDirection: "row",
-    marginBottom: 20,
     alignSelf: "center",
   },
 });
