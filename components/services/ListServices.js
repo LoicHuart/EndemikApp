@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { SearchBar } from "react-native-elements";
 import color from "../../constants/color";
 import { searchInJson } from "../../function"
+import { screen } from "../../styles/";
 
 export const ListServices = ({refresh}) => {
   const { token } = useContext(AuthContext);
@@ -62,15 +63,16 @@ export const ListServices = ({refresh}) => {
     <View>
 
       <SearchBar
-        placeholder="Type Here..."
+        placeholder="Rechercher"
         onChangeText={setSearch}
         value={search}
-        lightTheme 
+        inputContainerStyle={screen.searchBarInputContainerStyle}
+        containerStyle={screen.searchBarContainerStyle}
       />
 
       <FlatList
         data={servicesSearch}
-        ListEmptyComponent={() => <Text>rien</Text>}
+        ListEmptyComponent={() => <Text style={screen.h1}>Aucun résultat</Text>}
         refreshing={loading}
         onRefresh={() => displayServices()}
         renderItem={({ item }) => <CardService item={item} refreshService={displayServices}/>}
