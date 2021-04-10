@@ -16,9 +16,10 @@ export default {
     BUTTONSUCCESS: "#ADF3AD",
     BUTTONDANGER: "#F0BEBD",
 
-    // VALIDATE: ,
-    // PREVALIDATE: ,
-    // REFUSE: ,
-    // WAIT: ,
+    VALIDATE: "#56C95D",
+    PREVALIDATE: "#C9A456",
+    REFUSE: "#C95658",
+    WAIT: "#5687C9",
+    CANCEL: "#B2B1A3",
   },
 };
