@@ -28,7 +28,7 @@ export const login = StyleSheet.create({
         flexDirection: "column",
     },
     button: {
-        backgroundColor: color.COLORS.SECONDARY,
+        backgroundColor: color.COLORS.PRIMARY,
         alignSelf: "flex-start",
         alignSelf: "center",
     },

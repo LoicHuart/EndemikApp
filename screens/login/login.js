@@ -1,22 +1,29 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Text, View, Image, StatusBar, ImageBackground } from "react-native";
 import color from "../../constants/color";
 import { login as loginStyle } from "../../styles/";
 import { AuthContext } from "../../context/AuthContext";
 import { Button, Input, Icon } from "react-native-elements";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+const SignupSchema = Yup.object().shape({
+  email: Yup.string()
+    .email()
+    .required("Champ obligatoire"),
+  password: Yup.string()
+    .required("Champ obligatoire"),
+});
 
 export const login = ({ navigation }) => {
   const { signIn, signOut } = useContext(AuthContext);
-  const [email, setEmail] = useState("gaspard@test.fr");
-  const [password, setPassword] = useState("egxT36sF");
+  const { error } = useContext(AuthContext);
+  const [loading, setLoading] = React.useState(false);
 
-  const submit = () => {
-    let data = {
-      email: email,
-      password: password,
-    };
-    signIn(data);
-  };
+  useEffect(() => {
+    setLoading(false)
+  }, [error]);
+
   return (
     <View style={loginStyle.container}>
       <StatusBar animated={true} backgroundColor={color.COLORS.PRIMARY} />
@@ -32,48 +39,67 @@ export const login = ({ navigation }) => {
         </View>
         <Text style={loginStyle.title}>Connexion</Text>
         <View style={loginStyle.card}>
-          <Input
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            leftIcon={
-              <Icon
-                name="envelope"
-                type="font-awesome"
-                color={color.COLORS.GREY}
-                style={{ width: 35 }}
-              />
-            }
-          />
-          <Input
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            leftIcon={
-              <Icon
-                name="unlock-alt"
-                type="font-awesome"
-                color={color.COLORS.GREY}
-                style={{ width: 35 }}
-              />
-            }
-          />
-          <Button
-            buttonStyle={loginStyle.button}
-            color={color.COLORS.PRIMARY}
-            title="Se connecter"
-            onPress={submit}
-          />
-
-          <Text
-            onPress={() => console.log("mdp forget")}
-            style={loginStyle.mdp}
+          <Formik
+            initialValues={{
+              email: "gaspard@test.fr",
+              password: "egxT36sF",
+            }}
+            validationSchema={SignupSchema}
+            onSubmit={(values) => {
+              signIn(values)
+              setLoading(true)
+            }}
           >
-            Mot de passe oublié
-          </Text>
-        </View>
+            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+              <View>
+                {error && (
+                  <Text >Identifiant incorrecte</Text>
+                )}
+                <Input
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur("email")}
+                  value={values.email}
+                  errorMessage={errors.email}
+                  placeholder="Email"
+                  leftIcon={
+                    <Icon
+                      name="envelope"
+                      type="font-awesome"
+                      color={color.COLORS.GREY}
+                      style={{ width: 35 }}
+                    />
+                  }
+                />
+                <Input
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                  value={values.password}
+                  errorMessage={errors.password}
+                  placeholder="Mot de passe"
+                  secureTextEntry
+                  leftIcon={
+                    <Icon
+                      name="unlock-alt"
+                      type="font-awesome"
+                      color={color.COLORS.GREY}
+                      style={{ width: 35 }}
+                    />
+                  }
+                />
 
+
+
+                <Button
+                  onPress={handleSubmit}
+                  title="Valider"
+                  buttonStyle={loading?'':loginStyle.button}
+                  loading={loading?true:false}
+                  type={loading?'clear':'solid'}
+                />
+              </View>
+            )}
+          </Formik>
+        </View>            
         <View style={{ flex: 3 }}></View>
       </ImageBackground>
     </View>
