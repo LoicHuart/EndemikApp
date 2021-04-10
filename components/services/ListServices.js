@@ -3,11 +3,16 @@ import { StyleSheet, Text, View, FlatList } from "react-native"
 import { Dimensions} from 'react-native'
 import { CardService } from "./CardService"
 import { AuthContext } from "../../context/AuthContext";
+import { SearchBar } from "react-native-elements";
+import color from "../../constants/color";
+import { searchInJson } from "../../function"
 
 export const ListServices = ({refresh}) => {
   const { token } = useContext(AuthContext);
   const [services, setServices] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [search, setSearch] = React.useState();
+  const [servicesSearch, setServicesSearch] = React.useState(services);
 
   const displayServices = async () => {
     setLoading(true);
@@ -41,7 +46,12 @@ export const ListServices = ({refresh}) => {
   }, []);
 
   useEffect(() => {
+    setServicesSearch(searchInJson(services,['name','id_manager.firstName'],search))
+  }, [search]);
+
+  useEffect(() => {
     setLoading(false);
+    setServicesSearch(searchInJson(services,['name','id_manager.firstName'],search))
   }, [services]);
 
   useEffect(() => {
@@ -50,8 +60,16 @@ export const ListServices = ({refresh}) => {
 
   return (
     <View>
+
+      <SearchBar
+        placeholder="Type Here..."
+        onChangeText={setSearch}
+        value={search}
+        lightTheme 
+      />
+
       <FlatList
-        data={services}
+        data={servicesSearch}
         ListEmptyComponent={() => <Text>rien</Text>}
         refreshing={loading}
         onRefresh={() => displayServices()}
