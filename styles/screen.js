@@ -35,5 +35,15 @@ export const screen = StyleSheet.create({
   },
   sucess: {
     color: color.COLORS.SUCCESS,
+  },
+  searchBarInputContainerStyle: {
+    backgroundColor: color.COLORS.LIGHTGREY, 
+    borderBottomWidth:1
+  },
+  searchBarContainerStyle: {
+    backgroundColor:"transparent", 
+    borderTopWidth:0, 
+    borderBottomWidth:0
   }
+
 });
