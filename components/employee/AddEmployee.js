@@ -24,17 +24,11 @@ const AddEmployeeSchema = Yup.object().shape({
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
   tel: Yup.string()
-    //   .integer()
-    //   .positive()
     .min(10, "10 caractères")
     .max(10, "10 caractères")
     .required("Champ obligatoire"),
-  date_birth: Yup.string()
-    // .min(8, "8 caractères minimum")
-    // .max(8, "8 caractères maximum")
-    .required("Champ obligatoire"),
+  date_birth: Yup.string().required("Champ obligatoire"),
   social_security_nb: Yup.string()
-    // .positive()
     .min(13, "13 caractères")
     .max(13, "13 caractères")
     .required("Champ obligatoire"),
@@ -140,8 +134,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
 
     var raw = "";
 
-    // console.log(raw);
-
     var requestOptions = {
       method: "GET",
       headers: myHeaders,
@@ -176,7 +168,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   }, [resultAddEmployee]);
 
   return (
-    //<View style={styles.form}>{children}</View>;
     <View
       style={{
         width: Dimensions.get("window").width - 100,
@@ -340,8 +331,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 margin: 10,
                 height: heightDropdown,
                 flex: 1,
-                // flexDirection: "row",
-                // alignItems: "center",
               }}
             >
               <DropDownPicker

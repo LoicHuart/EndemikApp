@@ -6,7 +6,7 @@ import {
   Card,
   AddService,
 } from "../../components/";
-import { Button, Overlay, Input, Icon } from "react-native-elements";
+import { Overlay, Icon } from "react-native-elements";
 import { screen } from "../../styles/";
 import color from "../../constants/color";
 
@@ -14,10 +14,9 @@ export const servicesManagement = ({ navigation }) => {
   const [overlayAdd, setOverlayAdd] = React.useState(false);
   const [refreshService, setRefreshService] = React.useState(false);
 
-
   const toggleOverlayAdd = () => {
     setOverlayAdd(!overlayAdd);
-    setRefreshService(!refreshService)
+    setRefreshService(!refreshService);
   };
 
   return (
@@ -32,9 +31,12 @@ export const servicesManagement = ({ navigation }) => {
             }}
           >
             <Text
-              style={[screen.h2,{
-                flex: 0.9,
-              }]}
+              style={[
+                screen.h2,
+                {
+                  flex: 0.9,
+                },
+              ]}
             >
               Liste des services :
             </Text>
@@ -49,7 +51,7 @@ export const servicesManagement = ({ navigation }) => {
             />
           </View>
 
-          <ListServices refresh={refreshService}/>
+          <ListServices refresh={refreshService} />
 
           <Overlay
             isVisible={overlayAdd}

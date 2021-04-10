@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 import DropDownPicker from "react-native-dropdown-picker";
 import { screen } from "../../styles/";
 
-const SignupSchema = Yup.object().shape({
+const Schema = Yup.object().shape({
   name: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
@@ -20,14 +20,15 @@ const SignupSchema = Yup.object().shape({
   id_manager: Yup.string().required("Champ obligatoire"),
 });
 
-export const AddService = ({ toggleOverlayAdd }) => {
+export const EditService = ({ toggleOverlayEdit, service }) => {
   const { token } = useContext(AuthContext);
-  const [resultAddService, setResultAddService] = React.useState("");
+  const [resultEditService, setResultEditService] = React.useState("");
   const [resultGetEmployees, setResultGetEmployees] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [heightDropdown, setHeightDropdown] = React.useState(40);
 
-  const sendAddServices = async (value) => {
+  const sendEditServices = async (value) => {
+    // console.log(value)
     if (!loading) {
       setLoading(true);
       var myHeaders = new Headers();
@@ -37,19 +38,20 @@ export const AddService = ({ toggleOverlayAdd }) => {
       var raw = JSON.stringify(value);
 
       var requestOptions = {
-        method: "POST",
+        method: "PUT",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
       };
+
       await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/services`,
+        `http://${process.env.REACT_APP_API_HOST}/api/services/${service._id}`,
         requestOptions
       )
         .then((response) => response.json())
         .then((result) => {
           // console.log(result)
-          setResultAddService(result);
+          setResultEditService(result);
         })
         .catch((error) => console.log("error", error));
     } else {
@@ -91,13 +93,13 @@ export const AddService = ({ toggleOverlayAdd }) => {
 
   useEffect(() => {
     setLoading(false);
-  }, [resultAddService]);
+  }, [resultEditService]);
 
   useEffect(() => {
     // console.log(loading)
-    // console.log(resultAddService._id)
-    if (resultAddService._id && !loading) {
-      toggleOverlayAdd();
+    // console.log(resultEditService._id)
+    if (resultEditService.message && !resultEditService.error && !loading) {
+      toggleOverlayEdit();
     } else {
       getAllEmployee();
     }
@@ -105,22 +107,22 @@ export const AddService = ({ toggleOverlayAdd }) => {
 
   return (
     <View>
-      <Text style={screen.h1}>Ajout d'un service</Text>
-      {resultAddService.error && (
-        <Text style={screen.error}>{resultAddService.error}</Text>
+      <Text style={screen.h1}>Edition d'un service</Text>
+      {resultEditService.error && (
+        <Text style={screen.error}>{resultEditService.error}</Text>
       )}
-      {resultAddService._id && (
+      {resultEditService._id && (
         <Text style={screen.sucess}>Service Ajouté</Text>
       )}
 
       <Formik
         initialValues={{
-          name: "",
-          site: "",
-          id_manager: "",
+          name: service.name,
+          site: service.site,
+          id_manager: service.id_manager._id,
         }}
-        validationSchema={SignupSchema}
-        onSubmit={(values) => sendAddServices(values)}
+        validationSchema={Schema}
+        onSubmit={(values) => sendEditServices(values)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
@@ -154,6 +156,7 @@ export const AddService = ({ toggleOverlayAdd }) => {
                 onOpen={() => setHeightDropdown(300)}
                 onClose={() => setHeightDropdown(40)}
                 dropDownMaxHeight={heightDropdown - 40}
+                // defaultValue={values.id_manager}
               />
             </View>
             <Button

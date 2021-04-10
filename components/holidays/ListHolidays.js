@@ -6,7 +6,7 @@ import color from "../../constants/color";
 
 export const ListHolidays = ({ user, status, token, gestion }) => {
   const [holidays, setHolidays] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   if (user === undefined) {
     const displayHolidays = async (status) => {
@@ -84,7 +84,11 @@ export const ListHolidays = ({ user, status, token, gestion }) => {
           refreshing={loading}
           onRefresh={() => displayHolidays(status)}
           renderItem={({ item }) => (
-            <CardHoliday item={item} gestion={gestion} />
+            <CardHoliday
+              item={item}
+              gestion={gestion}
+              refreshHolidays={displayHolidays}
+            />
           )}
           keyExtractor={(item) => item._id}
         />
@@ -157,7 +161,11 @@ export const ListHolidays = ({ user, status, token, gestion }) => {
           refreshing={loading}
           onRefresh={() => displayHolidays()}
           renderItem={({ item }) => (
-            <CardHoliday item={item} gestion={gestion} />
+            <CardHoliday
+              item={item}
+              gestion={gestion}
+              refreshHolidays={displayHolidays}
+            />
           )}
           keyExtractor={(item) => item._id}
         />

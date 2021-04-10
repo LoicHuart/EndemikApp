@@ -5,12 +5,19 @@ import color from "../../constants/color";
 import { Pressable } from "react-native";
 import { screen } from "../../styles/";
 import { ValideRefuseService } from "./ValideRefuseService";
+import { EditService } from "./EditService";
 
 export const CardService = ({ item, refreshService }) => {
   const [overlayDelete, setOverlayDelete] = React.useState(false);
+  const [overlayEdit, setOverlayEdit] = React.useState(false);
 
   const toggleOverlayDelete = () => {
     setOverlayDelete(!overlayDelete);
+    refreshService();
+  };
+
+  const toggleOverlayEdit = () => {
+    setOverlayEdit(!overlayEdit);
     refreshService();
   };
 
@@ -36,14 +43,10 @@ export const CardService = ({ item, refreshService }) => {
       </View>
       <View style={styles.cardBot}>
         <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-          <View style={{ flex: 0.5 }}>
+          <Pressable style={{ flex: 0.5 }} onPress={toggleOverlayEdit}>
             <Icon name="edit" type="font-awesome-5" color={color.COLORS.GREY} />
-          </View>
-          <Pressable
-            style={{ flex: 0.5 }}
-            // onPress={() => deleteService(item._id)}
-            onPress={toggleOverlayDelete}
-          >
+          </Pressable>
+          <Pressable style={{ flex: 0.5 }} onPress={toggleOverlayDelete}>
             <Icon
               name="trash"
               type="font-awesome-5"
@@ -52,6 +55,14 @@ export const CardService = ({ item, refreshService }) => {
           </Pressable>
         </View>
       </View>
+
+      <Overlay
+        isVisible={overlayEdit}
+        onBackdropPress={toggleOverlayEdit}
+        overlayStyle={screen.overlay}
+      >
+        <EditService toggleOverlayEdit={toggleOverlayEdit} service={item} />
+      </Overlay>
 
       <Overlay
         isVisible={overlayDelete}
@@ -91,10 +102,6 @@ const styles = StyleSheet.create({
     borderColor: color.COLORS.GREY,
     borderWidth: 1,
     borderTopWidth: 0,
-  },
-  button: {
-    borderTopColor: color.COLORS.GREY,
-    borderWidth: 1,
   },
   firstName: {
     textTransform: "capitalize",

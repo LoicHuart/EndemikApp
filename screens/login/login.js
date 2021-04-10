@@ -61,7 +61,6 @@ export const login = ({ navigation }) => {
           />
           <Button
             buttonStyle={loginStyle.button}
-            color={color.COLORS.PRIMARY}
             title="Se connecter"
             onPress={submit}
           />
@@ -70,7 +69,7 @@ export const login = ({ navigation }) => {
             onPress={() => console.log("mdp forget")}
             style={loginStyle.mdp}
           >
-            Mot de passe oublié
+            Mot de passe oublié ?
           </Text>
         </View>
 

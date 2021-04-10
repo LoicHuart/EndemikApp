@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Pressable, StyleSheet, View, Text, Switch } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  Switch,
+  ScrollView,
+} from "react-native";
 import color from "../../constants/color";
 import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
@@ -16,9 +23,15 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   };
 
   const [overlayDelete, setOverlayDelete] = React.useState(false);
+  const [overlayEdit, setOverlayEdit] = React.useState(false);
 
   const toggleOverlayDelete = () => {
     setOverlayDelete(!overlayDelete);
+    refreshEmployee();
+  };
+
+  const toggleOverlayEdit = () => {
+    setOverlayEdit(!overlayEdit);
     refreshEmployee();
   };
 
@@ -41,12 +54,6 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
     setIsEnabled(item.active);
   });
 
-  // const [overlayAdd, setOverlayAdd] = React.useState(false);
-
-  // const toggleOverlayAdd = () => {
-  //   setOverlayAdd(!overlayAdd);
-  // };
-
   return (
     <View style={styles.cardEmployee}>
       <View style={{ flexDirection: "row", alignItems: "center", margin: 10 }}>
@@ -67,14 +74,9 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
       </View>
       <View style={styles.cardButton}>
         <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-          <View style={styles.icon}>
-            <Icon
-              name="edit"
-              type="font-awesome-5"
-              color={color.COLORS.GREY}
-              onPress={() => console.log("Edit")}
-            />
-          </View>
+          <Pressable style={{ flex: 1 }} onPress={toggleOverlayEdit}>
+            <Icon name="edit" type="font-awesome-5" color={color.COLORS.GREY} />
+          </Pressable>
           <View style={styles.container}>
             <Switch
               trackColor={{ false: color.COLORS.GREY, true: color.COLORS.GREY }}
@@ -93,6 +95,17 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
           </Pressable>
         </View>
       </View>
+
+      <Overlay
+        isVisible={overlayEdit}
+        onBackdropPress={toggleOverlayEdit}
+        overlayStyle={screen.overlay}
+      >
+        <ScrollView>
+          <EditEmployee toggleOverlayEdit={toggleOverlayEdit} employee={item} />
+        </ScrollView>
+      </Overlay>
+
       <Overlay
         isVisible={overlayDelete}
         onBackdropPress={toggleOverlayDelete}
@@ -104,9 +117,6 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
           toggleOverlay={toggleOverlayDelete}
         />
       </Overlay>
-      {/* <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
-        <EditEmployee />
-      </Overlay> */}
     </View>
   );
 };
