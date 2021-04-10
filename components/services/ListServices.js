@@ -15,7 +15,7 @@ export const ListServices = ({refresh}) => {
   const [loading, setLoading] = React.useState(true);
   const [search, setSearch] = React.useState();
   const [servicesSearch, setServicesSearch] = React.useState(services);
-  const [servicesSort, setServicesSort] = React.useState();
+  const [servicesSort, setServicesSort] = React.useState('A-Z');
 
   const displayServices = async () => {
     setLoading(true);
