@@ -11,10 +11,10 @@ import RadioForm, {
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
-import { PopUpConfirm } from "./PopUpConfirm";
+import { ConfirmAddHoliday } from "./ConfirmAddHoliday";
 import { Card } from "../Card";
 
-export const FormHolidaysAdd = () => {
+export const AddHoliday = () => {
   const { user, token } = useContext(AuthContext);
   const today = new Date();
   const tomorrow = new Date(today);
@@ -271,7 +271,7 @@ export const FormHolidaysAdd = () => {
         style={{ opacity: showConfirm ? 100 : 0 }}
       >
         <Card>
-          <PopUpConfirm />
+          <ConfirmAddHoliday />
         </Card>
       </Pressable>
     </View>

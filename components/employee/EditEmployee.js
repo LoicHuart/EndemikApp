@@ -49,10 +49,11 @@ const EditEmployeeSchema = Yup.object().shape({
     .max(250, "250 caractères maximum")
     .required("Champ obligatoire"),
   id_role: Yup.string().required("Champ obligatoire"),
-  id_service: Yup.string().required("Champ obligatoire"),
+  // id_service: Yup.string().required("Champ obligatoire"),
 });
 
-export const EditEmployee = ({ toggleOverlayEdit }) => {
+export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
+  console.log(employee);
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = React.useState(true);
   const [resultEditEmployee, setResultEditEmployee] = React.useState("");
@@ -68,13 +69,11 @@ export const EditEmployee = ({ toggleOverlayEdit }) => {
   ]);
 
   const sendEditEmployee = async (values) => {
+    console.log(values);
     if (!loading) {
       setLoading(true);
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${token}`);
-
-      console.log(values.id_service);
-      console.log(values.id_role);
 
       var formdata = new FormData();
       formdata.append("title", values.title);
@@ -94,14 +93,14 @@ export const EditEmployee = ({ toggleOverlayEdit }) => {
       formdata.append("children_nb", 0);
 
       var requestOptions = {
-        method: "POST",
+        method: "PUT",
         headers: myHeaders,
         body: formdata,
         redirect: "follow",
       };
 
       await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees/`,
+        `http://${process.env.REACT_APP_API_HOST}/api/employees/${employee._id}`,
         requestOptions
       )
         .then((response) => response.json())
@@ -109,7 +108,7 @@ export const EditEmployee = ({ toggleOverlayEdit }) => {
           console.log(result);
           setResultEditEmployee(result);
         })
-        .catch((error) => console.log("error", error));
+        .catch((error) => console.log("error : ", error));
 
       // try {
       //   const resp = await fetch(
@@ -176,6 +175,10 @@ export const EditEmployee = ({ toggleOverlayEdit }) => {
     }
   }, [loading]);
 
+  this.state = {
+    service: "RH",
+  };
+
   return (
     <View
       style={{
@@ -205,18 +208,18 @@ export const EditEmployee = ({ toggleOverlayEdit }) => {
           // street_nb: "",
           // street: "",
           // city: "",
-          lastname: "Pottier",
-          firstname: "Domitille",
-          mail: "dopitter@gmail.com",
-          tel: "0649826159",
-          date_birth: "1998-08-30",
-          social_security_nb: "2980857403863",
-          postal_code: "51100",
-          street_nb: "27",
-          street: "rue des moulins",
-          city: "Reims",
-          id_role: "",
-          id_service: "",
+          lastname: employee.lastName,
+          firstname: employee.firstName,
+          mail: employee.mail,
+          tel: employee.tel_nb,
+          date_birth: employee.date_birth,
+          social_security_nb: employee.social_security_number,
+          postal_code: employee.postal_code,
+          street_nb: employee.street_nb,
+          street: employee.street,
+          city: employee.city,
+          id_role: employee.id_role,
+          id_service: employee.id_service,
         }}
         validationSchema={EditEmployeeSchema}
         onSubmit={(values) => sendEditEmployee(values)}
@@ -345,6 +348,7 @@ export const EditEmployee = ({ toggleOverlayEdit }) => {
               <DropDownPicker
                 onChangeItem={(item) => (values.id_service = item.value)}
                 onBlur={(item) => (values.id_service = item.value)}
+                // defaultValue={this.state.service}
                 items={resultGetServices}
                 value={values.id_service}
                 placeholder="Service"

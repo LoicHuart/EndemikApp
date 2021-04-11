@@ -12,7 +12,7 @@ import RadioForm, {
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
 
-export const FormHolidaysUpdate = ({ item, toggleShowPopUp }) => {
+export const UpdateHoliday = ({ item, toggleShowPopUp }) => {
   const { token } = useContext(AuthContext);
 
   const today = new Date();

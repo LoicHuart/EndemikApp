@@ -1,8 +1,8 @@
 export { HeaderCustom } from "./HeaderCustom.js";
 export { ListHolidays } from "./holidays/ListHolidays";
-export { FormHolidaysAdd } from "./holidays/FormHolidaysAdd";
+export { AddHoliday } from "./holidays/AddHoliday";
 export { CardHoliday } from "./holidays/CardHoliday";
-export { PopUpAnswer } from "./holidays/PopUpAnswer";
+export { ValidateRefuseHoliday } from "./holidays/ValidateRefuseHoliday";
 
 export { Card } from "./Card";
 

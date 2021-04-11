@@ -17,6 +17,7 @@ export const employeesManagement = ({ navigation }) => {
   const toggleOverlayAdd = () => {
     setOverlayAdd(!overlayAdd);
   };
+
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
@@ -29,13 +30,12 @@ export const employeesManagement = ({ navigation }) => {
             }}
           >
             <Text
-              style={{
-                marginTop: 10,
-                marginBottom: 20,
-                fontWeight: "bold",
-                fontSize: 17,
-                flex: 0.9,
-              }}
+              style={[
+                screen.h2,
+                {
+                  flex: 0.9,
+                },
+              ]}
             >
               Liste des utilisateurs :
             </Text>

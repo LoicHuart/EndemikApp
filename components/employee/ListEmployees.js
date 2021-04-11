@@ -66,7 +66,7 @@ export const ListEmployees = (refresh) => {
       <FlatList
         data={employees}
         style={{ height: Dimensions.get("window").height - 150 }}
-        ListEmptyComponent={() => <Text>rien</Text>}
+        // ListEmptyComponent={() => <Text>rien</Text>}
         refreshing={loading}
         onRefresh={() => displayEmployees()}
         renderItem={({ item }) => (

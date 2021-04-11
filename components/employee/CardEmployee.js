@@ -23,7 +23,7 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   };
 
   const [overlayDelete, setOverlayDelete] = React.useState(false);
-  const [overlayEdit, setOverlayEdit] = React.useState(false);
+  const [overlayEdit, setOverlayEdit] = React.useState(item);
 
   const toggleOverlayDelete = () => {
     setOverlayDelete(!overlayDelete);
