@@ -13,24 +13,28 @@ export const AuthContextProvier = ({ children }) => {
             ...prevState,
             token: action.token,
             user: action.user,
+            error: action.error,
           };
         case "SIGN_IN":
           return {
             ...prevState,
             token: action.token,
             user: action.user,
+            error: action.error,
           };
         case "SIGN_OUT":
           return {
             ...prevState,
             token: null,
             user: null,
+            error: null,
           };
       }
     },
     {
       token: null,
       user: null,
+      error: null,
     }
   );
 
@@ -75,10 +79,17 @@ export const AuthContextProvier = ({ children }) => {
             type: "RESTORE_TOKEN",
             token: userToken,
             user: user,
+            error: null,
           });
         }
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
+        dispatch({
+          type: "RESTORE_TOKEN",
+          token: null,
+          user: null,
+          error: error,
+        });
       }
     };
 
@@ -121,12 +132,19 @@ export const AuthContextProvier = ({ children }) => {
         type: "SIGN_IN",
         token: respJSON.token,
         user: JSON.stringify(user),
+        error: null,
       });
       console.log("singIn");
       console.log(await AsyncStorage.getItem("token"));
       console.log(await AsyncStorage.getItem("user"));
     } catch (error) {
       console.log("error", error);
+      dispatch({
+        type: "SIGN_IN",
+        token: null,
+        user: null,
+        error: error,
+      });
     }
   };
 
@@ -134,7 +152,10 @@ export const AuthContextProvier = ({ children }) => {
     await AsyncStorage.setItem("token", "");
     await AsyncStorage.setItem("user", "");
 
-    dispatch({ type: "SIGN_OUT" });
+    dispatch({ 
+      type: "SIGN_OUT", 
+      error: null,
+    });
 
     console.log("singOut");
     console.log(await AsyncStorage.getItem("token"));
@@ -146,6 +167,7 @@ export const AuthContextProvier = ({ children }) => {
       value={{
         token: state.token,
         user: JSON.parse(state.user),
+        error: state.error,
         signIn: signIn,
         signOut: signOut,
       }}

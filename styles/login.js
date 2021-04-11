@@ -28,7 +28,12 @@ export const login = StyleSheet.create({
         flexDirection: "column",
     },
     button: {
-        backgroundColor: color.COLORS.SECONDARY,
+        backgroundColor: color.COLORS.PRIMARY,
+        alignSelf: "flex-start",
+        alignSelf: "center",
+    },
+    buttonAnnuler: {
+        backgroundColor: color.COLORS.GREY,
         alignSelf: "flex-start",
         alignSelf: "center",
     },
@@ -50,7 +55,23 @@ export const login = StyleSheet.create({
         justifyContent: "center",
     },
     mdp:{
-        marginTop:20,
+        marginHorizontal:10,
+        marginBottom:10,
+        marginTop:-5,
         fontSize:12
-    }
+    },
+    error: {
+        color: color.COLORS.DANGER,
+    },
+    overlay: {
+        padding: 15,
+        borderRadius: 10,
+        width: Dimensions.get("window").width - 70,
+    },
+    h1: {
+        margin: 10,
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 17,
+    },
 });
