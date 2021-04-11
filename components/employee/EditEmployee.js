@@ -2,19 +2,19 @@ import React, { useContext, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import color from "../../constants/color";
 import { Button, Input } from "react-native-elements";
+import DropDownPicker from "react-native-dropdown-picker";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
 import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
-import DropDownPicker from "react-native-dropdown-picker";
 
 const EditEmployeeSchema = Yup.object().shape({
-  firstname: Yup.string()
+  firstName: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
-  lastname: Yup.string()
+  lastName: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
@@ -23,12 +23,12 @@ const EditEmployeeSchema = Yup.object().shape({
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
-  tel: Yup.string()
+  tel_nb: Yup.string()
     .min(10, "10 caractères")
     .max(10, "10 caractères")
     .required("Champ obligatoire"),
   date_birth: Yup.string().required("Champ obligatoire"),
-  social_security_nb: Yup.string()
+  social_security_number: Yup.string()
     .min(13, "13 caractères")
     .max(13, "13 caractères")
     .required("Champ obligatoire"),
@@ -48,12 +48,12 @@ const EditEmployeeSchema = Yup.object().shape({
     .min(0, "")
     .max(250, "250 caractères maximum")
     .required("Champ obligatoire"),
-  id_role: Yup.string().required("Champ obligatoire"),
+  // id_role: Yup.string().required("Champ obligatoire"),
   // id_service: Yup.string().required("Champ obligatoire"),
 });
 
 export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
-  console.log(employee);
+  // console.log(employee);
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = React.useState(true);
   const [resultEditEmployee, setResultEditEmployee] = React.useState("");
@@ -69,63 +69,52 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
   ]);
 
   const sendEditEmployee = async (values) => {
-    console.log(values);
+    console.log(JSON.stringify(values));
     if (!loading) {
       setLoading(true);
       var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append(
+        "Authorization",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDI2NWMzNTlkMTZiODJhNmM4MDFmMGMiLCJpYXQiOjE2MTQ1MzQ1MTl9.IvVNv2189ezpH7wTvp9ACdG97WPn0Tlb5rigxKeKmGI"
+      );
+      myHeaders.append("Content-Type", "application/json");
 
-      var formdata = new FormData();
-      formdata.append("title", values.title);
-      formdata.append("firstName", values.firstname);
-      formdata.append("lastName", values.lastname);
-      formdata.append("date_birth", values.date_birth);
-      formdata.append("social_security_number", values.social_security_nb);
-      formdata.append("mail", values.mail);
-      formdata.append("tel_nb", values.tel);
-      formdata.append("postal_code", values.postal_code);
-      formdata.append("street_nb", values.street_nb);
-      formdata.append("street", values.street);
-      formdata.append("city", values.city);
-      formdata.append("arrival_date", "2000-12-20");
-      formdata.append("id_service", values.id_service);
-      formdata.append("id_role", values.id_role);
-      formdata.append("children_nb", 0);
+      // var formdata = new FormData();
+
+      // formdata.append("title", values.title);
+      // formdata.append("firstName", values.firstname);
+      // formdata.append("lastName", values.lastname);
+      // formdata.append("date_birth", values.date_birth);
+      // formdata.append("social_security_number", values.social_security_nb);
+      // formdata.append("mail", values.mail);
+      // formdata.append("tel_nb", values.tel);
+      // formdata.append("postal_code", values.postal_code);
+      // formdata.append("street_nb", values.street_nb);
+      // formdata.append("street", values.street);
+      // formdata.append("city", values.city);
+      // formdata.append("arrival_date", "2000-12-20");
+      // formdata.append("id_service", values.id_service);
+      // formdata.append("id_role", values.id_role);
+      // formdata.append("children_nb", 0);
+
+      values.holiday_balance.rtt = 101;
+      values.holiday_balance.congesPayes = 101;
+      var raw = JSON.stringify(values);
 
       var requestOptions = {
         method: "PUT",
         headers: myHeaders,
-        body: formdata,
+        body: raw,
         redirect: "follow",
       };
 
       await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees/${employee._id}`,
+        "http://82.65.142.99:43000/api/employees/60525dcfc417710570e8c9fa",
         requestOptions
       )
         .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          setResultEditEmployee(result);
-        })
-        .catch((error) => console.log("error : ", error));
-
-      // try {
-      //   const resp = await fetch(
-      //     `http://${process.env.REACT_APP_API_HOST}/api/employees`,
-      //     requestOptions
-      //   );
-
-      //   const respJSON = await resp.json();
-
-      //   if (!resp.ok) {
-      //     console.log("error");
-      //     console.log(resp);
-      //   }
-      //   console.log(respJSON);
-      // } catch (e) {
-      //   console.log(e);
-      // }
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
     } else {
       console.log("loading");
     }
@@ -175,9 +164,9 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
     }
   }, [loading]);
 
-  this.state = {
-    service: "RH",
-  };
+  // this.state = {
+  //   service: "RH",
+  // };
 
   return (
     <View
@@ -197,23 +186,12 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
       </Text>
       <Formik
         initialValues={{
-          // lastname: "",
-          // firstname: "",
-          // mail: "",
-          // tel: "",
-          // date_birth: "",
-          // role: "",
-          // social_security_nb: "",
-          // postal_code: "",
-          // street_nb: "",
-          // street: "",
-          // city: "",
-          lastname: employee.lastName,
-          firstname: employee.firstName,
+          lastName: employee.lastName,
+          firstName: employee.firstName,
           mail: employee.mail,
-          tel: employee.tel_nb,
+          tel_nb: employee.tel_nb,
           date_birth: employee.date_birth,
-          social_security_nb: employee.social_security_number,
+          social_security_number: employee.social_security_number,
           postal_code: employee.postal_code,
           street_nb: employee.street_nb,
           street: employee.street,
@@ -232,21 +210,21 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 <View style={{ flex: 1 }}>
                   <Input
                     style={styles.input}
-                    onChangeText={handleChange("lastname")}
-                    onBlur={handleBlur("lastname")}
-                    value={values.lastname}
+                    onChangeText={handleChange("lastName")}
+                    onBlur={handleBlur("lastName")}
+                    value={values.lastName}
                     placeholder="Nom"
-                    errorMessage={errors.lastname}
+                    errorMessage={errors.lastName}
                   />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
-                    onChangeText={handleChange("firstname")}
-                    onBlur={handleBlur("firstname")}
-                    value={values.firstname}
+                    style={styles.inputF}
+                    onChangeText={handleChange("firstName")}
+                    onBlur={handleBlur("firstName")}
+                    value={values.firstName}
                     placeholder="Prénom"
-                    errorMessage={errors.firstname}
+                    errorMessage={errors.firstName}
                   />
                 </View>
               </View>
@@ -254,11 +232,11 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 <View style={{ flex: 1 }}>
                   <Input
                     style={styles.input}
-                    onChangeText={handleChange("tel")}
-                    onBlur={handleBlur("tel")}
-                    value={values.tel}
+                    onChangeText={handleChange("tel_nb")}
+                    onBlur={handleBlur("tel_nb")}
+                    value={values.tel_nb}
                     placeholder="Téléphone"
-                    errorMessage={errors.tel}
+                    errorMessage={errors.tel_nb}
                   />
                 </View>
                 <View style={{ flex: 1 }}>
@@ -282,11 +260,11 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
               />
               <Input
                 style={styles.input}
-                onChangeText={handleChange("social_security_nb")}
-                onBlur={handleBlur("social_security_nb")}
-                value={values.social_security_nb}
+                onChangeText={handleChange("social_security_number")}
+                onBlur={handleBlur("social_security_number")}
+                value={values.social_security_number}
                 placeholder="Numéro de sécurité social"
-                errorMessage={errors.social_security_nb}
+                errorMessage={errors.social_security_number}
               />
             </View>
             <View>
@@ -348,7 +326,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
               <DropDownPicker
                 onChangeItem={(item) => (values.id_service = item.value)}
                 onBlur={(item) => (values.id_service = item.value)}
-                // defaultValue={this.state.service}
+                //defaultValue={setResultGetServices(employee.id_service)}
                 items={resultGetServices}
                 value={values.id_service}
                 placeholder="Service"
@@ -432,6 +410,17 @@ const styles = StyleSheet.create({
     height: 20,
     width: "100%",
     backgroundColor: "white",
+    //borderColor: "gray",
+    // borderWidth: 1,
+    // borderRadius: 10,
+  },
+  inputF: {
+    fontSize: 12,
+    borderColor: color.COLORS.BLACK,
+    height: 20,
+    width: "100%",
+    backgroundColor: "white",
+    textTransform: "capitalize",
     //borderColor: "gray",
     // borderWidth: 1,
     // borderRadius: 10,
