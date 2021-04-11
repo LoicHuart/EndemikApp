@@ -156,13 +156,25 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
                 // defaultValue={values.id_manager}
               />
             </View>
-            <Button
-              onPress={handleSubmit}
-              title="Valider"
-              buttonStyle={loading?'':screen.button}
-              loading={loading?true:false}
-              type={loading?'clear':'solid'}
-            />
+
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Button
+                  onPress={() => toggleOverlayEdit()}
+                  title="Annuler"
+                  buttonStyle={screen.buttonCancel}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Button
+                  onPress={handleSubmit}
+                  title="Valider"
+                  buttonStyle={loading?'':screen.button}
+                  loading={loading?true:false}
+                  type={loading?'clear':'solid'}
+                />
+              </View>
+            </View>
           </View>
         )}
       </Formik>
