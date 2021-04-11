@@ -51,14 +51,14 @@ export const ValideRefuseService = ({itemId, text, toggleOverlay}) => {
             <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                 <Button
-                    buttonStyle={screen.buttonDanger}
+                    buttonStyle={screen.buttonCancel}
                     title="Annuler"
                     onPress={() => toggleOverlay()}
                 />
                 </View>
                 <View style={{ flex: 1 }}>
                 <Button
-                    buttonStyle={screen.buttonSuccess}
+                    buttonStyle={screen.button}
                     onPress={() => deleteService(itemId)}
                     title="Valider"
                 />
