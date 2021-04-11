@@ -48,15 +48,15 @@ const EditEmployeeSchema = Yup.object().shape({
     .min(0, "")
     .max(250, "250 caractères maximum")
     .required("Champ obligatoire"),
-  // id_role: Yup.string().required("Champ obligatoire"),
-  // id_service: Yup.string().required("Champ obligatoire"),
+  id_role: Yup.string().required("Champ obligatoire"),
+  id_service: Yup.string().required("Champ obligatoire"),
 });
 
 export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
   // console.log(employee);
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = React.useState(true);
-  const [resultEditEmployee, setResultEditEmployee] = React.useState("");
+  const [resultEditEmployee, setResultEditEmployee] = React.useState([]);
   const [resultGetServices, setResultGetServices] = React.useState([]);
   const [heightDropdown, setHeightDropdown] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
@@ -73,10 +73,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
     if (!loading) {
       setLoading(true);
       var myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDI2NWMzNTlkMTZiODJhNmM4MDFmMGMiLCJpYXQiOjE2MTQ1MzQ1MTl9.IvVNv2189ezpH7wTvp9ACdG97WPn0Tlb5rigxKeKmGI"
-      );
+      myHeaders.append("Authorization", `Bearer ${token}`);
       myHeaders.append("Content-Type", "application/json");
 
       // var formdata = new FormData();
@@ -97,8 +94,6 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
       // formdata.append("id_role", values.id_role);
       // formdata.append("children_nb", 0);
 
-      values.holiday_balance.rtt = 101;
-      values.holiday_balance.congesPayes = 101;
       var raw = JSON.stringify(values);
 
       var requestOptions = {
@@ -109,11 +104,14 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
       };
 
       await fetch(
-        "http://82.65.142.99:43000/api/employees/60525dcfc417710570e8c9fa",
+        `http://${process.env.REACT_APP_API_HOST}/api/employees/60525dcfc417710570e8c9fa`,
         requestOptions
       )
         .then((response) => response.json())
-        .then((result) => console.log(result))
+        .then((result) => {
+          console.log(result);
+          setResultEditEmployee(result);
+        })
         .catch((error) => console.log("error", error));
     } else {
       console.log("loading");
@@ -164,10 +162,6 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
     }
   }, [loading]);
 
-  // this.state = {
-  //   service: "RH",
-  // };
-
   return (
     <View
       style={{
@@ -196,8 +190,8 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
           street_nb: employee.street_nb,
           street: employee.street,
           city: employee.city,
-          id_role: employee.id_role,
-          id_service: employee.id_service,
+          id_role: employee.id_role._id,
+          id_service: employee.id_service._id,
         }}
         validationSchema={EditEmployeeSchema}
         onSubmit={(values) => sendEditEmployee(values)}
@@ -370,11 +364,9 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={loading ? "" : screen.buttonDanger}
+                  buttonStyle={screen.buttonDanger}
                   title="Annuler"
                   onPress={() => toggleOverlayEdit()}
-                  type={loading ? "clear" : "solid"}
-                  loading={loading ? true : false}
                 />
               </View>
               <View style={{ flex: 1 }}>
