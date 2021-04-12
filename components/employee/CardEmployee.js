@@ -68,7 +68,7 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
               trackColor={{ false: color.COLORS.GREY, true: color.COLORS.GREY }}
               thumbColor={isEnabled ? "#adf3ad" : "#f0bebd"}
               ios_backgroundColor={color.COLORS.GREY}
-              onValueChange={toggleSwitch}
+              // onValueChange={toggleSwitch}
               value={isEnabled}
             />
           </View>
