@@ -16,7 +16,7 @@ export const TabsHolidaysContent = () => {
           let iconName;
           let iconColor;
 
-          if (route.name === "Demandes") {
+          if (route.name === "Demande") {
             iconName = focused ? "calendar-plus" : "calendar-plus";
             iconColor = focused ? color.COLORS.PRIMARY : color.COLORS.GREY;
           } else if (route.name === "Historique") {
@@ -34,7 +34,7 @@ export const TabsHolidaysContent = () => {
         inactiveTintColor: "gray",
       }}
     >
-      <Tab.Screen name="Demandes" component={holidaysRequest} />
+      <Tab.Screen name="Demande" component={holidaysRequest} />
       <Tab.Screen name="Historique" component={holidaysHistory} />
     </Tab.Navigator>
   );
