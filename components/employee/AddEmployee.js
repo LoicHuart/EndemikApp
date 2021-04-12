@@ -13,6 +13,7 @@ import { formatAPI } from "../../function";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AddEmployeeSchema = Yup.object().shape({
+  title: Yup.string().required("Champ obligatoire"),
   firstname: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
@@ -261,15 +262,16 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   />
                 </View>
                 <View style={{ flex: 1 }}>
-                  {/* <Input
+                  <Input
                     style={styles.input}
                     onChangeText={handleChange("date_birth")}
                     onBlur={handleBlur("date_birth")}
                     value={formatDisplay(values.date_birth)}
                     placeholder="Date de naissance"
                     errorMessage={errors.date_birth}
-                  /> */}
-                  <DateTimePicker
+                  />
+
+                  {/* <DateTimePicker
                     testID="dateTimePickerDateBirth"
                     value={new Date()}
                     locale="fr-FR"
@@ -277,7 +279,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                     display="default"
                     onChange={onChangeStartDate}
                     minimumDate={today}
-                  />
+                  /> */}
                 </View>
               </View>
               <Input
