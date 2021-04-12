@@ -34,23 +34,26 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
       var myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${token}`);
       myHeaders.append("Content-Type", "application/json");
-      
+
       var raw = JSON.stringify(value);
-      
+
       var requestOptions = {
-        method: 'PUT',
+        method: "PUT",
         headers: myHeaders,
         body: raw,
-        redirect: 'follow'
+        redirect: "follow",
       };
-      
-      await fetch(`http://${process.env.REACT_APP_API_HOST}/api/services/${service._id}`, requestOptions)
-        .then(response => response.json())
+
+      await fetch(
+        `http://${process.env.REACT_APP_API_HOST}/api/services/${service._id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
         .then((result) => {
           // console.log(result)
           setResultEditService(result);
         })
-        .catch(error => console.log('error', error));
+        .catch((error) => console.log("error", error));
     } else {
       console.log("loading");
     }
@@ -156,7 +159,6 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
                 // defaultValue={values.id_manager}
               />
             </View>
-
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button

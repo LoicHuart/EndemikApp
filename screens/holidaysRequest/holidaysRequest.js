@@ -9,14 +9,14 @@ export const holidaysRequest = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
-      <View style={({ flex: 2 }, styles.card)}>
+      {/* <View style={({ flex: 2 }, styles.card)}>
         <Text>Nombre de RTT :</Text>
         <Text>{user.holiday_balance.rtt}</Text>
       </View>
       <View style={({ flex: 5 }, styles.card)}>
         <Text>Nombre de Congés Payés :</Text>
         <Text>{user.holiday_balance.congesPayes}</Text>
-      </View>
+      </View> */}
       <View style={{ flex: 5 }}>
         <AddHoliday />
       </View>

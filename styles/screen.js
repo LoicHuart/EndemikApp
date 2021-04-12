@@ -24,14 +24,21 @@ export const screen = StyleSheet.create({
   },
   overlay: {
     padding: 15,
+    margin: 15,
     borderRadius: 10,
     width: Dimensions.get("window").width - 70,
   },
   buttonSuccess: {
+    // margin: 20,
+    // width: 100,
+    // alignSelf: "center",
     margin: 10,
     backgroundColor: color.COLORS.BUTTONSUCCESS,
   },
   buttonDanger: {
+    // margin: 20,
+    // width: 100,
+    // alignSelf: "center",
     margin: 10,
     backgroundColor: color.COLORS.BUTTONDANGER,
   },
@@ -42,13 +49,12 @@ export const screen = StyleSheet.create({
     color: color.COLORS.SUCCESS,
   },
   searchBarInputContainerStyle: {
-    backgroundColor: color.COLORS.LIGHTGREY, 
-    borderBottomWidth:1
+    backgroundColor: color.COLORS.LIGHTGREY,
+    borderBottomWidth: 1,
   },
   searchBarContainerStyle: {
-    backgroundColor:"transparent", 
-    borderTopWidth:0, 
-    borderBottomWidth:0
-  }
-
+    backgroundColor: "transparent",
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+  },
 });

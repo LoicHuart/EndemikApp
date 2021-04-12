@@ -216,6 +216,7 @@ export const AddHoliday = () => {
                     <DateTimePicker
                       testID="dateTimePickerStart"
                       value={startDate}
+                      locale="fr-FR"
                       mode="date"
                       display="default"
                       onChange={onChangeStartDate}

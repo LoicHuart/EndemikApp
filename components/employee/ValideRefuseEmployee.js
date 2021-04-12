@@ -5,42 +5,49 @@ import color from "../../constants/color";
 import { screen } from "../../styles";
 import { AuthContext } from "../../context/AuthContext";
 
-export const ValideRefuseService = ({ itemId, text, toggleOverlay }) => {
+export const ValideRefuseEmployee = ({ itemId, text, toggleOverlay }) => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = React.useState(true);
-  const [resultDeleteService, setResultDeleteService] = React.useState([]);
+  const [resultDeleteEmployee, setResultDeleteEmployee] = React.useState([]);
 
-  const deleteService = async (id) => {
+  const deleteEmployee = async (id) => {
     setLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
+    var raw = "";
+
     var requestOptions = {
       method: "DELETE",
       headers: myHeaders,
+      body: raw,
       redirect: "follow",
     };
 
     await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/services/${id}`,
+      `http://${process.env.REACT_APP_API_HOST}/api/employees/${id}`,
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
         // console.log(result)
-        setResultDeleteService(result);
+        setResultDeleteEmployee(result);
       })
       .catch((error) => console.log("error", error));
   };
 
   useEffect(() => {
     setLoading(false);
-  }, [resultDeleteService]);
+  }, [resultDeleteEmployee]);
 
   useEffect(() => {
     // console.log(loading)
-    // console.log(resultDeleteService)
-    if (resultDeleteService.message && !resultDeleteService.error && !loading) {
+    // console.log(resultDeleteEmployee)
+    if (
+      resultDeleteEmployee.message &&
+      !resultDeleteEmployee.error &&
+      !loading
+    ) {
       toggleOverlay();
     }
   }, [loading]);
@@ -48,9 +55,9 @@ export const ValideRefuseService = ({ itemId, text, toggleOverlay }) => {
   return (
     <View>
       <Text style={screen.title}>{text}</Text>
-      {resultDeleteService.error && (
+      {resultDeleteEmployee.error && (
         <Text style={{ color: color.COLORS.DANGER, alignSelf: "center" }}>
-          Vous ne pouvez pas supprimer ce service
+          Vous ne pouvez pas supprimer ce utilisateur
         </Text>
       )}
       <View style={{ flexDirection: "row" }}>
@@ -64,7 +71,7 @@ export const ValideRefuseService = ({ itemId, text, toggleOverlay }) => {
         <View style={{ flex: 1 }}>
           <Button
             buttonStyle={screen.buttonSuccess}
-            onPress={() => deleteService(itemId)}
+            onPress={() => deleteEmployee(itemId)}
             title="Valider"
           />
         </View>

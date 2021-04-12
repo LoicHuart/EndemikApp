@@ -1,25 +1,25 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Avatar, Icon, Overlay } from "react-native-elements"
-import color from "../../constants/color"
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Avatar, Icon, Overlay } from "react-native-elements";
+import color from "../../constants/color";
 import { Pressable } from "react-native";
 import { screen } from "../../styles/";
 import { ValideRefuseService } from "./ValideRefuseService";
 import { EditService } from "./EditService";
 
-export const CardService = ({item, refreshService}) => {
-    const [overlayDelete, setOverlayDelete] = React.useState(false);
-    const [overlayEdit, setOverlayEdit] = React.useState(false);
+export const CardService = ({ item, refreshService }) => {
+  const [overlayDelete, setOverlayDelete] = React.useState(false);
+  const [overlayEdit, setOverlayEdit] = React.useState(false);
 
-    const toggleOverlayDelete = () => {
-        setOverlayDelete(!overlayDelete);
-        refreshService();
-    };
+  const toggleOverlayDelete = () => {
+    setOverlayDelete(!overlayDelete);
+    refreshService();
+  };
 
-    const toggleOverlayEdit = () => {
-        setOverlayEdit(!overlayEdit);
-        refreshService();
-    };
+  const toggleOverlayEdit = () => {
+    setOverlayEdit(!overlayEdit);
+    refreshService();
+  };
 
     return (
         <View>
@@ -64,60 +64,61 @@ export const CardService = ({item, refreshService}) => {
                 </View>
             </View>
 
-            
-            <Overlay
-                isVisible={overlayEdit}
-                onBackdropPress={toggleOverlayEdit}
-                overlayStyle={screen.overlay}
-            >
-                <EditService toggleOverlayEdit={toggleOverlayEdit} service={item}/>
-            </Overlay>
+      <Overlay
+        isVisible={overlayEdit}
+        onBackdropPress={toggleOverlayEdit}
+        overlayStyle={screen.overlay}
+      >
+        <EditService toggleOverlayEdit={toggleOverlayEdit} service={item} />
+      </Overlay>
 
-            <Overlay
-                isVisible={overlayDelete}
-                onBackdropPress={toggleOverlayDelete}
-                overlayStyle={screen.overlay}
-            >
-                <ValideRefuseService itemId={item._id} text={"Voulez-vous supprimer ce service ?"} toggleOverlay={toggleOverlayDelete} />
-          </Overlay>
-        </View>
-    )
-}
+      <Overlay
+        isVisible={overlayDelete}
+        onBackdropPress={toggleOverlayDelete}
+        overlayStyle={screen.overlay}
+      >
+        <ValideRefuseService
+          itemId={item._id}
+          text={"Voulez-vous supprimer ce service ?"}
+          toggleOverlay={toggleOverlayDelete}
+        />
+      </Overlay>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    cardTop: {
-        marginTop: 10,
-        marginHorizontal: 10,
-        backgroundColor: color.COLORS.LIGHTGREY,
-        padding: 10,
-        
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderColor: color.COLORS.GREY,
-        borderWidth: 1,
+  cardTop: {
+    marginTop: 10,
+    marginHorizontal: 10,
+    backgroundColor: color.COLORS.LIGHTGREY,
+    padding: 10,
 
-    },
-    cardBot: {
-        marginBottom: 10,
-        marginHorizontal: 10,
-        backgroundColor: color.COLORS.LIGHTGREY,
-        padding: 5,
-        
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        borderColor: color.COLORS.GREY,
-        borderWidth: 1,
-        borderTopWidth: 0,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderColor: color.COLORS.GREY,
+    borderWidth: 1,
+  },
+  cardBot: {
+    marginBottom: 10,
+    marginHorizontal: 10,
+    backgroundColor: color.COLORS.LIGHTGREY,
+    padding: 5,
 
-    },
-    firstName: {
-      textTransform: "capitalize",
-      marginRight: 5,
-      marginLeft: 20,
-    },
-    service: {
-      textTransform: "uppercase",
-      textAlign: 'center', 
-      fontWeight: "bold"
-    }
-})
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderColor: color.COLORS.GREY,
+    borderWidth: 1,
+    borderTopWidth: 0,
+  },
+  firstName: {
+    textTransform: "capitalize",
+    marginRight: 5,
+    marginLeft: 20,
+  },
+  service: {
+    textTransform: "uppercase",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+});

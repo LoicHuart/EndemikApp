@@ -8,17 +8,12 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 
 const SignupSchema = Yup.object().shape({
-  email: Yup.string()
-    .email()
-    .required("Champ obligatoire"),
-  password: Yup.string()
-    .required("Champ obligatoire"),
+  email: Yup.string().email().required("Champ obligatoire"),
+  password: Yup.string().required("Champ obligatoire"),
 });
 
 const ForgotPasswordSchema = Yup.object().shape({
-  email: Yup.string()
-    .email()
-    .required("Champ obligatoire"),
+  email: Yup.string().email().required("Champ obligatoire"),
 });
 
 export const login = ({ navigation }) => {
@@ -29,38 +24,39 @@ export const login = ({ navigation }) => {
   const [resultForgotPassword, setResultForgotPassword] = React.useState([]);
 
   const toggleOverlay = () => {
-    setOverlay(!overlay)
+    setOverlay(!overlay);
   };
 
   const forgotPassword = async (email) => {
     if (!loading) {
-      setLoading(true)
+      setLoading(true);
       var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
+        method: "GET",
+        redirect: "follow",
       };
-      
-      fetch(`http://${process.env.REACT_APP_API_HOST}/api/employees/forgotPassword/${email}`, requestOptions)
-        .then(response => response.text())
-        .then(result => {
+
+      fetch(
+        `http://${process.env.REACT_APP_API_HOST}/api/employees/forgotPassword/${email}`,
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => {
           // console.log(result)
-          setResultForgotPassword(result)
+          setResultForgotPassword(result);
         })
-        .catch(error => console.log('error', error));
+        .catch((error) => console.log("error", error));
     } else {
       console.log("loading");
     }
   };
 
   useEffect(() => {
-    setLoading(false)
+    setLoading(false);
   }, [error]);
 
   useEffect(() => {
-    
-    setLoading(false)
-    setOverlay(false)
-    
+    setLoading(false);
+    setOverlay(false);
   }, [resultForgotPassword]);
 
   return (
@@ -85,8 +81,8 @@ export const login = ({ navigation }) => {
             }}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
-              signIn(values)
-              setLoading(true)
+              signIn(values);
+              setLoading(true);
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -125,11 +121,8 @@ export const login = ({ navigation }) => {
                     />
                   }
                 />
-                <Text
-                  onPress={toggleOverlay}
-                  style={loginStyle.mdp}
-                >
-                  Mot de passe oublié
+                <Text onPress={toggleOverlay} style={loginStyle.mdp}>
+                  Mot de passe oublié ?
                 </Text>
                 <Button
                   onPress={handleSubmit}
@@ -141,9 +134,8 @@ export const login = ({ navigation }) => {
               </View>
             )}
           </Formik>
-        </View>            
+        </View>
         <View style={{ flex: 3 }}></View>
-
         <Overlay
           isVisible={overlay}
           onBackdropPress={toggleOverlay}
@@ -157,8 +149,8 @@ export const login = ({ navigation }) => {
             }}
             validationSchema={ForgotPasswordSchema}
             onSubmit={(values) => {
-              setResultForgotPassword([])
-              forgotPassword(values.email)
+              setResultForgotPassword([]);
+              forgotPassword(values.email);
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -181,7 +173,7 @@ export const login = ({ navigation }) => {
                     />
                   }
                 />
-                <View style={{flexDirection: "row"}}>
+                <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1 }}>
                     <Button
                       onPress={toggleOverlay}

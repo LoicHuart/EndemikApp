@@ -1,26 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Alert,
-  Modal,
   Pressable,
   StyleSheet,
   View,
   Text,
   Switch,
+  ScrollView,
 } from "react-native";
 import color from "../../constants/color";
+import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
 import { Avatar, Icon, Overlay } from "react-native-elements";
+import { ValideRefuseEmployee } from "./ValideRefuseEmployee";
+import { updateEmployee } from "../../requeteApi";
 
-export const CardEmployee = ({ item }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-  // const [overlayAdd, setOverlayAdd] = React.useState(false);
+export const CardEmployee = ({ item, refreshEmployee }) => {
+  const [isEnabled, setIsEnabled] = useState(item.active);
+  // console.log(item.active);
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled);
+    updateEmployee(!isEnabled);
+    console.log(isEnabled);
+  };
 
-  // const toggleOverlayAdd = () => {
-  //   setOverlayAdd(!overlayAdd);
-  // };
+  const [overlayDelete, setOverlayDelete] = React.useState(false);
+  const [overlayEdit, setOverlayEdit] = React.useState(false);
+
+  const toggleOverlayDelete = () => {
+    setOverlayDelete(!overlayDelete);
+    refreshEmployee();
+  };
+
+  const toggleOverlayEdit = () => {
+    setOverlayEdit(!overlayEdit);
+    refreshEmployee();
+  };
+
+  useEffect(() => {
+    setIsEnabled(item.active);
+  });
 
   return (
     <View style={styles.cardEmployee}>
@@ -42,36 +60,49 @@ export const CardEmployee = ({ item }) => {
       </View>
       <View style={styles.cardButton}>
         <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-          <View style={styles.icon}>
-            <Icon
-              name="edit"
-              type="font-awesome-5"
-              color={color.COLORS.GREY}
-              onPress={() => console.log("Edit")}
-            />
-          </View>
+          <Pressable style={{ flex: 1 }} onPress={toggleOverlayEdit}>
+            <Icon name="edit" type="font-awesome-5" color={color.COLORS.GREY} />
+          </Pressable>
           <View style={styles.container}>
             <Switch
               trackColor={{ false: color.COLORS.GREY, true: color.COLORS.GREY }}
               thumbColor={isEnabled ? "#adf3ad" : "#f0bebd"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
+              ios_backgroundColor={color.COLORS.GREY}
+              // onValueChange={toggleSwitch}
               value={isEnabled}
             />
           </View>
-          <View style={styles.icon}>
+          <Pressable style={{ flex: 1 }} onPress={toggleOverlayDelete}>
             <Icon
               name="trash"
               type="font-awesome-5"
               color={color.COLORS.GREY}
-              onPress={() => setModalVisible(true)}
             />
-          </View>
+          </Pressable>
         </View>
       </View>
-      {/* <Overlay isVisible={overlayAdd} onBackdropPress={toggleOverlayAdd}>
-        <EditEmployee />
-      </Overlay> */}
+
+      <Overlay
+        isVisible={overlayEdit}
+        onBackdropPress={toggleOverlayEdit}
+        overlayStyle={screen.overlay}
+      >
+        <ScrollView>
+          <EditEmployee toggleOverlayEdit={toggleOverlayEdit} employee={item} />
+        </ScrollView>
+      </Overlay>
+
+      <Overlay
+        isVisible={overlayDelete}
+        onBackdropPress={toggleOverlayDelete}
+        overlayStyle={screen.overlay}
+      >
+        <ValideRefuseEmployee
+          itemId={item._id}
+          text={"Voulez-vous supprimer cet utilisateur ?"}
+          toggleOverlay={toggleOverlayDelete}
+        />
+      </Overlay>
     </View>
   );
 };
