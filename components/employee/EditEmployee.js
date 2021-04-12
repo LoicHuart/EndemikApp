@@ -10,6 +10,7 @@ import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
 
 const EditEmployeeSchema = Yup.object().shape({
+  title: Yup.string().required("Champ obligatoire"),
   firstName: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
@@ -66,6 +67,13 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
     { label: "Développeur", value: "603ea811b4a9d056a48fccd7" },
     { label: "Direction", value: "603ea81cb4a9d056a48fccd8" },
     { label: "Ressource Humaine", value: "603ea826b4a9d056a48fccd9" },
+  ]);
+
+  const [Title, setTitle] = React.useState([
+    { label: "Madame", value: "Madame" },
+    { label: "Monsieur", value: "Monsieur" },
+    { label: "Mademoiselle", value: "Mademoiselle" },
+    { label: "Autres", value: "Autres" },
   ]);
 
   const sendEditEmployee = async (values) => {
@@ -180,6 +188,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
       </Text>
       <Formik
         initialValues={{
+          title: employee.title,
           lastName: employee.lastName,
           firstName: employee.firstName,
           mail: employee.mail,
@@ -199,7 +208,21 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
-              <Text style={{ fontSize: 15 }}>Civilité</Text>
+              {/* <Text style={{ fontSize: 15 }}>Civilité</Text> */}
+              <DropDownPicker
+                onChangeItem={(item) => (values.title = item.value)}
+                onBlur={(item) => (values.title = item.value)}
+                items={Title}
+                value={values.title}
+                placeholder="Civilité"
+                containerStyle={{ height: 40, margin: 10 }}
+                style={{ backgroundColor: color.COLORS.DEFAULT }}
+                labelStyle={{ textTransform: "capitalize" }}
+                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+                onOpen={() => setHeightDropdownRole(300)}
+                onClose={() => setHeightDropdownRole(40)}
+                dropDownMaxHeight={heightDropdownRole - 40}
+              />
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input

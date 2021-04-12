@@ -1,14 +1,11 @@
 import React, { useEffect, useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  FlatList,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, View, FlatList, Dimensions } from "react-native";
 import { CardEmployee } from "./CardEmployee";
 import { AuthContext } from "../../context/AuthContext";
+import { SearchBar } from "react-native-elements";
+import { searchInJson, sortJson } from "../../function";
+import { screen } from "../../styles/";
+import DropDownPicker from "react-native-dropdown-picker";
 
 import color from "../../constants/color";
 
@@ -16,6 +13,9 @@ export const ListEmployees = (refresh) => {
   const { token } = useContext(AuthContext);
   const [employees, setEmployees] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [search, setSearch] = React.useState();
+  const [employeesSearch, setEmployeesSearch] = React.useState(employees);
+  const [employeesSort, setEmployeesSort] = React.useState("A-Z");
 
   const displayEmployees = async () => {
     setLoading(true);
@@ -53,6 +53,16 @@ export const ListEmployees = (refresh) => {
     displayEmployees();
   }, []);
 
+  // console.log(firstName);
+  useEffect(() => {
+    let test = searchInJson(
+      employees,
+      ["firstName", "lastName", "mail", "tel_nb"],
+      search
+    );
+    setEmployeesSearch(sortJson(test, "firstName", employeesSort));
+  }, [search, employeesSort, employees]);
+
   useEffect(() => {
     setLoading(false);
   }, [employees]);
@@ -63,8 +73,30 @@ export const ListEmployees = (refresh) => {
 
   return (
     <View>
+      <SearchBar
+        placeholder="Rechercher"
+        onChangeText={setSearch}
+        value={search}
+        inputContainerStyle={screen.searchBarInputContainerStyle}
+        containerStyle={screen.searchBarContainerStyle}
+      />
+
+      <View style={{ margin: 10, alignSelf: "center" }}>
+        <DropDownPicker
+          onChangeItem={(item) => setEmployeesSort(item.value)}
+          items={[
+            { value: "A-Z", label: "A-Z" },
+            { value: "Z-A", label: "Z-A" },
+          ]}
+          value={employeesSort}
+          placeholder="Trier"
+          containerStyle={{ height: 40, width: 120 }}
+          style={{ backgroundColor: color.COLORS.DEFAULT }}
+          dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+        />
+      </View>
       <FlatList
-        data={employees}
+        data={employeesSearch}
         style={{ height: Dimensions.get("window").height - 150 }}
         refreshing={loading}
         onRefresh={() => displayEmployees()}
