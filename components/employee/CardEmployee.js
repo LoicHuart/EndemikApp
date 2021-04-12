@@ -12,13 +12,14 @@ import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
 import { Avatar, Icon, Overlay } from "react-native-elements";
 import { ValideRefuseEmployee } from "./ValideRefuseEmployee";
+import { updateEmployee } from "../../requeteApi";
 
 export const CardEmployee = ({ item, refreshEmployee }) => {
   const [isEnabled, setIsEnabled] = useState(item.active);
   // console.log(item.active);
   const toggleSwitch = () => {
     setIsEnabled(!isEnabled);
-    //requete API
+    updateEmployee(!isEnabled);
     console.log(isEnabled);
   };
 
@@ -33,21 +34,6 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   const toggleOverlayEdit = () => {
     setOverlayEdit(!overlayEdit);
     refreshEmployee();
-  };
-
-  const formatDisplay = (date) => {
-    date = new Date(date);
-    let day = date.getDate();
-    if (day.toString().length < 2) {
-      day = "0" + day;
-    }
-
-    let month = date.getMonth() + 1;
-    if (month.toString().length < 2) {
-      month = "0" + month;
-    }
-
-    return day + "/" + month + "/" + date.getFullYear();
   };
 
   useEffect(() => {
