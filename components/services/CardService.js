@@ -25,7 +25,7 @@ export const CardService = ({item, refreshService}) => {
         <View>
             <View style={styles.cardTop}>
                 <Text style={styles.service}>{item.name}</Text>
-                <Text>Manager : </Text>
+                <Text>Manageur : </Text>
                 <View style={{flexDirection: "row",alignItems: "center", margin: 10}}>
                     <Avatar
                         rounded
