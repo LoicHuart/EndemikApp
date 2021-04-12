@@ -31,6 +31,7 @@ export function DrawerContent(props) {
                 name="desktop"
                 type="font-awesome-5"
                 color={color.COLORS.DEFAULT}
+                iconStyle={drawer.icon}
               />
             )}
             label="Tableau de bord"
@@ -45,6 +46,7 @@ export function DrawerContent(props) {
                 name="calendar-plus"
                 type="font-awesome-5"
                 color={color.COLORS.DEFAULT}
+                iconStyle={drawer.icon}
               />
             )}
             label="Demande de congé"
@@ -59,6 +61,7 @@ export function DrawerContent(props) {
                 name="calendar-day"
                 type="font-awesome-5"
                 color={color.COLORS.DEFAULT}
+                iconStyle={drawer.icon}
               />
             )}
             label="Gestion des congés"
@@ -73,6 +76,7 @@ export function DrawerContent(props) {
                 name="users-cog"
                 type="font-awesome-5"
                 color={color.COLORS.DEFAULT}
+                iconStyle={drawer.icon}
               />
             )}
             label="Gestion des utilisateurs"
@@ -87,6 +91,7 @@ export function DrawerContent(props) {
                 name="cogs"
                 type="font-awesome-5"
                 color={color.COLORS.DEFAULT}
+                iconStyle={drawer.icon}
               />
             )}
             label="Gestion des services"
@@ -101,6 +106,7 @@ export function DrawerContent(props) {
                 name="user"
                 type="font-awesome-5"
                 color={color.COLORS.DEFAULT}
+                iconStyle={drawer.icon}
               />
             )}
             label="Mon profil"

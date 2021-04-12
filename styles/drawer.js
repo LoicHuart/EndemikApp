@@ -23,4 +23,7 @@ export const drawer = StyleSheet.create({
     fontWeight: "bold",
     color: color.COLORS.DEFAULT,
   },
+  icon: {
+    width:40,
+  }
 });

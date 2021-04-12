@@ -16,6 +16,11 @@ export const screen = StyleSheet.create({
   },
   button: {
     backgroundColor: color.COLORS.PRIMARY,
+    margin: 10,
+  },
+  buttonCancel: {
+    backgroundColor: color.COLORS.GREY,
+    margin: 10,
   },
   overlay: {
     padding: 15,

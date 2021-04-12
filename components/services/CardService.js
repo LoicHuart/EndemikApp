@@ -21,40 +21,48 @@ export const CardService = ({ item, refreshService }) => {
     refreshService();
   };
 
-  return (
-    <View>
-      <View style={styles.cardTop}>
-        <Text style={styles.service}>{item.name}</Text>
-        <Text>Manager : </Text>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", margin: 10 }}
-        >
-          <Avatar
-            rounded
-            source={{
-              uri: `http://${process.env.REACT_APP_API_HOST}/uploads/${item.id_manager.photo_url}`,
-            }}
-            size="medium"
-            title={item.id_manager.firstName[0] + item.id_manager.lastName[0]}
-          />
-          <Text style={styles.firstName}>{item.id_manager.firstName}</Text>
-          <Text>{item.id_manager.lastName}</Text>
-        </View>
-      </View>
-      <View style={styles.cardBot}>
-        <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-          <Pressable style={{ flex: 0.5 }} onPress={toggleOverlayEdit}>
-            <Icon name="edit" type="font-awesome-5" color={color.COLORS.GREY} />
-          </Pressable>
-          <Pressable style={{ flex: 0.5 }} onPress={toggleOverlayDelete}>
-            <Icon
-              name="trash"
-              type="font-awesome-5"
-              color={color.COLORS.GREY}
-            />
-          </Pressable>
-        </View>
-      </View>
+    return (
+        <View>
+            <View style={styles.cardTop}>
+                <Text style={styles.service}>{item.name}</Text>
+                <Text>Manageur : </Text>
+                <View style={{flexDirection: "row",alignItems: "center", margin: 10}}>
+                    <Avatar
+                        rounded
+                        source={{
+                            uri: `http://${process.env.REACT_APP_API_HOST}/uploads/${item.id_manager.photo_url}`,
+                        }}
+                        size="medium"
+                        title={item.id_manager.firstName[0] + item.id_manager.lastName[0]}
+                    />
+                    <Text style={styles.firstName}>{item.id_manager.firstName}</Text>
+                    <Text>{item.id_manager.lastName}</Text>
+                </View>
+            </View>
+            <View style={styles.cardBot}>
+                <View style={{flexDirection: "row",alignItems: "center", flex:1}}>
+                    <Pressable 
+                        style= {{flex:0.5}}
+                        onPress={toggleOverlayEdit}
+                    >
+                        <Icon
+                            name='edit'
+                            type='font-awesome-5'
+                            color= {color.COLORS.GREY}
+                        />
+                    </Pressable>
+                    <Pressable 
+                        style= {{flex:0.5}}
+                        onPress={toggleOverlayDelete}
+                    >
+                        <Icon
+                            name='trash'
+                            type='font-awesome-5'
+                            color= {color.COLORS.GREY}
+                        />
+                    </Pressable>
+                </View>
+            </View>
 
       <Overlay
         isVisible={overlayEdit}
