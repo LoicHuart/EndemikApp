@@ -57,7 +57,7 @@ export const ValideRefuseEmployee = ({ itemId, text, toggleOverlay }) => {
       <Text style={screen.title}>{text}</Text>
       {resultDeleteEmployee.error && (
         <Text style={{ color: color.COLORS.DANGER, alignSelf: "center" }}>
-          Vous ne pouvez pas supprimer ce utilisateur
+          Vous ne pouvez pas supprimer cet utilisateur
         </Text>
       )}
       <View style={{ flexDirection: "row" }}>

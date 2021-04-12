@@ -139,7 +139,7 @@ export const AddHoliday = () => {
         </Text>
         <Formik
           initialValues={{
-            note: "Demande de congés",
+            note: "Demande de congé",
             type: "rtt",
             startDate: startDate,
             endDate: endDate,

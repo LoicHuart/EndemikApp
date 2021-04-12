@@ -12,8 +12,7 @@ export const dashbord = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>dashbord</Text>
-        <Button onPress={() => navigation.goBack()} title="Go Back" />
+        <Text>Tableau de bord</Text>
         <Button title="signOut" onPress={signOut} />
       </View>
     </View>
