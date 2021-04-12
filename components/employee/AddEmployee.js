@@ -8,6 +8,9 @@ import { AuthContext } from "../../context/AuthContext";
 import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
 import DropDownPicker from "react-native-dropdown-picker";
+import { formatDisplay } from "../../function";
+import { formatAPI } from "../../function";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AddEmployeeSchema = Yup.object().shape({
   firstname: Yup.string()
@@ -58,12 +61,20 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const [resultGetServices, setResultGetServices] = React.useState([]);
   const [heightDropdown, setHeightDropdown] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
+
   const [Roles, setRoles] = React.useState([
     { label: "Administrateur", value: "60381739c7e71a89252b8844" },
     { label: "Salarié", value: "60381701c7e71a89252b8843" },
     { label: "Développeur", value: "603ea811b4a9d056a48fccd7" },
     { label: "Direction", value: "603ea81cb4a9d056a48fccd8" },
     { label: "Ressource Humaine", value: "603ea826b4a9d056a48fccd9" },
+  ]);
+
+  const [Title, setTitle] = React.useState([
+    { label: "Madame", value: "Madame" },
+    { label: "Monsieur", value: "Monsieur" },
+    { label: "Mademoiselle", value: "Mademoiselle" },
+    { label: "Autres", value: "Autres" },
   ]);
 
   const sendAddEmployee = async (values) => {
@@ -73,6 +84,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
 
     console.log(values.id_service);
     console.log(values.id_role);
+    console.log(formatDisplay(values.date_birth));
 
     var formdata = new FormData();
     formdata.append("title", values.title);
@@ -108,23 +120,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         setResultAddEmployee(result);
       })
       .catch((error) => console.log("error", error));
-
-    // try {
-    //   const resp = await fetch(
-    //     `http://${process.env.REACT_APP_API_HOST}/api/employees`,
-    //     requestOptions
-    //   );
-
-    //   const respJSON = await resp.json();
-
-    //   if (!resp.ok) {
-    //     console.log("error");
-    //     console.log(resp);
-    //   }
-    //   console.log(respJSON);
-    // } catch (e) {
-    //   console.log(e);
-    // }
   };
 
   const getAllService = async () => {
@@ -185,29 +180,31 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
       </Text>
       <Formik
         initialValues={{
-          lastname: "",
-          firstname: "",
-          mail: "",
-          tel: "",
-          date_birth: "",
-          role: "",
-          social_security_nb: "",
-          postal_code: "",
-          street_nb: "",
-          street: "",
-          city: "",
-          // lastname: "Pottier",
-          // firstname: "Domitille",
-          // mail: "dopitter@gmail.com",
-          // tel: "0649826159",
-          // date_birth: "1998-08-30",
-          // social_security_nb: "2980857403863",
-          // postal_code: "51100",
-          // street_nb: "27",
-          // street: "rue des moulins",
-          // city: "Reims",
-          // id_role: "",
-          // id_service: "",
+          // title: "",
+          // lastname: "",
+          // firstname: "",
+          // mail: "",
+          // tel: "",
+          // date_birth: "",
+          // role: "",
+          // social_security_nb: "",
+          // postal_code: "",
+          // street_nb: "",
+          // street: "",
+          // city: "",
+          title: "",
+          lastname: "Pottier",
+          firstname: "Domitille",
+          mail: "dopitter@gmail.com",
+          tel: "0649826159",
+          date_birth: "1998-08-30",
+          social_security_nb: "2980857403863",
+          postal_code: "51100",
+          street_nb: "27",
+          street: "rue des moulins",
+          city: "Reims",
+          id_role: "",
+          id_service: "",
         }}
         validationSchema={AddEmployeeSchema}
         onSubmit={(values) => sendAddEmployee(values)}
@@ -215,7 +212,21 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
-              <Text style={{ fontSize: 15 }}>Civilité</Text>
+              {/* <Text style={{ fontSize: 15 }}>Civilité</Text> */}
+              <DropDownPicker
+                onChangeItem={(item) => (values.title = item.value)}
+                onBlur={(item) => (values.title = item.value)}
+                items={Title}
+                value={values.title}
+                placeholder="Civilité"
+                containerStyle={{ height: 40, margin: 10 }}
+                style={{ backgroundColor: color.COLORS.DEFAULT }}
+                labelStyle={{ textTransform: "capitalize" }}
+                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+                onOpen={() => setHeightDropdownRole(300)}
+                onClose={() => setHeightDropdownRole(40)}
+                dropDownMaxHeight={heightDropdownRole - 40}
+              />
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
@@ -250,13 +261,22 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Input
+                  {/* <Input
                     style={styles.input}
                     onChangeText={handleChange("date_birth")}
                     onBlur={handleBlur("date_birth")}
-                    value={values.date_birth}
+                    value={formatDisplay(values.date_birth)}
                     placeholder="Date de naissance"
                     errorMessage={errors.date_birth}
+                  /> */}
+                  <DateTimePicker
+                    testID="dateTimePickerDateBirth"
+                    value={new Date()}
+                    locale="fr-FR"
+                    mode="date"
+                    display="default"
+                    onChange={onChangeStartDate}
+                    minimumDate={today}
                   />
                 </View>
               </View>
@@ -328,7 +348,9 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
             </View>
             <View
               style={{
-                margin: 10,
+                // margin: 10,
+                // marginVertical: 10,
+                marginBottom: 10,
                 height: heightDropdown,
                 flex: 1,
               }}
@@ -353,7 +375,8 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
             </View>
             <View
               style={{
-                margin: 10,
+                // margin: 10,
+                marginVertical: 10,
                 height: heightDropdownRole,
                 flex: 1,
               }}
