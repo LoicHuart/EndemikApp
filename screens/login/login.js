@@ -133,7 +133,7 @@ export const login = ({ navigation }) => {
                 </Text>
                 <Button
                   onPress={handleSubmit}
-                  title="Valider"
+                  title="Se connecter"
                   buttonStyle={loading?'':loginStyle.button}
                   loading={loading?true:false}
                   type={loading?'clear':'solid'}
