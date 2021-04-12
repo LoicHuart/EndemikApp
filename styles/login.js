@@ -29,13 +29,11 @@ export const login = StyleSheet.create({
     },
     button: {
         backgroundColor: color.COLORS.PRIMARY,
-        alignSelf: "flex-start",
-        alignSelf: "center",
+        margin: 10,
     },
     buttonAnnuler: {
         backgroundColor: color.COLORS.GREY,
-        alignSelf: "flex-start",
-        alignSelf: "center",
+        margin: 10,
     },
     card: {
         alignSelf: "flex-start",

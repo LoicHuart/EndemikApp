@@ -133,7 +133,7 @@ export const login = ({ navigation }) => {
                 </Text>
                 <Button
                   onPress={handleSubmit}
-                  title="Valider"
+                  title="Se connecter"
                   buttonStyle={loading?'':loginStyle.button}
                   loading={loading?true:false}
                   type={loading?'clear':'solid'}
@@ -187,7 +187,6 @@ export const login = ({ navigation }) => {
                       onPress={toggleOverlay}
                       title="Annuler"
                       buttonStyle={loginStyle.buttonAnnuler}
-                      style={{flex:1}}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
@@ -197,7 +196,6 @@ export const login = ({ navigation }) => {
                       buttonStyle={loading?'':loginStyle.button}
                       loading={loading?true:false}
                       type={loading?'clear':'solid'}
-                      style={{flex:1}}
                     />
                   </View>
                 </View>
