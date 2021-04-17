@@ -50,6 +50,7 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
           }}
           size="medium"
           activeOpacity={0.7}
+          title={item.firstName[0] + item.lastName[0]}
         />
         <Text style={styles.firstName}>{item.firstName}</Text>
         <Text>{item.lastName}</Text>
