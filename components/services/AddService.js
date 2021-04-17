@@ -7,6 +7,7 @@ import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
 import DropDownPicker from "react-native-dropdown-picker";
 import { screen } from "../../styles/";
+import { addServiceApi, getEmployeeApi } from "../../requestApi/";
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -30,52 +31,16 @@ export const AddService = ({ toggleOverlayAdd }) => {
   const sendAddServices = async (value) => {
     if (!loading) {
       setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      var raw = JSON.stringify(value);
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/services`,
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          // console.log(result)
-          setResultAddService(result);
-        })
-        .catch((error) => console.log("error", error));
+      await addServiceApi(token, value).then((result) => {
+        setResultAddService(result)
+      })
     } else {
       console.log("loading");
     }
   };
 
   const getAllEmployee = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify();
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/employees`,
-      requestOptions
-    )
-      .then((response) => response.json())
+    await getEmployeeApi(token, true)
       .then((result) => {
         let array = [];
         result.forEach((elem) => {
@@ -86,7 +51,6 @@ export const AddService = ({ toggleOverlayAdd }) => {
         });
         setResultGetEmployees(array);
       })
-      .catch((error) => console.log("error", error));
   };
 
   useEffect(() => {
@@ -98,8 +62,6 @@ export const AddService = ({ toggleOverlayAdd }) => {
     // console.log(resultAddService._id)
     if (resultAddService._id && !loading) {
       toggleOverlayAdd();
-    } else {
-      getAllEmployee();
     }
   }, [loading]);
 
@@ -151,7 +113,10 @@ export const AddService = ({ toggleOverlayAdd }) => {
                 containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdown(300)}
+                onOpen={() => {
+                  getAllEmployee()
+                  setHeightDropdown(300)
+                }}
                 onClose={() => setHeightDropdown(40)}
                 dropDownMaxHeight={heightDropdown - 40}
               />
@@ -168,9 +133,9 @@ export const AddService = ({ toggleOverlayAdd }) => {
                 <Button
                   onPress={handleSubmit}
                   title="Valider"
-                  buttonStyle={loading?'':screen.button}
-                  loading={loading?true:false}
-                  type={loading?'clear':'solid'}
+                  buttonStyle={loading ? '' : screen.button}
+                  loading={loading ? true : false}
+                  type={loading ? 'clear' : 'solid'}
                 />
               </View>
             </View>

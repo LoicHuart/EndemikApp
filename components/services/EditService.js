@@ -7,6 +7,8 @@ import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
 import DropDownPicker from "react-native-dropdown-picker";
 import { screen } from "../../styles/";
+import { updateServiceApi, getEmployeeApi } from "../../requestApi/";
+
 
 const Schema = Yup.object().shape({
   name: Yup.string()
@@ -31,53 +33,17 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
     // console.log(value)
     if (!loading) {
       setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      var raw = JSON.stringify(value);
-
-      var requestOptions = {
-        method: "PUT",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-
-      await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/services/${service._id}`,
-        requestOptions
-      )
-        .then((response) => response.json())
+      updateServiceApi(token, value, service._id)
         .then((result) => {
-          // console.log(result)
           setResultEditService(result);
         })
-        .catch((error) => console.log("error", error));
     } else {
       console.log("loading");
     }
   };
 
   const getAllEmployee = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify();
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/employees`,
-      requestOptions
-    )
-      .then((response) => response.json())
+    await getEmployeeApi(token, true)
       .then((result) => {
         let array = [];
         result.forEach((elem) => {
@@ -88,7 +54,6 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
         });
         setResultGetEmployees(array);
       })
-      .catch((error) => console.log("error", error));
   };
 
   useEffect(() => {
@@ -100,8 +65,6 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
     // console.log(resultEditService._id)
     if (resultEditService.message && !resultEditService.error && !loading) {
       toggleOverlayEdit();
-    } else {
-      getAllEmployee();
     }
   }, [loading]);
 
@@ -153,10 +116,13 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
                 containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdown(300)}
+                onOpen={() => {
+                  getAllEmployee()
+                  setHeightDropdown(300)
+                }}
                 onClose={() => setHeightDropdown(40)}
                 dropDownMaxHeight={heightDropdown - 40}
-                // defaultValue={values.id_manager}
+              // defaultValue={values.id_manager}
               />
             </View>
             <View style={{ flexDirection: "row" }}>
@@ -171,9 +137,9 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
                 <Button
                   onPress={handleSubmit}
                   title="Valider"
-                  buttonStyle={loading?'':screen.button}
-                  loading={loading?true:false}
-                  type={loading?'clear':'solid'}
+                  buttonStyle={loading ? '' : screen.button}
+                  loading={loading ? true : false}
+                  type={loading ? 'clear' : 'solid'}
                 />
               </View>
             </View>
