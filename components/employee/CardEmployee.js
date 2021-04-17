@@ -12,14 +12,14 @@ import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
 import { Avatar, Icon, Overlay } from "react-native-elements";
 import { ValideRefuseEmployee } from "./ValideRefuseEmployee";
-import { updateEmployee } from "../../requeteApi";
+import { updateEmployeeApi } from "../../requestApi";
 
 export const CardEmployee = ({ item, refreshEmployee }) => {
   const [isEnabled, setIsEnabled] = useState(item.active);
   // console.log(item.active);
   const toggleSwitch = () => {
     setIsEnabled(!isEnabled);
-    updateEmployee(!isEnabled);
+    updateEmployeeApi(!isEnabled);
     console.log(isEnabled);
   };
 

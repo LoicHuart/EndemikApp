@@ -7,6 +7,7 @@ import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
 import DropDownPicker from "react-native-dropdown-picker";
 import { screen } from "../../styles/";
+import { addServiceApi } from "../../requestApi/";
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -30,28 +31,10 @@ export const AddService = ({ toggleOverlayAdd }) => {
   const sendAddServices = async (value) => {
     if (!loading) {
       setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      var raw = JSON.stringify(value);
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/services`,
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          // console.log(result)
-          setResultAddService(result);
-        })
-        .catch((error) => console.log("error", error));
+      let result = await addServiceApi(token, value)
+      if (result) {
+        setResultAddService(result)
+      }
     } else {
       console.log("loading");
     }
@@ -168,9 +151,9 @@ export const AddService = ({ toggleOverlayAdd }) => {
                 <Button
                   onPress={handleSubmit}
                   title="Valider"
-                  buttonStyle={loading?'':screen.button}
-                  loading={loading?true:false}
-                  type={loading?'clear':'solid'}
+                  buttonStyle={loading ? '' : screen.button}
+                  loading={loading ? true : false}
+                  type={loading ? 'clear' : 'solid'}
                 />
               </View>
             </View>

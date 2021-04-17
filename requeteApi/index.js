@@ -1,1 +1,0 @@
-export { updateEmployee } from "./updateEmployee";
