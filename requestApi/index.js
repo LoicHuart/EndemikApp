@@ -7,6 +7,8 @@ export { getEmployeeApi } from "./getEmployeeApi";
 export { addServiceApi } from "./addServiceApi";
 export { updateServiceApi } from "./updateServiceApi";
 export { getServiceApi } from "./getServiceApi";
+export { deleteServiceApi } from "./deleteServiceApi";
+
 
 //holiday
 

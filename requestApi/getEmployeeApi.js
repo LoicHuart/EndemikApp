@@ -1,5 +1,5 @@
 /**
- * @param {string} token
+ * @param {String} token
  * @param {Boolean} polulate
  */
 export const getEmployeeApi = async (token, polulate) => {

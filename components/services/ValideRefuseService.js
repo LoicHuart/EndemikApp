@@ -4,6 +4,7 @@ import { Button } from "react-native-elements";
 import color from "../../constants/color";
 import { screen } from "../../styles";
 import { AuthContext } from "../../context/AuthContext";
+import { deleteServiceApi } from "../../requestApi/";
 
 export const ValideRefuseService = ({ itemId, text, toggleOverlay }) => {
   const { token } = useContext(AuthContext);
@@ -11,26 +12,15 @@ export const ValideRefuseService = ({ itemId, text, toggleOverlay }) => {
   const [resultDeleteService, setResultDeleteService] = React.useState([]);
 
   const deleteService = async (id) => {
-    setLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    var requestOptions = {
-      method: "DELETE",
-      headers: myHeaders,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/services/${id}`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        // console.log(result)
-        setResultDeleteService(result);
-      })
-      .catch((error) => console.log("error", error));
+    if (!loading) {
+      setLoading(true);
+      deleteServiceApi(token, id)
+        .then((result) => {
+          setResultDeleteService(result);
+        })
+    } else {
+      console.log("loading");
+    }
   };
 
   useEffect(() => {
@@ -63,9 +53,11 @@ export const ValideRefuseService = ({ itemId, text, toggleOverlay }) => {
         </View>
         <View style={{ flex: 1 }}>
           <Button
-            buttonStyle={screen.buttonSuccess}
             onPress={() => deleteService(itemId)}
             title="Valider"
+            buttonStyle={loading ? '' : screen.buttonSuccess}
+            loading={loading ? true : false}
+            type={loading ? 'clear' : 'solid'}
           />
         </View>
       </View>

@@ -1,25 +1,21 @@
 /**
  * @param {String} token
- * @param {Boolean} polulate
+ * @param {Array} id
  */
-export const getServiceApi = async (token, polulate) => {
+export const deleteServiceApi = async (token, id) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify();
 
     var requestOptions = {
-        method: "GET",
+        method: "DELETE",
         headers: myHeaders,
-        body: raw,
         redirect: "follow",
     };
 
     var val
 
     await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/services?populate=${polulate && 1}`,
+        `http://${process.env.REACT_APP_API_HOST}/api/services/${id}`,
         requestOptions
     )
         .then((response) => response.json())
@@ -29,4 +25,4 @@ export const getServiceApi = async (token, polulate) => {
         })
         .catch((error) => console.log("error", error));
     return val
-};
+}

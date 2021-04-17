@@ -1,5 +1,5 @@
 /**
- * @param {string} token
+ * @param {String} token
  * @param {Array} values
  */
 export const addServiceApi = async (token, values) => {
