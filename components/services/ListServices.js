@@ -8,6 +8,7 @@ import color from "../../constants/color";
 import { searchInJson, sortJson } from "../../function";
 import { screen } from "../../styles/";
 import DropDownPicker from "react-native-dropdown-picker";
+import { getServiceApi } from "../../requestApi/";
 
 export const ListServices = ({ refresh }) => {
   const { token } = useContext(AuthContext);
@@ -19,29 +20,10 @@ export const ListServices = ({ refresh }) => {
 
   const displayServices = async () => {
     setLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify();
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/services?populate=1`,
-      requestOptions
-    )
-      .then((response) => response.json())
+    getServiceApi(token, true)
       .then((result) => {
-        // console.log(result)
         setServices(result);
       })
-      .catch((error) => console.log("error", error));
   };
 
   useEffect(() => {

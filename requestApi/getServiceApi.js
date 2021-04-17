@@ -1,17 +1,16 @@
 /**
  * @param {string} token
- * @param {Array} values
- * @param {String} id
+ * @param {Boolean} polulate
  */
-export const updateServiceApi = async (token, values, id) => {
+export const getServiceApi = async (token, polulate) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify(values);
+    var raw = JSON.stringify();
 
     var requestOptions = {
-        method: "PUT",
+        method: "GET",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
@@ -20,7 +19,7 @@ export const updateServiceApi = async (token, values, id) => {
     var val
 
     await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/services/${id}`,
+        `http://${process.env.REACT_APP_API_HOST}/api/services?populate=${polulate && 1}`,
         requestOptions
     )
         .then((response) => response.json())
@@ -30,4 +29,4 @@ export const updateServiceApi = async (token, values, id) => {
         })
         .catch((error) => console.log("error", error));
     return val
-}
+};
