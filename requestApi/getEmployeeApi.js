@@ -1,16 +1,16 @@
 /**
  * @param {string} token
- * @param {Array} values
+ * @param {Boolean} polulate
  */
-export const addServiceApi = async (token, values) => {
+export const getEmployeeApi = async (token, polulate) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify(values);
+    var raw = JSON.stringify();
 
     var requestOptions = {
-        method: "POST",
+        method: "GET",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
@@ -19,13 +19,13 @@ export const addServiceApi = async (token, values) => {
     var val
 
     await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/services`,
+        `http://${process.env.REACT_APP_API_HOST}/api/employees?populate=${polulate && 1}`,
         requestOptions
     )
         .then((response) => response.json())
         .then((result) => {
-            // console.log(result)
-            val = result;
+            val = result
+            console.log('result' + result)
         })
         .catch((error) => console.log("error", error));
     return val
