@@ -1,13 +1,13 @@
 //employee
-export { updateEmployeeApi } from "./updateEmployeeApi";
-export { getEmployeeApi } from "./getEmployeeApi";
+export { updateEmployeeApi } from "./employees/updateEmployeeApi";
+export { getEmployeeApi } from "./employees/getEmployeeApi";
 
 
 //service
-export { addServiceApi } from "./addServiceApi";
-export { updateServiceApi } from "./updateServiceApi";
-export { getServiceApi } from "./getServiceApi";
-export { deleteServiceApi } from "./deleteServiceApi";
+export { addServiceApi } from "./services/addServiceApi";
+export { updateServiceApi } from "./services/updateServiceApi";
+export { getServiceApi } from "./services/getServiceApi";
+export { deleteServiceApi } from "./services/deleteServiceApi";
 
 
 //holiday
