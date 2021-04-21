@@ -6,7 +6,6 @@
 export const updateEmployeeApi = async (token, values, id) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
-    // myHeaders.append("Content-Type", "application/json");
 
     var formdata = new FormData();
 
@@ -26,8 +25,6 @@ export const updateEmployeeApi = async (token, values, id) => {
     formdata.append("id_role", values.id_role);
     formdata.append("children_nb", 0);
 
-    // var raw = JSON.stringify(values);
-
     var requestOptions = {
         method: "PUT",
         headers: myHeaders,
@@ -43,7 +40,7 @@ export const updateEmployeeApi = async (token, values, id) => {
     )
         .then((response) => response.json())
         .then((result) => {
-            console.log(result);
+            // console.log(result);
             val = result
         })
         .catch((error) => console.log("error", error));
