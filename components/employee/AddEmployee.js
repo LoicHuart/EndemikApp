@@ -11,6 +11,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { formatDisplay } from "../../function";
 import { formatAPI } from "../../function";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { addEmployeeApi } from "../../requestApi"
 
 const AddEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -62,6 +63,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const [resultGetServices, setResultGetServices] = React.useState([]);
   const [heightDropdown, setHeightDropdown] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
+  const [loading, setLoading] = React.useState(true);
 
   const [Roles, setRoles] = React.useState([
     { label: "Administrateur", value: "60381739c7e71a89252b8844" },
@@ -79,48 +81,15 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   ]);
 
   const sendAddEmployee = async (values) => {
-    // setLoading = true;
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    console.log(values.id_service);
-    console.log(values.id_role);
-    console.log(formatDisplay(values.date_birth));
-
-    var formdata = new FormData();
-    formdata.append("title", values.title);
-    formdata.append("firstName", values.firstname);
-    formdata.append("lastName", values.lastname);
-    formdata.append("date_birth", values.date_birth);
-    formdata.append("social_security_number", values.social_security_nb);
-    formdata.append("mail", values.mail);
-    formdata.append("tel_nb", values.tel);
-    formdata.append("postal_code", values.postal_code);
-    formdata.append("street_nb", values.street_nb);
-    formdata.append("street", values.street);
-    formdata.append("city", values.city);
-    formdata.append("arrival_date", "2000-12-20");
-    formdata.append("id_service", values.id_service);
-    formdata.append("id_role", values.id_role);
-    formdata.append("children_nb", 0);
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/employees`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        setResultAddEmployee(result);
+    console.log(values)
+    if (!loading) {
+      setLoading(true);
+      await addEmployeeApi(token, values).then((result) => {
+        setResultAddEmployee(result)
       })
-      .catch((error) => console.log("error", error));
+    } else {
+      console.log("loading");
+    }
   };
 
   const getAllService = async () => {
@@ -154,6 +123,10 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
       })
       .catch((error) => console.log("error : ", error));
   };
+
+  useEffect(() => {
+    setLoading(false);
+  }, [resultAddEmployee]);
 
   useEffect(() => {
     if (resultAddEmployee._id) {

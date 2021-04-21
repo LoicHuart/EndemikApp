@@ -25,7 +25,7 @@ export const getEmployeeApi = async (token, polulate) => {
         .then((response) => response.json())
         .then((result) => {
             val = result
-            console.log('result' + result)
+            // console.log('result' + result)
         })
         .catch((error) => console.log("error", error));
     return val
