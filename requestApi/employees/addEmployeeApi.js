@@ -1,21 +1,19 @@
 /**
  * @param {String} token
  * @param {Array} values
- * @param {String} id
  */
-export const updateEmployeeApi = async (token, values, id) => {
+export const addEmployeeApi = async (token, values) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
     var formdata = new FormData();
-
     formdata.append("title", values.title);
-    formdata.append("firstName", values.firstName);
-    formdata.append("lastName", values.lastName);
+    formdata.append("firstName", values.firstname);
+    formdata.append("lastName", values.lastname);
     formdata.append("date_birth", values.date_birth);
-    formdata.append("social_security_number", values.social_security_number);
+    formdata.append("social_security_number", values.social_security_nb);
     formdata.append("mail", values.mail);
-    formdata.append("tel_nb", values.tel_nb);
+    formdata.append("tel_nb", values.tel);
     formdata.append("postal_code", values.postal_code);
     formdata.append("street_nb", values.street_nb);
     formdata.append("street", values.street);
@@ -26,7 +24,7 @@ export const updateEmployeeApi = async (token, values, id) => {
     formdata.append("children_nb", 0);
 
     var requestOptions = {
-        method: "PUT",
+        method: "POST",
         headers: myHeaders,
         body: formdata,
         redirect: "follow",
@@ -35,12 +33,12 @@ export const updateEmployeeApi = async (token, values, id) => {
     var val
 
     await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees/${id}`,
+        `http://${process.env.REACT_APP_API_HOST}/api/employees`,
         requestOptions
     )
         .then((response) => response.json())
         .then((result) => {
-            // console.log(result);
+            console.log(result);
             val = result
         })
         .catch((error) => console.log("error", error));

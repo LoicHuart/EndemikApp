@@ -11,6 +11,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { formatDisplay } from "../../function";
 import { formatAPI } from "../../function";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { addEmployeeApi } from "../../requestApi"
 
 const AddEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -62,6 +63,9 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const [resultGetServices, setResultGetServices] = React.useState([]);
   const [heightDropdown, setHeightDropdown] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
+  const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
+  const [heightDropdownService, setHeightDropdownService] = React.useState(40);
+  const [loading, setLoading] = React.useState(true);
 
   const [Roles, setRoles] = React.useState([
     { label: "Administrateur", value: "60381739c7e71a89252b8844" },
@@ -79,48 +83,15 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   ]);
 
   const sendAddEmployee = async (values) => {
-    // setLoading = true;
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    console.log(values.id_service);
-    console.log(values.id_role);
-    console.log(formatDisplay(values.date_birth));
-
-    var formdata = new FormData();
-    formdata.append("title", values.title);
-    formdata.append("firstName", values.firstname);
-    formdata.append("lastName", values.lastname);
-    formdata.append("date_birth", values.date_birth);
-    formdata.append("social_security_number", values.social_security_nb);
-    formdata.append("mail", values.mail);
-    formdata.append("tel_nb", values.tel);
-    formdata.append("postal_code", values.postal_code);
-    formdata.append("street_nb", values.street_nb);
-    formdata.append("street", values.street);
-    formdata.append("city", values.city);
-    formdata.append("arrival_date", "2000-12-20");
-    formdata.append("id_service", values.id_service);
-    formdata.append("id_role", values.id_role);
-    formdata.append("children_nb", 0);
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/employees`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        setResultAddEmployee(result);
+    // console.log(values)
+    if (!loading) {
+      setLoading(true);
+      await addEmployeeApi(token, values).then((result) => {
+        setResultAddEmployee(result)
       })
-      .catch((error) => console.log("error", error));
+    } else {
+      console.log("loading");
+    }
   };
 
   const getAllService = async () => {
@@ -156,6 +127,10 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   };
 
   useEffect(() => {
+    setLoading(false);
+  }, [resultAddEmployee]);
+
+  useEffect(() => {
     if (resultAddEmployee._id) {
       toggleOverlayAdd();
     } else {
@@ -181,31 +156,31 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
       </Text>
       <Formik
         initialValues={{
-          // title: "",
-          // lastname: "",
-          // firstname: "",
-          // mail: "",
-          // tel: "",
-          // date_birth: "",
-          // role: "",
-          // social_security_nb: "",
-          // postal_code: "",
-          // street_nb: "",
-          // street: "",
-          // city: "",
           title: "",
-          lastname: "Pottier",
-          firstname: "Domitille",
-          mail: "dopitter@gmail.com",
-          tel: "0649826159",
-          date_birth: "1998-08-30",
-          social_security_nb: "2980857403863",
-          postal_code: "51100",
-          street_nb: "27",
-          street: "rue des moulins",
-          city: "Reims",
-          id_role: "",
-          id_service: "",
+          lastname: "",
+          firstname: "",
+          mail: "",
+          tel: "",
+          date_birth: "",
+          role: "",
+          social_security_nb: "",
+          postal_code: "",
+          street_nb: "",
+          street: "",
+          city: "",
+          // title: "",
+          // lastname: "Pottier",
+          // firstname: "Domitille",
+          // mail: "dopitter@gmail.com",
+          // tel: "0649826159",
+          // date_birth: "1998-08-30",
+          // social_security_nb: "2980857403863",
+          // postal_code: "51100",
+          // street_nb: "27",
+          // street: "rue des moulins",
+          // city: "Reims",
+          // id_role: "",
+          // id_service: "",
         }}
         validationSchema={AddEmployeeSchema}
         onSubmit={(values) => sendAddEmployee(values)}
@@ -213,21 +188,23 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
-              {/* <Text style={{ fontSize: 15 }}>Civilité</Text> */}
-              <DropDownPicker
-                onChangeItem={(item) => (values.title = item.value)}
-                onBlur={(item) => (values.title = item.value)}
-                items={Title}
-                value={values.title}
-                placeholder="Civilité"
-                containerStyle={{ height: 40, margin: 10 }}
-                style={{ backgroundColor: color.COLORS.DEFAULT }}
-                labelStyle={{ textTransform: "capitalize" }}
-                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownRole(300)}
-                onClose={() => setHeightDropdownRole(40)}
-                dropDownMaxHeight={heightDropdownRole - 40}
-              />
+              <View style={{ margin: 10, marginBottom: 15, height: heightDropdownTitle }}>
+                <DropDownPicker
+                  onChangeItem={(item) => (values.title = item.value)}
+                  onBlur={(item) => (values.title = item.value)}
+                  items={Title}
+                  value={values.title}
+                  placeholder="Civilité"
+                  containerStyle={{ height: 40 }}
+                  style={{ backgroundColor: color.COLORS.DEFAULT }}
+                  labelStyle={{ textTransform: "capitalize" }}
+                  dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+                  onOpen={() => setHeightDropdownTitle(190)}
+                  onClose={() => setHeightDropdownTitle(40)}
+                  dropDownMaxHeight={heightDropdownTitle - 40}
+                />
+                <Text style={screen.errorDropdown}>{errors.title}</Text>
+              </View>
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
@@ -348,15 +325,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 </View>
               </View>
             </View>
-            <View
-              style={{
-                // margin: 10,
-                // marginVertical: 10,
-                marginBottom: 10,
-                height: heightDropdown,
-                flex: 1,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
               <DropDownPicker
                 onChangeItem={(item) => (values.id_service = item.value)}
                 onBlur={(item) => (values.id_service = item.value)}
@@ -366,23 +335,17 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 searchable={true}
                 searchablePlaceholder="Rechercher"
                 searchableError={() => <Text>Aucun résultat</Text>}
-                containerStyle={{ height: 40, margin: 10 }}
+                containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdown(250)}
-                onClose={() => setHeightDropdown(40)}
-                dropDownMaxHeight={heightDropdown - 40}
+                onOpen={() => setHeightDropdownService(250)}
+                onClose={() => setHeightDropdownService(40)}
+                dropDownMaxHeight={heightDropdownService - 40}
               />
+              <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
-            <View
-              style={{
-                // margin: 10,
-                marginVertical: 10,
-                height: heightDropdownRole,
-                flex: 1,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
               <DropDownPicker
                 onChangeItem={(item) => (values.id_role = item.value)}
                 onBlur={(item) => (values.id_role = item.value)}
@@ -392,7 +355,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 searchable={true}
                 searchablePlaceholder="Rechercher"
                 searchableError={() => <Text>Aucun résultat</Text>}
-                containerStyle={{ height: 40, margin: 10 }}
+                containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
@@ -400,20 +363,23 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 onClose={() => setHeightDropdownRole(40)}
                 dropDownMaxHeight={heightDropdownRole - 40}
               />
+              <Text style={screen.errorDropdown}>{errors.id_role}</Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={screen.buttonDanger}
                   title="Annuler"
                   onPress={() => toggleOverlayAdd()}
+                  buttonStyle={screen.buttonCancel}
                 />
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={screen.buttonSuccess}
                   onPress={handleSubmit}
                   title="Valider"
+                  buttonStyle={loading ? '' : screen.button}
+                  loading={loading ? true : false}
+                  type={loading ? 'clear' : 'solid'}
                 />
               </View>
             </View>
