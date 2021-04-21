@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
 import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
+import { updateEmployeeApi, getServiceApi } from "../../requestApi"
 
 const EditEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -59,8 +60,10 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
   const [loading, setLoading] = React.useState(true);
   const [resultEditEmployee, setResultEditEmployee] = React.useState([]);
   const [resultGetServices, setResultGetServices] = React.useState([]);
-  const [heightDropdown, setHeightDropdown] = React.useState(40);
+  const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
+  const [heightDropdownService, setHeightDropdownService] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
+
   const [Roles, setRoles] = React.useState([
     { label: "Administrateur", value: "60381739c7e71a89252b8844" },
     { label: "Salarié", value: "60381701c7e71a89252b8843" },
@@ -77,74 +80,18 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
   ]);
 
   const sendEditEmployee = async (values) => {
-    console.log(JSON.stringify(values));
     if (!loading) {
       setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      // var formdata = new FormData();
-
-      // formdata.append("title", values.title);
-      // formdata.append("firstName", values.firstname);
-      // formdata.append("lastName", values.lastname);
-      // formdata.append("date_birth", values.date_birth);
-      // formdata.append("social_security_number", values.social_security_nb);
-      // formdata.append("mail", values.mail);
-      // formdata.append("tel_nb", values.tel);
-      // formdata.append("postal_code", values.postal_code);
-      // formdata.append("street_nb", values.street_nb);
-      // formdata.append("street", values.street);
-      // formdata.append("city", values.city);
-      // formdata.append("arrival_date", "2000-12-20");
-      // formdata.append("id_service", values.id_service);
-      // formdata.append("id_role", values.id_role);
-      // formdata.append("children_nb", 0);
-
-      var raw = JSON.stringify(values);
-
-      var requestOptions = {
-        method: "PUT",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-
-      await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees/60525dcfc417710570e8c9fa`,
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          setResultEditEmployee(result);
-        })
-        .catch((error) => console.log("error", error));
+      await updateEmployeeApi(token, values, employee._id).then((result) => {
+        setResultEditEmployee(result)
+      })
     } else {
       console.log("loading");
     }
   };
 
   const getAllService = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = "";
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/services?populate=1`,
-      requestOptions
-    )
-      .then((response) => response.json())
+    await getServiceApi(token, true)
       .then((result) => {
         let array = [];
         result.forEach((elem) => {
@@ -155,8 +102,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
         });
         setResultGetServices(array);
       })
-      .catch((error) => console.log("error : ", error));
-  };
+  }
 
   useEffect(() => {
     setLoading(false);
@@ -165,8 +111,6 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
   useEffect(() => {
     if (resultEditEmployee.message && !resultEditEmployee.error && !loading) {
       toggleOverlayEdit();
-    } else {
-      getAllService();
     }
   }, [loading]);
 
@@ -208,21 +152,23 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
-              {/* <Text style={{ fontSize: 15 }}>Civilité</Text> */}
-              <DropDownPicker
-                onChangeItem={(item) => (values.title = item.value)}
-                onBlur={(item) => (values.title = item.value)}
-                items={Title}
-                value={values.title}
-                placeholder="Civilité"
-                containerStyle={{ height: 40, margin: 10 }}
-                style={{ backgroundColor: color.COLORS.DEFAULT }}
-                labelStyle={{ textTransform: "capitalize" }}
-                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownRole(300)}
-                onClose={() => setHeightDropdownRole(40)}
-                dropDownMaxHeight={heightDropdownRole - 40}
-              />
+              <View style={{ margin: 10, marginBottom: 15, height: heightDropdownTitle }}>
+                <DropDownPicker
+                  onChangeItem={(item) => (values.title = item.value)}
+                  onBlur={(item) => (values.title = item.value)}
+                  items={Title}
+                  value={values.title}
+                  placeholder="Civilité"
+                  containerStyle={{ height: 40 }}
+                  style={{ backgroundColor: color.COLORS.DEFAULT }}
+                  labelStyle={{ textTransform: "capitalize" }}
+                  dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+                  onOpen={() => setHeightDropdownTitle(190)}
+                  onClose={() => setHeightDropdownTitle(40)}
+                  dropDownMaxHeight={heightDropdownTitle - 40}
+                />
+                <Text style={screen.errorDropdown}>{errors.title}</Text>
+              </View>
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
@@ -333,13 +279,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 </View>
               </View>
             </View>
-            <View
-              style={{
-                margin: 10,
-                height: heightDropdown,
-                flex: 1,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
               <DropDownPicker
                 onChangeItem={(item) => (values.id_service = item.value)}
                 onBlur={(item) => (values.id_service = item.value)}
@@ -350,22 +290,20 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 searchable={true}
                 searchablePlaceholder="Rechercher"
                 searchableError={() => <Text>Aucun résultat</Text>}
-                containerStyle={{ height: 40, margin: 10 }}
+                containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdown(250)}
-                onClose={() => setHeightDropdown(40)}
-                dropDownMaxHeight={heightDropdown - 40}
+                onOpen={() => {
+                  getAllService()
+                  setHeightDropdownService(250)
+                }}
+                onClose={() => setHeightDropdownService(40)}
+                dropDownMaxHeight={heightDropdownService - 40}
               />
+              <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
-            <View
-              style={{
-                margin: 10,
-                height: heightDropdownRole,
-                flex: 1,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
               <DropDownPicker
                 onChangeItem={(item) => (values.id_role = item.value)}
                 onBlur={(item) => (values.id_role = item.value)}
@@ -375,7 +313,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 searchable={true}
                 searchablePlaceholder="Rechercher"
                 searchableError={() => <Text>Aucun résultat</Text>}
-                containerStyle={{ height: 40, margin: 10 }}
+                containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
@@ -383,22 +321,23 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 onClose={() => setHeightDropdownRole(40)}
                 dropDownMaxHeight={heightDropdownRole - 40}
               />
+              <Text style={screen.errorDropdown}>{errors.title}</Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={screen.buttonDanger}
                   title="Annuler"
                   onPress={() => toggleOverlayEdit()}
+                  buttonStyle={screen.buttonCancel}
                 />
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={loading ? "" : screen.buttonSuccess}
-                  loading={loading ? true : false}
                   onPress={handleSubmit}
                   title="Valider"
-                  type={loading ? "clear" : "solid"}
+                  buttonStyle={loading ? '' : screen.button}
+                  loading={loading ? true : false}
+                  type={loading ? 'clear' : 'solid'}
                 />
               </View>
             </View>

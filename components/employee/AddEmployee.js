@@ -83,7 +83,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   ]);
 
   const sendAddEmployee = async (values) => {
-    console.log(values)
+    // console.log(values)
     if (!loading) {
       setLoading(true);
       await addEmployeeApi(token, values).then((result) => {
@@ -199,7 +199,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   style={{ backgroundColor: color.COLORS.DEFAULT }}
                   labelStyle={{ textTransform: "capitalize" }}
                   dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                  onOpen={() => setHeightDropdownTitle(300)}
+                  onOpen={() => setHeightDropdownTitle(190)}
                   onClose={() => setHeightDropdownTitle(40)}
                   dropDownMaxHeight={heightDropdownTitle - 40}
                 />
