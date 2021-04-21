@@ -124,6 +124,7 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
                 dropDownMaxHeight={heightDropdown - 40}
               // defaultValue={values.id_manager}
               />
+              <Text style={screen.errorDropdown}>{errors.id_manager}</Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>

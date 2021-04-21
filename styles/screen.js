@@ -57,4 +57,9 @@ export const screen = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
   },
+  errorDropdown: {
+    fontSize: 12,
+    color: 'red',
+    paddingHorizontal: 5,
+  }
 });

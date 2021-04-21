@@ -120,6 +120,7 @@ export const AddService = ({ toggleOverlayAdd }) => {
                 onClose={() => setHeightDropdown(40)}
                 dropDownMaxHeight={heightDropdown - 40}
               />
+              <Text style={screen.errorDropdown}>{errors.id_manager}</Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
