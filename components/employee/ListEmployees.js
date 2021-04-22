@@ -97,7 +97,7 @@ export const ListEmployees = (refresh) => {
       </View>
       <FlatList
         data={employeesSearch}
-        style={{ height: Dimensions.get("window").height - 150 }}
+        style={{ height: Dimensions.get("window").height - 275 }}
         refreshing={loading}
         onRefresh={() => displayEmployees()}
         renderItem={({ item }) => (

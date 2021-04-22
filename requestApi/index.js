@@ -2,6 +2,7 @@
 export { getEmployeeApi } from "./employees/getEmployeeApi";
 export { addEmployeeApi } from "./employees/addEmployeeApi";
 export { updateEmployeeApi } from "./employees/updateEmployeeApi";
+export { deleteEmployeeApi } from "./employees/deleteEmployeeApi";
 
 //service
 export { addServiceApi } from "./services/addServiceApi";
