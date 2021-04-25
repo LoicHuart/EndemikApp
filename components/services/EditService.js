@@ -7,7 +7,7 @@ import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
 import DropDownPicker from "react-native-dropdown-picker";
 import { screen } from "../../styles/";
-import { updateServiceApi, getEmployeeApi } from "../../requestApi/";
+import { updateServiceApi } from "../../requestApi/";
 
 
 const Schema = Yup.object().shape({
@@ -22,10 +22,9 @@ const Schema = Yup.object().shape({
   id_manager: Yup.string().required("Champ obligatoire"),
 });
 
-export const EditService = ({ toggleOverlayEdit, service }) => {
+export const EditService = ({ toggleOverlayEdit, service, allEmployee }) => {
   const { token } = useContext(AuthContext);
   const [resultEditService, setResultEditService] = React.useState("");
-  const [resultGetEmployees, setResultGetEmployees] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [heightDropdown, setHeightDropdown] = React.useState(40);
 
@@ -42,19 +41,6 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
     }
   };
 
-  const getAllEmployee = async () => {
-    await getEmployeeApi(token, true)
-      .then((result) => {
-        let array = [];
-        result.forEach((elem) => {
-          array.push({
-            label: `${elem.firstName} ${elem.lastName}`,
-            value: elem._id,
-          });
-        });
-        setResultGetEmployees(array);
-      })
-  };
 
   useEffect(() => {
     setLoading(false);
@@ -107,7 +93,7 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
               <DropDownPicker
                 onChangeItem={(item) => (values.id_manager = item.value)}
                 onBlur={(item) => (values.id_manager = item.value)}
-                items={resultGetEmployees}
+                items={allEmployee}
                 value={values.id_manager}
                 placeholder="Manager"
                 searchable={true}
@@ -117,12 +103,11 @@ export const EditService = ({ toggleOverlayEdit, service }) => {
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
                 onOpen={() => {
-                  getAllEmployee()
                   setHeightDropdown(300)
                 }}
                 onClose={() => setHeightDropdown(40)}
                 dropDownMaxHeight={heightDropdown - 40}
-              // defaultValue={values.id_manager}
+                defaultValue={values.id_manager}
               />
               <Text style={screen.errorDropdown}>{errors.id_manager}</Text>
             </View>
