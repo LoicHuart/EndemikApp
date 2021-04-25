@@ -11,7 +11,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { formatDisplay } from "../../function";
 import { formatAPI } from "../../function";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { addEmployeeApi } from "../../requestApi"
+import { addEmployeeApi } from "../../requestApi";
 
 const AddEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -87,8 +87,8 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     if (!loading) {
       setLoading(true);
       await addEmployeeApi(token, values).then((result) => {
-        setResultAddEmployee(result)
-      })
+        setResultAddEmployee(result);
+      });
     } else {
       console.log("loading");
     }
@@ -188,7 +188,13 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
-              <View style={{ margin: 10, marginBottom: 15, height: heightDropdownTitle }}>
+              <View
+                style={{
+                  margin: 10,
+                  marginBottom: 15,
+                  height: heightDropdownTitle,
+                }}
+              >
                 <DropDownPicker
                   onChangeItem={(item) => (values.title = item.value)}
                   onBlur={(item) => (values.title = item.value)}
@@ -243,7 +249,9 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                     style={styles.input}
                     onChangeText={handleChange("date_birth")}
                     onBlur={handleBlur("date_birth")}
-                    value={formatDisplay(values.date_birth)}
+                    value={
+                      values.date_birth && formatDisplay(values.date_birth)
+                    }
                     placeholder="Date de naissance"
                     errorMessage={errors.date_birth}
                   />
@@ -325,7 +333,13 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 </View>
               </View>
             </View>
-            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
+            <View
+              style={{
+                margin: 10,
+                marginBottom: 15,
+                height: heightDropdownService,
+              }}
+            >
               <DropDownPicker
                 onChangeItem={(item) => (values.id_service = item.value)}
                 onBlur={(item) => (values.id_service = item.value)}
@@ -345,7 +359,13 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               />
               <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
-            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
+            <View
+              style={{
+                margin: 10,
+                marginBottom: 15,
+                height: heightDropdownRole,
+              }}
+            >
               <DropDownPicker
                 onChangeItem={(item) => (values.id_role = item.value)}
                 onBlur={(item) => (values.id_role = item.value)}
@@ -377,9 +397,9 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 <Button
                   onPress={handleSubmit}
                   title="Valider"
-                  buttonStyle={loading ? '' : screen.button}
+                  buttonStyle={loading ? "" : screen.button}
                   loading={loading ? true : false}
-                  type={loading ? 'clear' : 'solid'}
+                  type={loading ? "clear" : "solid"}
                 />
               </View>
             </View>
