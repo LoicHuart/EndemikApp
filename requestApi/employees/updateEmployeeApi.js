@@ -19,7 +19,7 @@ export const updateEmployeeApi = async (token, values, id) => {
   formdata.append("street_nb", values.street_nb);
   formdata.append("street", values.street);
   formdata.append("city", values.city);
-  formdata.append("arrival_date", "2000-12-20");
+  formdata.append("arrival_date", values.arrival_date);
   formdata.append("id_service", values.id_service);
   formdata.append("id_role", values.id_role);
   formdata.append("children_nb", 0);
