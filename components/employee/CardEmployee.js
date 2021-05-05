@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -12,33 +12,47 @@ import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
 import { Avatar, Icon, Overlay } from "react-native-elements";
 import { ValideRefuseEmployee } from "./ValideRefuseEmployee";
-import { updateEmployeeApi } from "../../requestApi";
+import { updateEmployeeApi, getServiceApi } from "../../requestApi";
+import { AuthContext } from "../../context/AuthContext";
 
 export const CardEmployee = ({ item, refreshEmployee }) => {
+  const { token } = useContext(AuthContext);
   const [isEnabled, setIsEnabled] = useState(item.active);
-  // console.log(item.active);
   const toggleSwitch = () => {
-    setIsEnabled(!isEnabled);
-    updateEmployeeApi(!isEnabled);
     console.log(isEnabled);
+    updateEmployeeApi(token, { active: !isEnabled }, item._id);
+    setIsEnabled(!isEnabled);
   };
 
   const [overlayDelete, setOverlayDelete] = React.useState(false);
   const [overlayEdit, setOverlayEdit] = React.useState(false);
+  const [resultGetServices, setResultGetServices] = React.useState([]);
+
+  const getAllService = async () => {
+    await getServiceApi(token, true).then((result) => {
+      let array = [];
+      result.forEach((elem) => {
+        array.push({
+          label: `${elem.name}`,
+          value: elem._id,
+        });
+      });
+      setResultGetServices(array);
+      console.log(array);
+    });
+  };
 
   const toggleOverlayDelete = () => {
     setOverlayDelete(!overlayDelete);
     refreshEmployee();
   };
 
-  const toggleOverlayEdit = () => {
+  const toggleOverlayEdit = async () => {
+    await getAllService();
+    // console.log(allService);
     setOverlayEdit(!overlayEdit);
     refreshEmployee();
   };
-
-  useEffect(() => {
-    setIsEnabled(item.active);
-  });
 
   return (
     <View style={styles.cardEmployee}>
@@ -69,7 +83,7 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
               trackColor={{ false: color.COLORS.GREY, true: color.COLORS.GREY }}
               thumbColor={isEnabled ? "#adf3ad" : "#f0bebd"}
               ios_backgroundColor={color.COLORS.GREY}
-              // onValueChange={toggleSwitch}
+              onValueChange={toggleSwitch}
               value={isEnabled}
             />
           </View>
@@ -89,7 +103,11 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
         overlayStyle={screen.overlay}
       >
         <ScrollView>
-          <EditEmployee toggleOverlayEdit={toggleOverlayEdit} employee={item} />
+          <EditEmployee
+            toggleOverlayEdit={toggleOverlayEdit}
+            employee={item}
+            allService={resultGetServices}
+          />
         </ScrollView>
       </Overlay>
 

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import color from "../../constants/color";
 import { Button, Input } from "react-native-elements";
 import { Formik } from "formik";
@@ -11,7 +11,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { formatDisplay } from "../../function";
 import { formatAPI } from "../../function";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { addEmployeeApi } from "../../requestApi"
+import { addEmployeeApi } from "../../requestApi";
 
 const AddEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -55,6 +55,7 @@ const AddEmployeeSchema = Yup.object().shape({
     .required("Champ obligatoire"),
   id_role: Yup.string().required("Champ obligatoire"),
   id_service: Yup.string().required("Champ obligatoire"),
+  arrival_date: Yup.string().required("Champ onligatoire"),
 });
 
 export const AddEmployee = ({ toggleOverlayAdd }) => {
@@ -66,6 +67,38 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
   const [heightDropdownService, setHeightDropdownService] = React.useState(40);
   const [loading, setLoading] = React.useState(true);
+
+  const today = new Date();
+  const today1 = new Date();
+  const [birthDate, setbirthDate] = useState(today);
+  const [showBirth, setShowBirth] = useState(false);
+  const [showArrival, setShowArrival] = useState(false);
+
+  const [arrivalDate, setArrivalDate] = useState(false);
+
+  const onChangeBirthDate = (selectedDate) => {
+    setShowBirth(false);
+    if (selectedDate.type !== "dismissed") {
+      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+      setbirthDate(timestamp);
+    }
+  };
+
+  const onChangeArrivalDate = (selectedDate) => {
+    setShowArrival(false);
+    if (selectedDate.type !== "dismissed") {
+      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+      setArrivalDate(timestamp);
+    }
+  };
+
+  const showDatepickerBirth = () => {
+    setShowBirth(true);
+  };
+
+  const showDatepickerArrival = () => {
+    setShowArrival(true);
+  };
 
   const [Roles, setRoles] = React.useState([
     { label: "Administrateur", value: "60381739c7e71a89252b8844" },
@@ -87,8 +120,8 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     if (!loading) {
       setLoading(true);
       await addEmployeeApi(token, values).then((result) => {
-        setResultAddEmployee(result)
-      })
+        setResultAddEmployee(result);
+      });
     } else {
       console.log("loading");
     }
@@ -168,6 +201,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           street_nb: "",
           street: "",
           city: "",
+          arrival_date: "",
           // title: "",
           // lastname: "Pottier",
           // firstname: "Domitille",
@@ -188,7 +222,13 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
-              <View style={{ margin: 10, marginBottom: 15, height: heightDropdownTitle }}>
+              <View
+                style={{
+                  margin: 10,
+                  marginBottom: 15,
+                  height: heightDropdownTitle,
+                }}
+              >
                 <DropDownPicker
                   onChangeItem={(item) => (values.title = item.value)}
                   onBlur={(item) => (values.title = item.value)}
@@ -239,25 +279,36 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Input
+                  <View>
+                    <Pressable onPress={showDatepickerBirth}>
+                      <Text style={styles.inputDate}>
+                        {formatDisplay(birthDate)}
+                      </Text>
+                    </Pressable>
+                  </View>
+                  {showBirth && (
+                    <DateTimePicker
+                      testID="dateTimePickerDateBirth"
+                      value={today}
+                      locale="fr-FR"
+                      mode="date"
+                      display="default"
+                      onChange={onChangeBirthDate}
+                      minimumDate={today}
+                    />
+                  )}
+                </View>
+
+                {/*                   <Input
                     style={styles.input}
                     onChangeText={handleChange("date_birth")}
                     onBlur={handleBlur("date_birth")}
-                    value={formatDisplay(values.date_birth)}
+                    value={
+                      values.date_birth && formatDisplay(values.date_birth)
+                    }
                     placeholder="Date de naissance"
                     errorMessage={errors.date_birth}
-                  />
-
-                  {/* <DateTimePicker
-                    testID="dateTimePickerDateBirth"
-                    value={new Date()}
-                    locale="fr-FR"
-                    mode="date"
-                    display="default"
-                    onChange={onChangeStartDate}
-                    minimumDate={today}
                   /> */}
-                </View>
               </View>
               <Input
                 style={styles.input}
@@ -325,7 +376,13 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 </View>
               </View>
             </View>
-            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
+            <View
+              style={{
+                margin: 10,
+                marginBottom: 15,
+                height: heightDropdownService,
+              }}
+            >
               <DropDownPicker
                 onChangeItem={(item) => (values.id_service = item.value)}
                 onBlur={(item) => (values.id_service = item.value)}
@@ -345,7 +402,13 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               />
               <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
-            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
+            <View
+              style={{
+                margin: 10,
+                marginBottom: 15,
+                height: heightDropdownRole,
+              }}
+            >
               <DropDownPicker
                 onChangeItem={(item) => (values.id_role = item.value)}
                 onBlur={(item) => (values.id_role = item.value)}
@@ -365,6 +428,39 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               />
               <Text style={screen.errorDropdown}>{errors.id_role}</Text>
             </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 12 }}>
+                  Jour d'arrivé du salarié :{" "}
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Pressable onPress={showDatepickerArrival}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      marginLeft: 40,
+                      marginBottom: 15,
+                    }}
+                  >
+                    {formatDisplay(arrivalDate)}
+                  </Text>
+                </Pressable>
+              </View>
+              {showArrival && (
+                <DateTimePicker
+                  testID="dateTimePickerDateArrival"
+                  value={today1}
+                  locale="fr-FR"
+                  mode="date"
+                  display="default"
+                  onChange={onChangeArrivalDate}
+                  minimumDate={today1}
+                />
+              )}
+            </View>
+
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
@@ -377,9 +473,9 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 <Button
                   onPress={handleSubmit}
                   title="Valider"
-                  buttonStyle={loading ? '' : screen.button}
+                  buttonStyle={loading ? "" : screen.button}
                   loading={loading ? true : false}
-                  type={loading ? 'clear' : 'solid'}
+                  type={loading ? "clear" : "solid"}
                 />
               </View>
             </View>
@@ -400,14 +496,16 @@ const styles = StyleSheet.create({
     // borderRadius: 15,
     // padding: 15,
   },
+  inputDate: {
+    fontSize: 12,
+    textAlign: "center",
+    marginTop: 20,
+  },
   input: {
     fontSize: 12,
     borderColor: color.COLORS.BLACK,
     height: 20,
     width: "100%",
     backgroundColor: "white",
-    //borderColor: "gray",
-    // borderWidth: 1,
-    // borderRadius: 10,
   },
 });

@@ -8,7 +8,8 @@ import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
 import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
-import { updateEmployeeApi, getServiceApi } from "../../requestApi"
+import { updateEmployeeApi } from "../../requestApi";
+import { formatDisplay } from "../../function";
 
 const EditEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -54,12 +55,11 @@ const EditEmployeeSchema = Yup.object().shape({
   id_service: Yup.string().required("Champ obligatoire"),
 });
 
-export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
+export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
   // console.log(employee);
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = React.useState(true);
   const [resultEditEmployee, setResultEditEmployee] = React.useState([]);
-  const [resultGetServices, setResultGetServices] = React.useState([]);
   const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
   const [heightDropdownService, setHeightDropdownService] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
@@ -73,36 +73,22 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
   ]);
 
   const [Title, setTitle] = React.useState([
-    { label: "Madame", value: "Madame" },
-    { label: "Monsieur", value: "Monsieur" },
-    { label: "Mademoiselle", value: "Mademoiselle" },
-    { label: "Autres", value: "Autres" },
+    { label: "Madame", value: "madame" },
+    { label: "Monsieur", value: "monsieur" },
+    { label: "Mademoiselle", value: "mademoiselle" },
+    { label: "Autres", value: "autres" },
   ]);
 
   const sendEditEmployee = async (values) => {
     if (!loading) {
       setLoading(true);
       await updateEmployeeApi(token, values, employee._id).then((result) => {
-        setResultEditEmployee(result)
-      })
+        setResultEditEmployee(result);
+      });
     } else {
       console.log("loading");
     }
   };
-
-  const getAllService = async () => {
-    await getServiceApi(token, true)
-      .then((result) => {
-        let array = [];
-        result.forEach((elem) => {
-          array.push({
-            label: `${elem.name}`,
-            value: elem._id,
-          });
-        });
-        setResultGetServices(array);
-      })
-  }
 
   useEffect(() => {
     setLoading(false);
@@ -152,11 +138,18 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
-              <View style={{ margin: 10, marginBottom: 15, height: heightDropdownTitle }}>
+              <View
+                style={{
+                  margin: 10,
+                  marginBottom: 15,
+                  height: heightDropdownTitle,
+                }}
+              >
                 <DropDownPicker
                   onChangeItem={(item) => (values.title = item.value)}
                   onBlur={(item) => (values.title = item.value)}
                   items={Title}
+                  defaultValue={values.title}
                   value={values.title}
                   placeholder="Civilité"
                   containerStyle={{ height: 40 }}
@@ -207,7 +200,9 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                     style={styles.input}
                     onChangeText={handleChange("date_birth")}
                     onBlur={handleBlur("date_birth")}
-                    value={values.date_birth}
+                    value={
+                      values.date_birth && formatDisplay(values.date_birth)
+                    }
                     placeholder="Date de naissance"
                     errorMessage={errors.date_birth}
                   />
@@ -279,12 +274,18 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 </View>
               </View>
             </View>
-            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
+            <View
+              style={{
+                margin: 10,
+                marginBottom: 15,
+                height: heightDropdownService,
+              }}
+            >
               <DropDownPicker
                 onChangeItem={(item) => (values.id_service = item.value)}
                 onBlur={(item) => (values.id_service = item.value)}
-                //defaultValue={setResultGetServices(employee.id_service)}
-                items={resultGetServices}
+                defaultValue={values.id_service}
+                items={allService}
                 value={values.id_service}
                 placeholder="Service"
                 searchable={true}
@@ -295,20 +296,26 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
                 onOpen={() => {
-                  getAllService()
-                  setHeightDropdownService(250)
+                  setHeightDropdownService(250);
                 }}
                 onClose={() => setHeightDropdownService(40)}
                 dropDownMaxHeight={heightDropdownService - 40}
               />
               <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
-            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
+            <View
+              style={{
+                margin: 10,
+                marginBottom: 15,
+                height: heightDropdownRole,
+              }}
+            >
               <DropDownPicker
                 onChangeItem={(item) => (values.id_role = item.value)}
                 onBlur={(item) => (values.id_role = item.value)}
                 items={Roles}
                 value={values.id_role}
+                defaultValue={values.id_role}
                 placeholder="Rôle"
                 searchable={true}
                 searchablePlaceholder="Rechercher"
@@ -335,9 +342,9 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 <Button
                   onPress={handleSubmit}
                   title="Valider"
-                  buttonStyle={loading ? '' : screen.button}
+                  buttonStyle={loading ? "" : screen.button}
                   loading={loading ? true : false}
-                  type={loading ? 'clear' : 'solid'}
+                  type={loading ? "clear" : "solid"}
                 />
               </View>
             </View>
