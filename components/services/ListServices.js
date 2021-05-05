@@ -17,6 +17,7 @@ export const ListServices = ({ refresh }) => {
   const [search, setSearch] = React.useState();
   const [servicesSearch, setServicesSearch] = React.useState(services);
   const [servicesSort, setServicesSort] = React.useState("A-Z");
+  const [heightDropdown, setHeightDropdown] = React.useState(40);
 
   const displayServices = async () => {
     setLoading(true);
@@ -53,7 +54,7 @@ export const ListServices = ({ refresh }) => {
         containerStyle={screen.searchBarContainerStyle}
       />
 
-      <View style={{ margin: 10, alignSelf: "center" }}>
+      <View style={{ margin: 10, alignSelf: "center", height: heightDropdown }}>
         <DropDownPicker
           onChangeItem={(item) => setServicesSort(item.value)}
           items={[
@@ -65,6 +66,8 @@ export const ListServices = ({ refresh }) => {
           containerStyle={{ height: 40, width: 120 }}
           style={{ backgroundColor: color.COLORS.DEFAULT }}
           dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+          onOpen={() => { setHeightDropdown(120) }}
+          onClose={() => setHeightDropdown(40)}
         />
       </View>
 

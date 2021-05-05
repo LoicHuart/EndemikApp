@@ -16,6 +16,7 @@ export const ListEmployees = (refresh) => {
   const [search, setSearch] = React.useState();
   const [employeesSearch, setEmployeesSearch] = React.useState(employees);
   const [employeesSort, setEmployeesSort] = React.useState("A-Z");
+  const [heightDropdown, setHeightDropdown] = React.useState(40);
 
   const displayEmployees = async () => {
     setLoading(true);
@@ -81,7 +82,7 @@ export const ListEmployees = (refresh) => {
         containerStyle={screen.searchBarContainerStyle}
       />
 
-      <View style={{ margin: 10, alignSelf: "center" }}>
+      <View style={{ margin: 10, alignSelf: "center", height: heightDropdown }}>
         <DropDownPicker
           onChangeItem={(item) => setEmployeesSort(item.value)}
           items={[
@@ -93,6 +94,8 @@ export const ListEmployees = (refresh) => {
           containerStyle={{ height: 40, width: 120 }}
           style={{ backgroundColor: color.COLORS.DEFAULT }}
           dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+          onOpen={() => { setHeightDropdown(120) }}
+          onClose={() => setHeightDropdown(40)}
         />
       </View>
       <FlatList
