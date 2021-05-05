@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from "react";
-import { StyleSheet, View, FlatList, Dimensions } from "react-native";
+import { StyleSheet, View, FlatList, Dimensions, Text } from "react-native";
 import { CardEmployee } from "./CardEmployee";
 import { AuthContext } from "../../context/AuthContext";
-import { SearchBar } from "react-native-elements";
+import { SearchBar, Tooltip } from "react-native-elements";
 import { searchInJson, sortJson } from "../../function";
 import { screen } from "../../styles/";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -56,12 +56,12 @@ export const ListEmployees = (refresh) => {
 
   // console.log(firstName);
   useEffect(() => {
-    let test = searchInJson(
+    let filtre = searchInJson(
       employees,
       ["firstName", "lastName", "mail", "tel_nb"],
       search
     );
-    setEmployeesSearch(sortJson(test, "firstName", employeesSort));
+    setEmployeesSearch(sortJson(filtre, "firstName", employeesSort));
   }, [search, employeesSort, employees]);
 
   useEffect(() => {
@@ -74,14 +74,22 @@ export const ListEmployees = (refresh) => {
 
   return (
     <View>
-      <SearchBar
-        placeholder="Rechercher"
-        onChangeText={setSearch}
-        value={search}
-        inputContainerStyle={screen.searchBarInputContainerStyle}
-        containerStyle={screen.searchBarContainerStyle}
-      />
-
+      <Tooltip
+        popover={
+          <Text style={{ fontStyle: "italic" }}>
+            Filtrage par nom, prénom, numéro de téléphone et email
+          </Text>
+        }
+        containerStyle={styles.tooltip}
+      >
+        <SearchBar
+          placeholder="Rechercher"
+          onChangeText={setSearch}
+          value={search}
+          inputContainerStyle={screen.searchBarInputContainerStyle}
+          containerStyle={screen.searchBarContainerStyle}
+        />
+      </Tooltip>
       <View style={{ margin: 10, alignSelf: "center", height: heightDropdown }}>
         <DropDownPicker
           onChangeItem={(item) => setEmployeesSort(item.value)}
@@ -112,4 +120,10 @@ export const ListEmployees = (refresh) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  tooltip: {
+    width: 150,
+    height: 70,
+    backgroundColor: "#999999",
+  },
+});
