@@ -90,7 +90,7 @@ export const ListEmployees = (refresh) => {
           containerStyle={screen.searchBarContainerStyle}
         />
       </Tooltip>
-      <View style={{ margin: 10, alignSelf: "center" }}>
+      <View style={{ margin: 10, alignSelf: "center", height: heightDropdown }}>
         <DropDownPicker
           onChangeItem={(item) => setEmployeesSort(item.value)}
           items={[
@@ -102,9 +102,8 @@ export const ListEmployees = (refresh) => {
           containerStyle={{ height: 40, width: 120 }}
           style={{ backgroundColor: color.COLORS.DEFAULT }}
           dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-          onOpen={() => setHeightDropdown(300)}
+          onOpen={() => { setHeightDropdown(120) }}
           onClose={() => setHeightDropdown(40)}
-          dropDownMaxHeight={heightDropdown - 40}
         />
       </View>
       <FlatList
