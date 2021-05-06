@@ -25,7 +25,7 @@ export const updateEmployeeApi = async (token, values, id) => {
   formdata.append("children_nb", 0);
   formdata.append("active", values.active);
 
-  console.log(formdata);
+  // console.log(formdata);
 
   var requestOptions = {
     method: "PUT",
