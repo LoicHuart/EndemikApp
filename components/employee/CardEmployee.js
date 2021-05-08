@@ -20,7 +20,8 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   const [isEnabled, setIsEnabled] = useState(item.active);
   const toggleSwitch = () => {
     console.log(isEnabled);
-    updateEmployeeApi(token, { active: !isEnabled }, item._id);
+    item.active = !isEnabled;
+    updateEmployeeApi(token, item, item._id);
     setIsEnabled(!isEnabled);
   };
 

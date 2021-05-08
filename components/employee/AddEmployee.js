@@ -69,12 +69,11 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const [loading, setLoading] = React.useState(true);
 
   const today = new Date();
-  const today1 = new Date();
-  const [birthDate, setbirthDate] = useState(today);
+  const [birthDate, setbirthDate] = useState();
   const [showBirth, setShowBirth] = useState(false);
   const [showArrival, setShowArrival] = useState(false);
 
-  const [arrivalDate, setArrivalDate] = useState(false);
+  const [arrivalDate, setArrivalDate] = useState(today);
 
   const onChangeBirthDate = (selectedDate) => {
     setShowBirth(false);
@@ -93,6 +92,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   };
 
   const showDatepickerBirth = () => {
+    setbirthDate(today);
     setShowBirth(true);
   };
 
@@ -215,6 +215,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           // city: "Reims",
           // id_role: "",
           // id_service: "",
+          // arrival_date: "1998-08-30",
         }}
         validationSchema={AddEmployeeSchema}
         onSubmit={(values) => sendAddEmployee(values)}
@@ -248,7 +249,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("lastname")}
                     onBlur={handleBlur("lastname")}
                     value={values.lastname}
@@ -258,7 +259,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("firstname")}
                     onBlur={handleBlur("firstname")}
                     value={values.firstname}
@@ -270,7 +271,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("tel")}
                     onBlur={handleBlur("tel")}
                     value={values.tel}
@@ -281,37 +282,25 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 <View style={{ flex: 1 }}>
                   <View>
                     <Pressable onPress={showDatepickerBirth}>
-                      <Text style={styles.inputDate}>
-                        {formatDisplay(birthDate)}
+                      <Text style={screen.InputDatePicker}>
+                        {birthDate ? formatDisplay(birthDate) : "Date de naissance"}
                       </Text>
                     </Pressable>
                   </View>
                   {showBirth && (
                     <DateTimePicker
                       testID="dateTimePickerDateBirth"
-                      value={today}
+                      value={birthDate}
                       locale="fr-FR"
                       mode="date"
                       display="default"
                       onChange={onChangeBirthDate}
-                      minimumDate={today}
                     />
                   )}
                 </View>
-
-                {/*                   <Input
-                    style={styles.input}
-                    onChangeText={handleChange("date_birth")}
-                    onBlur={handleBlur("date_birth")}
-                    value={
-                      values.date_birth && formatDisplay(values.date_birth)
-                    }
-                    placeholder="Date de naissance"
-                    errorMessage={errors.date_birth}
-                  /> */}
               </View>
               <Input
-                style={styles.input}
+                style={screen.input}
                 onChangeText={handleChange("mail")}
                 onBlur={handleBlur("mail")}
                 value={values.mail}
@@ -319,7 +308,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 errorMessage={errors.mail}
               />
               <Input
-                style={styles.input}
+                style={screen.input}
                 onChangeText={handleChange("social_security_nb")}
                 onBlur={handleBlur("social_security_nb")}
                 value={values.social_security_nb}
@@ -332,7 +321,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("street_nb")}
                     onBlur={handleBlur("street_nb")}
                     value={values.street_nb}
@@ -342,7 +331,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("street")}
                     onBlur={handleBlur("street")}
                     value={values.street}
@@ -355,7 +344,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1 }}>
                     <Input
-                      style={styles.input}
+                      style={screen.input}
                       onChangeText={handleChange("city")}
                       onBlur={handleBlur("city")}
                       value={values.city}
@@ -365,7 +354,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   </View>
                   <View style={{ flex: 1 }}>
                     <Input
-                      style={styles.input}
+                      style={screen.input}
                       onChangeText={handleChange("postal_code")}
                       onBlur={handleBlur("postal_code")}
                       value={values.postal_code}
@@ -438,11 +427,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               <View style={{ flex: 1 }}>
                 <Pressable onPress={showDatepickerArrival}>
                   <Text
-                    style={{
-                      fontSize: 12,
-                      marginLeft: 40,
-                      marginBottom: 15,
-                    }}
+                    style={screen.InputDatePicker}
                   >
                     {formatDisplay(arrivalDate)}
                   </Text>
@@ -451,12 +436,11 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               {showArrival && (
                 <DateTimePicker
                   testID="dateTimePickerDateArrival"
-                  value={today1}
+                  value={arrivalDate}
                   locale="fr-FR"
                   mode="date"
                   display="default"
                   onChange={onChangeArrivalDate}
-                  minimumDate={today1}
                 />
               )}
             </View>
@@ -487,25 +471,4 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
 };
 
 const styles = StyleSheet.create({
-  form: {
-    // marginVertical: 10,
-    // marginHorizontal: 10,
-    // marginTop: 40,
-    backgroundColor: color.COLORS.LIGHTGREY,
-    // width: Dimensions.get("window").width - 30,
-    // borderRadius: 15,
-    // padding: 15,
-  },
-  inputDate: {
-    fontSize: 12,
-    textAlign: "center",
-    marginTop: 20,
-  },
-  input: {
-    fontSize: 12,
-    borderColor: color.COLORS.BLACK,
-    height: 20,
-    width: "100%",
-    backgroundColor: "white",
-  },
 });

@@ -23,6 +23,8 @@ export const addEmployeeApi = async (token, values) => {
   formdata.append("id_role", values.id_role);
   formdata.append("children_nb", 0);
 
+  console.log(formdata);
+
   var requestOptions = {
     method: "POST",
     headers: myHeaders,

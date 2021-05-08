@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import color from "../../constants/color";
 import { Button, Input } from "react-native-elements";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -10,6 +10,7 @@ import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
 import { updateEmployeeApi } from "../../requestApi";
 import { formatDisplay } from "../../function";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const EditEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -63,6 +64,38 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
   const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
   const [heightDropdownService, setHeightDropdownService] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
+
+  const today = new Date();
+  const [birthDate, setbirthDate] = useState(employee.date_birth);
+  const [showBirth, setShowBirth] = useState(false);
+  const [showArrival, setShowArrival] = useState(false);
+
+  const [arrivalDate, setArrivalDate] = useState(today);
+
+  const onChangeBirthDate = (selectedDate) => {
+    setShowBirth(false);
+    if (selectedDate.type !== "dismissed") {
+      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+      setbirthDate(timestamp);
+    }
+  };
+
+  const onChangeArrivalDate = (selectedDate) => {
+    setShowArrival(false);
+    if (selectedDate.type !== "dismissed") {
+      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+      setArrivalDate(timestamp);
+    }
+  };
+
+  const showDatepickerBirth = () => {
+    setbirthDate(today);
+    setShowBirth(true);
+  };
+
+  const showDatepickerArrival = () => {
+    setShowArrival(true);
+  };
 
   const [Roles, setRoles] = React.useState([
     { label: "Administrateur", value: "60381739c7e71a89252b8844" },
@@ -165,7 +198,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("lastName")}
                     onBlur={handleBlur("lastName")}
                     value={values.lastName}
@@ -175,7 +208,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.inputF}
+                    style={[screen.input, { textTransform: "capitalize" }]}
                     onChangeText={handleChange("firstName")}
                     onBlur={handleBlur("firstName")}
                     value={values.firstName}
@@ -187,7 +220,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("tel_nb")}
                     onBlur={handleBlur("tel_nb")}
                     value={values.tel_nb}
@@ -196,20 +229,27 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                   />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Input
-                    style={styles.input}
-                    onChangeText={handleChange("date_birth")}
-                    onBlur={handleBlur("date_birth")}
-                    value={
-                      values.date_birth && formatDisplay(values.date_birth)
-                    }
-                    placeholder="Date de naissance"
-                    errorMessage={errors.date_birth}
-                  />
+                  <View>
+                    <Pressable onPress={showDatepickerBirth}>
+                      <Text style={screen.InputDatePicker}>
+                        {birthDate ? formatDisplay(birthDate) : "Date de naissance"}
+                      </Text>
+                    </Pressable>
+                  </View>
+                  {showBirth && (
+                    <DateTimePicker
+                      testID="dateTimePickerDateBirth"
+                      value={birthDate}
+                      locale="fr-FR"
+                      mode="date"
+                      display="default"
+                      onChange={onChangeBirthDate}
+                    />
+                  )}
                 </View>
               </View>
               <Input
-                style={styles.input}
+                style={screen.input}
                 onChangeText={handleChange("mail")}
                 onBlur={handleBlur("mail")}
                 value={values.mail}
@@ -217,7 +257,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                 errorMessage={errors.mail}
               />
               <Input
-                style={styles.input}
+                style={screen.input}
                 onChangeText={handleChange("social_security_number")}
                 onBlur={handleBlur("social_security_number")}
                 value={values.social_security_number}
@@ -230,7 +270,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("street_nb")}
                     onBlur={handleBlur("street_nb")}
                     value={values.street_nb}
@@ -240,7 +280,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("street")}
                     onBlur={handleBlur("street")}
                     value={values.street}
@@ -253,7 +293,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1 }}>
                     <Input
-                      style={styles.input}
+                      style={screen.input}
                       onChangeText={handleChange("city")}
                       onBlur={handleBlur("city")}
                       value={values.city}
@@ -263,7 +303,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                   </View>
                   <View style={{ flex: 1 }}>
                     <Input
-                      style={styles.input}
+                      style={screen.input}
                       onChangeText={handleChange("postal_code")}
                       onBlur={handleBlur("postal_code")}
                       value={values.postal_code}
@@ -330,6 +370,34 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
               />
               <Text style={screen.errorDropdown}>{errors.title}</Text>
             </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 12 }}>
+                  Jour d'arrivé du salarié :{" "}
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Pressable onPress={showDatepickerArrival}>
+                  <Text
+                    style={screen.InputDatePicker}
+                  >
+                    {formatDisplay(arrivalDate)}
+                  </Text>
+                </Pressable>
+              </View>
+              {showArrival && (
+                <DateTimePicker
+                  testID="dateTimePickerDateArrival"
+                  value={arrivalDate}
+                  locale="fr-FR"
+                  mode="date"
+                  display="default"
+                  onChange={onChangeArrivalDate}
+                />
+              )}
+            </View>
+
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
@@ -356,34 +424,4 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
 };
 
 const styles = StyleSheet.create({
-  form: {
-    // marginVertical: 10,
-    // marginHorizontal: 10,
-    // marginTop: 40,
-    backgroundColor: color.COLORS.LIGHTGREY,
-    // width: Dimensions.get("window").width - 30,
-    // borderRadius: 15,
-    // padding: 15,
-  },
-  input: {
-    fontSize: 12,
-    borderColor: color.COLORS.BLACK,
-    height: 20,
-    width: "100%",
-    backgroundColor: "white",
-    //borderColor: "gray",
-    // borderWidth: 1,
-    // borderRadius: 10,
-  },
-  inputF: {
-    fontSize: 12,
-    borderColor: color.COLORS.BLACK,
-    height: 20,
-    width: "100%",
-    backgroundColor: "white",
-    textTransform: "capitalize",
-    //borderColor: "gray",
-    // borderWidth: 1,
-    // borderRadius: 10,
-  },
 });
