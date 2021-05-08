@@ -34,7 +34,7 @@ export const ListEmployees = (refresh) => {
 
     try {
       const resp = await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees?populate=1`,
+        `http://${process.env.REACT_APP_API_HOST}/api/employees?populate=0`,
         requestOptions
       );
 

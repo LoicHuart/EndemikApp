@@ -42,7 +42,7 @@ export const updateEmployeeApi = async (token, values, id) => {
   )
     .then((response) => response.json())
     .then((result) => {
-      // console.log(result);
+      console.log(result);
       val = result;
     })
     .catch((error) => console.log("error", error));

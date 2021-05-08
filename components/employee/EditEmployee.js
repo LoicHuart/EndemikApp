@@ -424,13 +424,4 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
 };
 
 const styles = StyleSheet.create({
-  form: {
-    // marginVertical: 10,
-    // marginHorizontal: 10,
-    // marginTop: 40,
-    backgroundColor: color.COLORS.LIGHTGREY,
-    // width: Dimensions.get("window").width - 30,
-    // borderRadius: 15,
-    // padding: 15,
-  }
 });
