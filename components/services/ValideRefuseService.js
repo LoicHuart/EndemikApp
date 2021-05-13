@@ -38,11 +38,10 @@ export const ValideRefuseService = ({ itemId, text, toggleOverlay }) => {
   return (
     <View>
       <Text style={screen.title}>{text}</Text>
-      {resultDeleteService.error && (
-        <Text style={{ color: color.COLORS.DANGER, alignSelf: "center" }}>
-          Vous ne pouvez pas supprimer ce service
-        </Text>
-      )}
+      {resultDeleteService.code == "47" && <Text style={screen.error}>ID service non valide</Text>}
+      {resultDeleteService.code == "48" && <Text style={screen.error}>Impossible de supprimer ce service</Text>}
+      {resultDeleteService.code == "49" && <Text style={screen.error}>Impossible de supprimer le service car un employé est lié à celui ci</Text>}
+
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1 }}>
           <Button
