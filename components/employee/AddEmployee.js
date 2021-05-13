@@ -195,19 +195,20 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           mail: "",
           tel: "",
           date_birth: "",
-          role: "",
           social_security_nb: "",
           postal_code: "",
           street_nb: "",
           street: "",
           city: "",
+          id_role: "",
+          id_service: "",
           arrival_date: "",
           // title: "",
           // lastname: "Pottier",
           // firstname: "Domitille",
           // mail: "dopitter@gmail.com",
           // tel: "0649826159",
-          // date_birth: "1998-08-30",
+          // date_birth: "",
           // social_security_nb: "2980857403863",
           // postal_code: "51100",
           // street_nb: "27",
@@ -215,7 +216,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           // city: "Reims",
           // id_role: "",
           // id_service: "",
-          // arrival_date: "1998-08-30",
+          // arrival_date: "",
         }}
         validationSchema={AddEmployeeSchema}
         onSubmit={(values) => sendAddEmployee(values)}
@@ -282,9 +283,14 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 <View style={{ flex: 1 }}>
                   <View>
                     <Pressable onPress={showDatepickerBirth}>
-                      <Text style={screen.InputDatePicker}>
-                        {birthDate ? formatDisplay(birthDate) : "Date de naissance"}
-                      </Text>
+                      <Input
+                        style={screen.input}
+                        value={birthDate && formatDisplay(birthDate)}
+                        placeholder="Date de naissance"
+                        errorMessage={errors.date_birth}
+                        disabledInputStyle={{ color: color.COLORS.BLACK }}
+                        disabled
+                      />
                     </Pressable>
                   </View>
                   {showBirth && (
@@ -294,7 +300,12 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                       locale="fr-FR"
                       mode="date"
                       display="default"
-                      onChange={onChangeBirthDate}
+                      onChange={
+                        (item) => {
+                          onChangeBirthDate(item)
+                          values.date_birth = formatAPI(item.nativeEvent.timestamp);
+                        }
+                      }
                     />
                   )}
                 </View>
@@ -424,13 +435,17 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   Jour d'arrivé du salarié :{" "}
                 </Text>
               </View>
+
               <View style={{ flex: 1 }}>
                 <Pressable onPress={showDatepickerArrival}>
-                  <Text
-                    style={screen.InputDatePicker}
-                  >
-                    {formatDisplay(arrivalDate)}
-                  </Text>
+                  <Input
+                    style={screen.input}
+                    value={arrivalDate && formatDisplay(arrivalDate)}
+                    placeholder="Date d'arrivé"
+                    errorMessage={errors.arrival_date}
+                    disabledInputStyle={{ color: color.COLORS.BLACK }}
+                    disabled
+                  />
                 </Pressable>
               </View>
               {showArrival && (
@@ -440,9 +455,16 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   locale="fr-FR"
                   mode="date"
                   display="default"
-                  onChange={onChangeArrivalDate}
+                  onChange={
+                    (item) => {
+                      onChangeArrivalDate(item)
+                      values.arrival_date = formatAPI(item.nativeEvent.timestamp);
+                    }
+                  }
                 />
               )}
+
+
             </View>
 
             <View style={{ flexDirection: "row" }}>
