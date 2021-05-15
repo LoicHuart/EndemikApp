@@ -3,6 +3,7 @@ export { ListHolidays } from "./holidays/ListHolidays";
 export { AddHoliday } from "./holidays/AddHoliday";
 export { CardHoliday } from "./holidays/CardHoliday";
 export { ValidateRefuseHoliday } from "./holidays/ValidateRefuseHoliday";
+export { ListHolidaysManager } from "./holidays/ListHolidaysManager";
 
 export { Card } from "./Card";
 

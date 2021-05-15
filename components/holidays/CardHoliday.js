@@ -43,7 +43,7 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
           </View>
         );
 
-      case "prevalidé":
+      case "prévalidé":
         return (
           <View
             style={{
@@ -148,7 +148,7 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
     await setShowValidator(!showValidator);
     if (
       (item.status === "en attente" ||
-        item.status === "prevalidé" ||
+        item.status === "prévalidé" ||
         item.status === "validé") &&
       showValidator
     ) {
@@ -166,7 +166,7 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
         return <UpdateHoliday item={item} toggleShowPopUp={toggleShowPopUp} />;
       } else {
         if (
-          (item.status === "prevalidé" || item.status === "validé") &&
+          (item.status === "prévalidé" || item.status === "validé") &&
           Date.now() < new Date(item.starting_date)
         ) {
           return (
@@ -188,8 +188,8 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
   const requester = () => {
     if (item.id_requester_employee.firstName) {
       return (
-        <Text>
-          Par {item.id_requester_employee.firstName}{" "}
+        <Text style={styles.type}>
+          {item.id_requester_employee.firstName}{" "}
           {item.id_requester_employee.lastName}{" "}
         </Text>
       );
@@ -208,27 +208,31 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
             {requester()}
             <Text style={styles.type}>{capitalize(item.type)}</Text>
             <View style={styles.dates}>
-              <View style={{ alignSelf: "center", flex: 2 }}>
+              <View style={{ alignSelf: "center", flex: 1 }}></View>
+              <View style={{ alignSelf: "center", flex: 3 }}>
                 <Icon
                   name="calendar-alt"
                   type="font-awesome-5"
                   color={color.COLORS.GREY}
                 />
               </View>
-              <Text style={{ alignSelf: "center", flex: 4 }}>
+              <View style={{ alignSelf: "center", flex: 1 }}></View>
+              <Text style={{ alignSelf: "center", flex: 9 }}>
                 {formatDisplay(item.starting_date)}
               </Text>
-              <View style={{ alignSelf: "center", flex: 2 }}>
+              <View style={{ alignSelf: "center", flex: 1 }}></View>
+              <View style={{ alignSelf: "center", flex: 3 }}>
                 <Icon
                   name="arrow-alt-circle-right"
                   type="font-awesome-5"
                   color={color.COLORS.GREY}
                 />
               </View>
-              <Text style={{ alignSelf: "center", flex: 4 }}>
+              <View style={{ alignSelf: "center", flex: 1 }}></View>
+              <Text style={{ alignSelf: "center", flex: 9 }}>
                 {formatDisplay(item.ending_date)}
               </Text>
-              <View style={{ flex: 3 }}></View>
+              <View style={{ alignSelf: "center", flex: 1 }}></View>
             </View>
           </View>
         </View>
@@ -261,7 +265,6 @@ const styles = StyleSheet.create({
   },
   dates: {
     marginTop: 10,
-    alignContent: "flex-start",
     flexDirection: "row",
   },
   column: {

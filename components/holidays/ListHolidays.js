@@ -77,7 +77,6 @@ export const ListHolidays = ({ user, status, token, gestion }) => {
 
     return (
       <View style={{ marginBottom: 50 }}>
-        <Text style={{ fontWeight: "bold" }}>Liste des congées en cours :</Text>
         <FlatList
           data={holidays}
           ListEmptyComponent={() => <Text>rien</Text>}
