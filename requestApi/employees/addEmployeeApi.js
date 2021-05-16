@@ -5,6 +5,8 @@
 export const addEmployeeApi = async (token, values) => {
   var myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
+  myHeaders.append('Accept', 'application/json');
+  myHeaders.append("Content-Type", 'multipart/form-data');
 
   var formdata = new FormData();
   formdata.append("title", values.title);
@@ -23,7 +25,15 @@ export const addEmployeeApi = async (token, values) => {
   formdata.append("id_role", values.id_role);
   formdata.append("children_nb", 0);
 
-  console.log(formdata);
+  if (values.photo) {
+    formdata.append('photo', {
+      name: "test.jpg",
+      type: 'image/jpeg',
+      uri: values.photo.uri,
+    });
+  }
+
+  // console.log(formdata);
 
   var requestOptions = {
     method: "POST",
@@ -40,7 +50,7 @@ export const addEmployeeApi = async (token, values) => {
   )
     .then((response) => response.json())
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       val = result;
     })
     .catch((error) => console.log("error", error));
