@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import color from "../../constants/color";
-import { Button, Input } from "react-native-elements";
+import { Button, Input, Avatar, ListItem, Overlay, Accessory } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
@@ -12,6 +12,7 @@ import { formatDisplay } from "../../function";
 import { formatAPI } from "../../function";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { addEmployeeApi } from "../../requestApi";
+import { OverlayPhoto } from "./OverlayPhoto";
 
 const AddEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -70,10 +71,17 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
 
   const today = new Date();
   const [birthDate, setbirthDate] = useState();
+  const [arrivalDate, setArrivalDate] = useState();
   const [showBirth, setShowBirth] = useState(false);
   const [showArrival, setShowArrival] = useState(false);
 
-  const [arrivalDate, setArrivalDate] = useState(today);
+  const [image, setImage] = useState(null);
+  const [visible, setVisible] = useState(false);
+
+  const toggleOverlayPhoto = () => {
+    setVisible(!visible);
+  };
+
 
   const onChangeBirthDate = (selectedDate) => {
     setShowBirth(false);
@@ -97,6 +105,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   };
 
   const showDatepickerArrival = () => {
+    setArrivalDate(today);
     setShowArrival(true);
   };
 
@@ -117,6 +126,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
 
   const sendAddEmployee = async (values) => {
     // console.log(values)
+    values.photo = image;
     if (!loading) {
       setLoading(true);
       await addEmployeeApi(token, values).then((result) => {
@@ -195,19 +205,20 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           mail: "",
           tel: "",
           date_birth: "",
-          role: "",
           social_security_nb: "",
           postal_code: "",
           street_nb: "",
           street: "",
           city: "",
+          id_role: "",
+          id_service: "",
           arrival_date: "",
           // title: "",
           // lastname: "Pottier",
           // firstname: "Domitille",
           // mail: "dopitter@gmail.com",
           // tel: "0649826159",
-          // date_birth: "1998-08-30",
+          // date_birth: "",
           // social_security_nb: "2980857403863",
           // postal_code: "51100",
           // street_nb: "27",
@@ -215,7 +226,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           // city: "Reims",
           // id_role: "",
           // id_service: "",
-          // arrival_date: "1998-08-30",
+          // arrival_date: "",
         }}
         validationSchema={AddEmployeeSchema}
         onSubmit={(values) => sendAddEmployee(values)}
@@ -223,6 +234,70 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
+              <View style={{ flexDirection: "row", flex: 1 }}>
+                <View style={{ flex: 0.6, alignSelf: "center", alignItems: "center" }}>
+                  <Avatar
+                    rounded
+                    source={image && { uri: image.uri }}
+                    containerStyle={!image && { backgroundColor: color.COLORS.GREY }}
+                    size="large"
+                    activeOpacity={0.7}
+                    title={values.lastname && values.firstname && values.lastname[0] + values.firstname[0]}
+                  />
+                  <View style={{ flexDirection: "row", alignSelf: "flex-start" }}>
+                    {image &&
+                      <Avatar
+                        size={30}
+                        rounded
+                        containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 10 }}
+                        onPress={() => console.log("Works!")}
+                        activeOpacity={0.7}
+                        icon={{
+                          name: 'trash-alt',
+                          type: 'font-awesome-5',
+                          color: color.COLORS.DEFAULT
+                        }}
+                        onPress={() => setImage(null)}
+                      />
+                    }
+                    <Avatar
+                      size={30}
+                      rounded
+                      containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 65 }}
+                      onPress={() => console.log("Works!")}
+                      activeOpacity={0.7}
+                      icon={{
+                        name: 'pencil-alt',
+                        type: 'font-awesome-5',
+                        color: color.COLORS.DEFAULT
+                      }}
+                      onPress={toggleOverlayPhoto}
+                    />
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1 }}>
+                    <Input
+                      style={screen.input}
+                      onChangeText={handleChange("lastname")}
+                      onBlur={handleBlur("lastname")}
+                      value={values.lastname}
+                      placeholder="Nom"
+                      errorMessage={errors.lastname}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Input
+                      style={screen.input}
+                      onChangeText={handleChange("firstname")}
+                      onBlur={handleBlur("firstname")}
+                      value={values.firstname}
+                      placeholder="Prénom"
+                      errorMessage={errors.firstname}
+                    />
+                  </View>
+                </View>
+              </View>
               <View
                 style={{
                   margin: 10,
@@ -250,28 +325,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 <View style={{ flex: 1 }}>
                   <Input
                     style={screen.input}
-                    onChangeText={handleChange("lastname")}
-                    onBlur={handleBlur("lastname")}
-                    value={values.lastname}
-                    placeholder="Nom"
-                    errorMessage={errors.lastname}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Input
-                    style={screen.input}
-                    onChangeText={handleChange("firstname")}
-                    onBlur={handleBlur("firstname")}
-                    value={values.firstname}
-                    placeholder="Prénom"
-                    errorMessage={errors.firstname}
-                  />
-                </View>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 1 }}>
-                  <Input
-                    style={screen.input}
                     onChangeText={handleChange("tel")}
                     onBlur={handleBlur("tel")}
                     value={values.tel}
@@ -282,9 +335,14 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 <View style={{ flex: 1 }}>
                   <View>
                     <Pressable onPress={showDatepickerBirth}>
-                      <Text style={screen.InputDatePicker}>
-                        {birthDate ? formatDisplay(birthDate) : "Date de naissance"}
-                      </Text>
+                      <Input
+                        style={screen.input}
+                        value={birthDate && formatDisplay(birthDate)}
+                        placeholder="Date de naissance"
+                        errorMessage={errors.date_birth}
+                        disabledInputStyle={{ color: color.COLORS.BLACK }}
+                        disabled
+                      />
                     </Pressable>
                   </View>
                   {showBirth && (
@@ -294,7 +352,12 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                       locale="fr-FR"
                       mode="date"
                       display="default"
-                      onChange={onChangeBirthDate}
+                      onChange={
+                        (item) => {
+                          onChangeBirthDate(item)
+                          values.date_birth = formatAPI(item.nativeEvent.timestamp);
+                        }
+                      }
                     />
                   )}
                 </View>
@@ -315,6 +378,33 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 placeholder="Numéro de sécurité social"
                 errorMessage={errors.social_security_nb}
               />
+              <View style={{ flex: 1 }}>
+                <Pressable onPress={showDatepickerArrival}>
+                  <Input
+                    style={screen.input}
+                    value={arrivalDate && formatDisplay(arrivalDate)}
+                    placeholder="Date d'arrivé du salarié"
+                    errorMessage={errors.arrival_date}
+                    disabledInputStyle={{ color: color.COLORS.BLACK }}
+                    disabled
+                  />
+                </Pressable>
+              </View>
+              {showArrival && (
+                <DateTimePicker
+                  testID="dateTimePickerDateArrival"
+                  value={arrivalDate}
+                  locale="fr-FR"
+                  mode="date"
+                  display="default"
+                  onChange={
+                    (item) => {
+                      onChangeArrivalDate(item)
+                      values.arrival_date = formatAPI(item.nativeEvent.timestamp);
+                    }
+                  }
+                />
+              )}
             </View>
             <View>
               <Text style={{ fontSize: 15 }}>Adresse</Text>
@@ -417,34 +507,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               />
               <Text style={screen.errorDropdown}>{errors.id_role}</Text>
             </View>
-
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 12 }}>
-                  Jour d'arrivé du salarié :{" "}
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Pressable onPress={showDatepickerArrival}>
-                  <Text
-                    style={screen.InputDatePicker}
-                  >
-                    {formatDisplay(arrivalDate)}
-                  </Text>
-                </Pressable>
-              </View>
-              {showArrival && (
-                <DateTimePicker
-                  testID="dateTimePickerDateArrival"
-                  value={arrivalDate}
-                  locale="fr-FR"
-                  mode="date"
-                  display="default"
-                  onChange={onChangeArrivalDate}
-                />
-              )}
-            </View>
-
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
@@ -466,6 +528,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           </View>
         )}
       </Formik>
+      <OverlayPhoto toggleOverlay={toggleOverlayPhoto} visible={visible} setImage={setImage}></OverlayPhoto>
     </View>
   );
 };
