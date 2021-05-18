@@ -13,7 +13,7 @@ import RadioForm, {
 import { AuthContext } from "../../context/AuthContext";
 
 export const UpdateHoliday = ({ item, toggleShowPopUp }) => {
-  const { token } = useContext(AuthContext);
+  const { token, user } = useContext(AuthContext);
 
   const today = new Date();
   const tomorrow = new Date(today);
@@ -49,6 +49,7 @@ export const UpdateHoliday = ({ item, toggleShowPopUp }) => {
 
     return day + "/" + month + "/" + date.getFullYear();
   };
+
   const formatAPI = (date) => {
     date = new Date(date);
     let day = date.getDate();
