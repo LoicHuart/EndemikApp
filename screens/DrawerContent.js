@@ -115,6 +115,7 @@ export function DrawerContent(props) {
             }}
             labelStyle={drawer.labelStyle}
           />
+
         </View>
       </DrawerContentScrollView>
     </View>
