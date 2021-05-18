@@ -173,15 +173,6 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
             <CancelHoliday item={item} toggleShowPopUp={toggleShowPopUp} />
           );
         }
-        return (
-          <View>
-            <Text>{capitalize(item.status)}</Text>
-            <Text>{capitalize(item.type)}</Text>
-            <Text>{item.note}</Text>
-            <Text>{formatDisplay(item.starting_date)}</Text>
-            <Text>{formatDisplay(item.ending_date)}</Text>
-          </View>
-        );
       }
     }
   };
@@ -189,7 +180,7 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
     if (item.id_requester_employee.firstName) {
       return (
         <Text style={styles.type}>
-          {item.id_requester_employee.firstName}{" "}
+          {capitalize(item.id_requester_employee.firstName)}{" "}
           {item.id_requester_employee.lastName}{" "}
         </Text>
       );
@@ -198,7 +189,17 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
 
   return (
     <View>
-      <Pressable onPress={toggleShowPopUp}>
+      <Pressable
+        onPress={() => {
+          if (
+            item.status != "annulé" &&
+            item.status != "refusé" &&
+            Date.now() < new Date(item.starting_date)
+          ) {
+            toggleShowPopUp();
+          }
+        }}
+      >
         <View style={styles.card}>
           {displayStatus()}
           <View style={{ flex: 4 }}>

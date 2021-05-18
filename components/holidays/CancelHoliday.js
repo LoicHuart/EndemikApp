@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
 import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
+import { screen } from "../../styles/";
 
 export const CancelHoliday = ({ item, toggleShowPopUp }) => {
   const { token } = useContext(AuthContext);
@@ -55,28 +56,27 @@ export const CancelHoliday = ({ item, toggleShowPopUp }) => {
       <View style={{ margin: 5, marginBottom: 10 }}>
         <Text>Voulez-vous annuler votre demande ?</Text>
       </View>
-      <View style={{ margin: 5 }}>
-        <Button
-          title="Annuler"
-          onPress={() => {
-            cancelHoliday();
-          }}
-          buttonStyle={styles.buttonValidate}
-        />
-      </View>
-      <View style={{ margin: 5 }}>
-        <Button
-          title="Retour"
-          onPress={() => {
-            toggleShowPopUp();
-          }}
-          buttonStyle={styles.buttonReturn}
-          type="outline"
-          titleStyle={{
-            color: color.COLORS.PRIMARY,
-          }}
-          containerStyle
-        />
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Retour"
+            onPress={() => {
+              toggleShowPopUp();
+            }}
+            buttonStyle={screen.buttonCancel}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Annuler"
+            onPress={() => {
+              cancelHoliday();
+            }}
+            buttonStyle={loading ? "" : screen.button}
+            loading={loading ? true : false}
+            type={loading ? "clear" : "solid"}
+          />
+        </View>
       </View>
     </View>
   );

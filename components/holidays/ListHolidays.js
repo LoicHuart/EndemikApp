@@ -8,6 +8,11 @@ export const ListHolidays = ({ user, status, token, gestion }) => {
   const [holidays, setHolidays] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
+  function custom_sort(a, b) {
+    return (
+      new Date(b.current_date).getTime() - new Date(a.current_date).getTime()
+    );
+  }
   if (user === undefined) {
     const displayHolidays = async (status) => {
       setLoading(true);
@@ -60,7 +65,7 @@ export const ListHolidays = ({ user, status, token, gestion }) => {
             console.log("error");
             console.log(resp);
           }
-          setHolidays(array);
+          setHolidays(array.sort(custom_sort));
         } catch (e) {
           console.log(e);
         }
@@ -121,7 +126,7 @@ export const ListHolidays = ({ user, status, token, gestion }) => {
           console.log("error");
           console.log(resp);
         }
-        setHolidays(respJSON);
+        setHolidays(respJSON.sort(custom_sort));
       } catch (e) {
         console.log(e);
       }
@@ -137,9 +142,6 @@ export const ListHolidays = ({ user, status, token, gestion }) => {
 
     return (
       <View style={{ marginBottom: 50 }}>
-        <Text style={{ fontWeight: "bold", marginBottom: 10 }}>
-          Historique :
-        </Text>
         <FlatList
           data={holidays}
           ListEmptyComponent={() => (
