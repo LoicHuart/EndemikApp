@@ -4,8 +4,9 @@ import { Button } from "react-native-elements";
 import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
 import { screen } from "../../styles/";
+import { cancelHolidayApi } from "../../requestApi/";
 
-export const CancelHoliday = ({ item, toggleShowPopUp }) => {
+export const CancelHoliday = ({ item, toggleShowPopUpCancel }) => {
   const { token } = useContext(AuthContext);
 
   const [loading, setLoading] = useState(true);
@@ -14,42 +15,23 @@ export const CancelHoliday = ({ item, toggleShowPopUp }) => {
   const cancelHoliday = () => {
     if (!loading) {
       setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      var requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        body: "",
-        redirect: "follow",
-      };
-
-      fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/annulé/${item._id}`,
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          setResultCancelHoliday(result);
-        })
-        .catch((error) => console.log("error", error));
+      cancelHolidayApi(item, token).then((result) => {
+        setResultCancelHoliday(result);
+      });
     } else {
       console.log("Loading");
     }
   };
 
   useEffect(() => {
-    if (resultCancelHoliday.message && !resultCancelHoliday.error && !loading) {
-      toggleShowPopUp();
-      console.log("toggleShowPopUp");
-    }
-  }, [loading]);
-
-  useEffect(() => {
     setLoading(false);
   }, [resultCancelHoliday]);
+
+  useEffect(() => {
+    if (resultCancelHoliday.message && !resultCancelHoliday.error && !loading) {
+      toggleShowPopUpCancel();
+    }
+  }, [loading]);
 
   return (
     <View>

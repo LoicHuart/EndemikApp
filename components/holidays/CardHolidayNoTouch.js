@@ -1,56 +1,17 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { Overlay, Icon } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import color from "../../constants/color";
-import { screen } from "../../styles";
-import { PrevalideHoliday } from "./PrevalideHoliday";
 
-import { date } from "yup/lib/locale";
-
-export const CardHolidayManager = ({ item, refreshHolidays }) => {
-  const [showValidator, setShowValidator] = useState(false);
+export const CardHolidayNoTouch = ({ item, refreshHolidays }) => {
+  const [showValidatorCancel, setShowValidatorCancel] = useState(false);
+  const [showValidatorUpdate, setShowValidatorUpdate] = useState(false);
 
   const capitalize = (str) => {
     if (str.toUpperCase() === "RTT") {
       return "RTT";
     }
     return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
-  const formatDisplay = (date) => {
-    date = new Date(date);
-    let day = date.getDate();
-    if (day.toString().length < 2) {
-      day = "0" + day;
-    }
-
-    let month = date.getMonth() + 1;
-    if (month.toString().length < 2) {
-      month = "0" + month;
-    }
-
-    return day + "/" + month + "/" + date.getFullYear();
-  };
-  const toggleShowPopUp = async () => {
-    await setShowValidator(!showValidator);
-    if (showValidator) {
-      refreshHolidays(item);
-    }
-  };
-
-  const overlay = () => {
-    return <PrevalideHoliday item={item} toggleShowPopUp={toggleShowPopUp} />;
-  };
-
-  const requester = () => {
-    if (item.id_requester_employee.firstName) {
-      return (
-        <Text style={styles.type}>
-          {item.id_requester_employee.firstName}{" "}
-          {item.id_requester_employee.lastName}{" "}
-        </Text>
-      );
-    }
   };
 
   const displayStatus = () => {
@@ -164,60 +125,71 @@ export const CardHolidayManager = ({ item, refreshHolidays }) => {
     }
   };
 
+  const formatDisplay = (date) => {
+    date = new Date(date);
+    let day = date.getDate();
+    if (day.toString().length < 2) {
+      day = "0" + day;
+    }
+
+    let month = date.getMonth() + 1;
+    if (month.toString().length < 2) {
+      month = "0" + month;
+    }
+
+    return day + "/" + month + "/" + date.getFullYear();
+  };
+
+  const requester = () => {
+    if (item.id_requester_employee.firstName) {
+      return (
+        <Text style={styles.type}>
+          {capitalize(item.id_requester_employee.firstName)}{" "}
+          {item.id_requester_employee.lastName}{" "}
+        </Text>
+      );
+    }
+  };
+
   return (
     <View>
-      <Pressable
-        onPress={() => {
-          if (item.status === "en attente") {
-            toggleShowPopUp();
-          }
-        }}
-      >
-        <View style={styles.card}>
-          {displayStatus()}
-          <View style={{ flex: 4 }}>
-            <Text style={{ alignSelf: "flex-end", marginRight: 5 }}>
-              {formatDisplay(item.current_date)}
-            </Text>
-            {requester()}
-            <Text style={styles.type}>{capitalize(item.type)}</Text>
-            <View style={styles.dates}>
-              <View style={{ alignSelf: "center", flex: 1 }}></View>
-              <View style={{ alignSelf: "center", flex: 3 }}>
-                <Icon
-                  name="calendar-alt"
-                  type="font-awesome-5"
-                  color={color.COLORS.GREY}
-                />
-              </View>
-              <View style={{ alignSelf: "center", flex: 1 }}></View>
-              <Text style={{ alignSelf: "center", flex: 9 }}>
-                {formatDisplay(item.starting_date)}
-              </Text>
-              <View style={{ alignSelf: "center", flex: 1 }}></View>
-              <View style={{ alignSelf: "center", flex: 3 }}>
-                <Icon
-                  name="arrow-alt-circle-right"
-                  type="font-awesome-5"
-                  color={color.COLORS.GREY}
-                />
-              </View>
-              <View style={{ alignSelf: "center", flex: 1 }}></View>
-              <Text style={{ alignSelf: "center", flex: 9 }}>
-                {formatDisplay(item.ending_date)}
-              </Text>
-              <View style={{ alignSelf: "center", flex: 1 }}></View>
+      <View style={styles.card}>
+        {displayStatus()}
+        <View style={{ flex: 4 }}>
+          <Text style={{ alignSelf: "flex-end", marginRight: 5 }}>
+            {formatDisplay(item.current_date)}
+          </Text>
+          {requester()}
+          <Text style={styles.type}>{capitalize(item.type)}</Text>
+          <View style={styles.dates}>
+            <View style={{ alignSelf: "center", flex: 1 }}></View>
+            <View style={{ alignSelf: "center", flex: 3 }}>
+              <Icon
+                name="calendar-alt"
+                type="font-awesome-5"
+                color={color.COLORS.GREY}
+              />
             </View>
+            <View style={{ alignSelf: "center", flex: 1 }}></View>
+            <Text style={{ alignSelf: "center", flex: 9 }}>
+              {formatDisplay(item.starting_date)}
+            </Text>
+            <View style={{ alignSelf: "center", flex: 1 }}></View>
+            <View style={{ alignSelf: "center", flex: 3 }}>
+              <Icon
+                name="arrow-alt-circle-right"
+                type="font-awesome-5"
+                color={color.COLORS.GREY}
+              />
+            </View>
+            <View style={{ alignSelf: "center", flex: 1 }}></View>
+            <Text style={{ alignSelf: "center", flex: 9 }}>
+              {formatDisplay(item.ending_date)}
+            </Text>
+            <View style={{ alignSelf: "center", flex: 1 }}></View>
           </View>
         </View>
-      </Pressable>
-      <Overlay
-        isVisible={showValidator}
-        onBackdropPress={toggleShowPopUp}
-        overlayStyle={screen.overlay}
-      >
-        {overlay()}
-      </Overlay>
+      </View>
     </View>
   );
 };
@@ -239,7 +211,6 @@ const styles = StyleSheet.create({
   },
   dates: {
     marginTop: 10,
-    alignContent: "flex-start",
     flexDirection: "row",
   },
   column: {

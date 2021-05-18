@@ -1,178 +1,115 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import { Icon, Overlay, Button } from "react-native-elements";
+import { Text, View, FlatList } from "react-native";
 import { CardHoliday } from "./CardHoliday";
-import color from "../../constants/color";
+import { CardHolidayRh } from "./CardHolidayRh";
+import { CardHolidayManager } from "./CardHolidayManager";
+import { CardHolidayNoTouch } from "./CardHolidayNoTouch";
+import {
+  getHolidaysApi,
+  getHolidaysByUserApi,
+  getHolidaysByServiceApi,
+} from "../../requestApi/";
 
-export const ListHolidays = ({ user, status, token, gestion }) => {
+export const ListHolidays = ({
+  user,
+  status,
+  token,
+  gestionRole,
+  service,
+  noTouch,
+}) => {
   const [holidays, setHolidays] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  function custom_sort(a, b) {
-    return (
-      new Date(b.current_date).getTime() - new Date(a.current_date).getTime()
-    );
-  }
-  if (user === undefined) {
-    const displayHolidays = async (status) => {
-      setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-
-      var raw = "";
-
-      var requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-
-      if (status === undefined) {
-        try {
-          const resp = await fetch(
-            `http://${process.env.REACT_APP_API_HOST}/api/holidays/?populate=1`,
-            requestOptions
-          );
-
-          const respJSON = await resp.json();
-
-          if (!resp.ok) {
-            console.log("error");
-            console.log(resp);
-          }
-          setHolidays(respJSON);
-        } catch (e) {
-          console.log(e);
-        }
+  const displayHolidays = async () => {
+    setLoading(true);
+    if (service === undefined) {
+      if (user === undefined) {
+        getHolidaysApi(token, status).then((result) => setHolidays(result));
       } else {
-        try {
-          const resp = await fetch(
-            `http://${process.env.REACT_APP_API_HOST}/api/holidays/?populate=1`,
-            requestOptions
-          );
-
-          const respJSON = await resp.json();
-
-          let array = [];
-          respJSON.forEach((item) => {
-            if (item.status == status) {
-              array.push(item);
-            }
-          });
-
-          if (!resp.ok) {
-            console.log("error");
-            console.log(resp);
-          }
-          setHolidays(array.sort(custom_sort));
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    };
-
-    useEffect(() => {
-      displayHolidays(status);
-    }, []);
-
-    useEffect(() => {
-      setLoading(false);
-    }, [holidays]);
-
-    return (
-      <View style={{ marginBottom: 50 }}>
-        <FlatList
-          data={holidays}
-          ListEmptyComponent={() => <Text>rien</Text>}
-          refreshing={loading}
-          onRefresh={() => displayHolidays(status)}
-          renderItem={({ item }) => (
-            <CardHoliday
-              item={item}
-              gestion={gestion}
-              refreshHolidays={displayHolidays}
-            />
-          )}
-          keyExtractor={(item) => item._id}
-        />
-        {/* <Button title="actualiser" onPress={() => displayHolidays()} /> */}
-      </View>
-    );
-  } else {
-    const displayHolidays = async () => {
-      setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-
-      var raw = "";
-
-      var requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-
-      try {
-        const resp = await fetch(
-          `http://${process.env.REACT_APP_API_HOST}/api/holidays/user/${user._id}`,
-          requestOptions
+        getHolidaysByUserApi(token, user._id, status).then((result) =>
+          setHolidays(result)
         );
-
-        const respJSON = await resp.json();
-
-        if (!resp.ok) {
-          console.log("error");
-          console.log(resp);
-        }
-        setHolidays(respJSON.sort(custom_sort));
-      } catch (e) {
-        console.log(e);
       }
-    };
+    } else {
+      getHolidaysByServiceApi(token, status).then((result) =>
+        setHolidays(result)
+      );
+    }
+  };
 
-    useEffect(() => {
-      displayHolidays();
-    }, []);
+  useEffect(() => {
+    displayHolidays(status);
+  }, []);
 
-    useEffect(() => {
-      setLoading(false);
-    }, [holidays]);
+  useEffect(() => {
+    setLoading(false);
+  }, [holidays]);
 
-    return (
-      <View style={{ marginBottom: 50 }}>
-        <FlatList
-          data={holidays}
-          ListEmptyComponent={() => (
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ margin: 10 }}>
-                Vous n'avez pas encore de demandes
-              </Text>
-              <Text style={{ color: color.COLORS.GREY }}>
-                Balayez vers le bas pour actualiser
-              </Text>
-              <Icon
-                name="angle-double-down"
-                type="font-awesome-5"
-                color={color.COLORS.GREY}
-              />
-            </View>
-          )}
-          refreshing={loading}
-          onRefresh={() => displayHolidays()}
-          renderItem={({ item }) => (
-            <CardHoliday
-              item={item}
-              gestion={gestion}
-              refreshHolidays={displayHolidays}
-            />
-          )}
-          keyExtractor={(item) => item._id}
-        />
-      </View>
-    );
-  }
+  return (
+    <View style={{ marginBottom: 50 }}>
+      <FlatList
+        data={holidays}
+        ListEmptyComponent={() => <Text>rien</Text>}
+        refreshing={loading}
+        onRefresh={() => displayHolidays()}
+        renderItem={({ item }) => {
+          switch (gestionRole) {
+            case "manager":
+              if (noTouch) {
+                return (
+                  <CardHolidayNoTouch
+                    item={item}
+                    refreshHolidays={displayHolidays}
+                  />
+                );
+              }
+              return (
+                <CardHolidayManager
+                  item={item}
+                  refreshHolidays={displayHolidays}
+                />
+              );
+            case "rh":
+              if (noTouch) {
+                return (
+                  <CardHolidayNoTouch
+                    item={item}
+                    refreshHolidays={displayHolidays}
+                  />
+                );
+              }
+              return (
+                <CardHolidayRh item={item} refreshHolidays={displayHolidays} />
+              );
+            case "DEV":
+              if (noTouch) {
+                return (
+                  <CardHolidayNoTouch
+                    item={item}
+                    refreshHolidays={displayHolidays}
+                  />
+                );
+              }
+              return (
+                <CardHolidayRh item={item} refreshHolidays={displayHolidays} />
+              );
+            case undefined:
+              if (noTouch) {
+                return (
+                  <CardHolidayNoTouch
+                    item={item}
+                    refreshHolidays={displayHolidays}
+                  />
+                );
+              }
+              return (
+                <CardHoliday item={item} refreshHolidays={displayHolidays} />
+              );
+          }
+        }}
+        keyExtractor={(item) => item._id}
+      />
+    </View>
+  );
 };
-
-const styles = StyleSheet.create({});

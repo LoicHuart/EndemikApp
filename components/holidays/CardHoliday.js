@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Overlay, Icon } from "react-native-elements";
 import color from "../../constants/color";
-import { ValidateRefuseHoliday } from "./ValidateRefuseHoliday";
 import { screen } from "../../styles";
 import { UpdateHoliday } from "./UpdateHoliday";
 import { CancelHoliday } from "./CancelHoliday";
 import { date } from "yup/lib/locale";
 
-export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
-  const [showValidator, setShowValidator] = useState(false);
+export const CardHoliday = ({ item, refreshHolidays }) => {
+  const [showValidatorCancel, setShowValidatorCancel] = useState(false);
+  const [showValidatorUpdate, setShowValidatorUpdate] = useState(false);
 
   const capitalize = (str) => {
     if (str.toUpperCase() === "RTT") {
@@ -144,38 +144,55 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
     return day + "/" + month + "/" + date.getFullYear();
     z;
   };
-  const toggleShowPopUp = async () => {
-    await setShowValidator(!showValidator);
+  const toggleShowPopUpCancel = async () => {
+    await setShowValidatorCancel(!showValidatorCancel);
     if (
       (item.status === "en attente" ||
         item.status === "prévalidé" ||
         item.status === "validé") &&
-      showValidator
+      showValidatorCancel
     ) {
       refreshHolidays(item.status);
     }
   };
 
-  const overlay = () => {
-    if (gestion) {
-      return (
-        <ValidateRefuseHoliday item={item} toggleShowPopUp={toggleShowPopUp} />
-      );
-    } else {
-      if (item.status === "en attente") {
-        return <UpdateHoliday item={item} toggleShowPopUp={toggleShowPopUp} />;
-      } else {
-        if (
-          (item.status === "prévalidé" || item.status === "validé") &&
-          Date.now() < new Date(item.starting_date)
-        ) {
-          return (
-            <CancelHoliday item={item} toggleShowPopUp={toggleShowPopUp} />
-          );
-        }
-      }
+  const toggleShowPopUpUpdate = async () => {
+    await setShowValidatorUpdate(!showValidatorUpdate);
+    if (item.status === "en attente" && showValidatorUpdate) {
+      refreshHolidays(item.status);
     }
   };
+
+  const overlayCancel = () => {
+    if (
+      (item.status === "prévalidé" ||
+        item.status === "validé" ||
+        item.status === "en attente") &&
+      Date.now() < new Date(item.starting_date)
+    ) {
+      return (
+        <CancelHoliday
+          item={item}
+          toggleShowPopUpCancel={toggleShowPopUpCancel}
+        />
+      );
+    }
+  };
+
+  const overlayUpdate = () => {
+    if (
+      item.status === "en attente" &&
+      Date.now() < new Date(item.starting_date)
+    ) {
+      return (
+        <UpdateHoliday
+          item={item}
+          toggleShowPopUpUpdate={toggleShowPopUpUpdate}
+        />
+      );
+    }
+  };
+
   const requester = () => {
     if (item.id_requester_employee.firstName) {
       return (
@@ -196,7 +213,15 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
             item.status != "refusé" &&
             Date.now() < new Date(item.starting_date)
           ) {
-            toggleShowPopUp();
+            toggleShowPopUpCancel();
+          }
+        }}
+        onLongPress={() => {
+          if (
+            item.status == "en attente" &&
+            Date.now() < new Date(item.starting_date)
+          ) {
+            toggleShowPopUpUpdate();
           }
         }}
       >
@@ -239,11 +264,18 @@ export const CardHoliday = ({ item, gestion, refreshHolidays }) => {
         </View>
       </Pressable>
       <Overlay
-        isVisible={showValidator}
-        onBackdropPress={toggleShowPopUp}
+        isVisible={showValidatorCancel}
+        onBackdropPress={toggleShowPopUpCancel}
         overlayStyle={screen.overlay}
       >
-        {overlay()}
+        {overlayCancel()}
+      </Overlay>
+      <Overlay
+        isVisible={showValidatorUpdate}
+        onBackdropPress={toggleShowPopUpUpdate}
+        overlayStyle={screen.overlay}
+      >
+        {overlayUpdate()}
       </Overlay>
     </View>
   );
