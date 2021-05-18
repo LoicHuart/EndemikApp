@@ -11,6 +11,7 @@ export { ListEmployees } from "./employee/ListEmployees";
 export { CardEmployee } from "./employee/CardEmployee";
 export { AddEmployee } from "./employee/AddEmployee";
 export { ValideRefuseEmployee } from "./employee/ValideRefuseEmployee";
+export { OverlayPhoto } from "./employee/OverlayPhoto";
 /* export { EditEmployee } from "./employee/EditEmployee"; */
 
 export { ListServices } from "./services/ListServices";
