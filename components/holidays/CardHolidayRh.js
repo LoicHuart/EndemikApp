@@ -3,11 +3,11 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Overlay, Icon } from "react-native-elements";
 import color from "../../constants/color";
 import { screen } from "../../styles";
-import { PrevalideHoliday } from "./PrevalideHoliday";
+import { ValidateRefuseHoliday } from "./ValidateRefuseHoliday";
 
 import { date } from "yup/lib/locale";
 
-export const CardHolidayManager = ({ item, refreshHolidays }) => {
+export const CardHolidayRh = ({ item, refreshHolidays }) => {
   const [showValidator, setShowValidator] = useState(false);
 
   const capitalize = (str) => {
@@ -39,7 +39,9 @@ export const CardHolidayManager = ({ item, refreshHolidays }) => {
   };
 
   const overlay = () => {
-    return <PrevalideHoliday item={item} toggleShowPopUp={toggleShowPopUp} />;
+    return (
+      <ValidateRefuseHoliday item={item} toggleShowPopUp={toggleShowPopUp} />
+    );
   };
 
   const requester = () => {
@@ -166,13 +168,7 @@ export const CardHolidayManager = ({ item, refreshHolidays }) => {
 
   return (
     <View>
-      <Pressable
-        onPress={() => {
-          if (item.status === "en attente") {
-            toggleShowPopUp();
-          }
-        }}
-      >
+      <Pressable onPress={toggleShowPopUp}>
         <View style={styles.card}>
           {displayStatus()}
           <View style={{ flex: 4 }}>

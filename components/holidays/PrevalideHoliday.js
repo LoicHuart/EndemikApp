@@ -3,51 +3,11 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
 import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
+import { prevalideHoliday, refuseHoliday } from "../../requestApi";
 
 export const PrevalideHoliday = ({ item, toggleShowPopUp }) => {
   const { token } = useContext(AuthContext);
 
-  const prevalideHoliday = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: "",
-      redirect: "follow",
-    };
-
-    fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/prévalidé/${item._id}`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
-  };
-
-  const refuseHoliday = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: "",
-      redirect: "follow",
-    };
-
-    fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/holidays/status/refusé/${item._id}`,
-      requestOptions
-    )
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
-  };
   return (
     <View>
       <View style={{ margin: 5 }}>
@@ -57,7 +17,7 @@ export const PrevalideHoliday = ({ item, toggleShowPopUp }) => {
         <Button
           title="Prévalider"
           onPress={() => {
-            prevalideHoliday();
+            prevalideHoliday(item, token);
             toggleShowPopUp();
           }}
           buttonStyle={styles.buttonValidate}
@@ -67,7 +27,7 @@ export const PrevalideHoliday = ({ item, toggleShowPopUp }) => {
         <Button
           title="Refuser"
           onPress={() => {
-            refuseHoliday();
+            refuseHoliday(item, token);
             toggleShowPopUp();
           }}
           buttonStyle={styles.buttonRefuse}

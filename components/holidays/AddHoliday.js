@@ -13,6 +13,8 @@ import RadioForm, {
 import { AuthContext } from "../../context/AuthContext";
 import { ConfirmAddHoliday } from "./ConfirmAddHoliday";
 import { Card } from "../Card";
+import { addHolidayApi } from "../../requestApi";
+import { formatAPI, formatDisplay } from "../../function/";
 
 export const AddHoliday = () => {
   const { user, token } = useContext(AuthContext);
@@ -28,33 +30,6 @@ export const AddHoliday = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [resultAddHoliday, setResultAddHoliday] = useState("");
-
-  const formatDisplay = (date) => {
-    date = new Date(date);
-    let day = date.getDate();
-    if (day.toString().length < 2) {
-      day = "0" + day;
-    }
-
-    let month = date.getMonth() + 1;
-    if (month.toString().length < 2) {
-      month = "0" + month;
-    }
-
-    return day + "/" + month + "/" + date.getFullYear();
-  };
-  const formatAPI = (date) => {
-    date = new Date(date);
-    let day = date.getDate();
-    if (day.toString().length < 2) {
-      day = "0" + day;
-    }
-    let month = date.getMonth() + 1;
-    if (month.toString().length < 2) {
-      month = "0" + month;
-    }
-    return date.getFullYear() + "-" + month + "-" + day;
-  };
 
   const onChangeStartDate = (selectedDate) => {
     setShowStart(false);
@@ -82,35 +57,9 @@ export const AddHoliday = () => {
   const addHoliday = async (holiday) => {
     if (!loading) {
       setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      var raw = JSON.stringify({
-        note: holiday.note,
-        starting_date: holiday.startDate,
-        ending_date: holiday.endDate,
-        type: holiday.type,
-        id_requester_employee: user._id,
+      await addHolidayApi(holiday, token, user).then((result) => {
+        setResultAddHoliday(result);
       });
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      //console.log(requestOptions);
-      fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/holidays`,
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          setResultAddHoliday(result);
-        })
-        .catch((error) => console.log("error", error));
     } else {
       console.log("Loading");
     }
