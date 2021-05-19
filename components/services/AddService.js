@@ -68,13 +68,11 @@ export const AddService = ({ toggleOverlayAdd }) => {
   return (
     <View>
       <Text style={screen.h1}>Ajout d'un service</Text>
-      {resultAddService.error && (
-        <Text style={screen.error}>{resultAddService.error}</Text>
-      )}
-      {resultAddService._id && (
-        <Text style={screen.sucess}>Service Ajouté</Text>
-      )}
-
+      {resultAddService.code == "36" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+      {resultAddService.code == "37" && <Text style={screen.error}>ID manager non valide</Text>}
+      {resultAddService.code == "38" && <Text style={screen.error}>Ce nom de service est déjà utilisé</Text>}
+      {resultAddService.code == "39" && <Text style={screen.error}>Cet employé est déjà responsable d'un service</Text>}
+      {resultAddService._id && <Text style={screen.sucess}>Service Ajouté</Text>}
       <Formik
         initialValues={{
           name: "",
@@ -120,6 +118,7 @@ export const AddService = ({ toggleOverlayAdd }) => {
                 onClose={() => setHeightDropdown(40)}
                 dropDownMaxHeight={heightDropdown - 40}
               />
+              <Text style={screen.errorDropdown}>{errors.id_manager}</Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>

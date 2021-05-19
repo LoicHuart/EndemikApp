@@ -57,4 +57,24 @@ export const screen = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
   },
+  errorDropdown: {
+    fontSize: 12,
+    color: 'red',
+    paddingHorizontal: 5,
+  },
+  InputDatePicker: {
+    minHeight: 40,
+    borderBottomWidth: 1,
+    color: "black",
+    fontSize: 12,
+    borderColor: "gray",
+    textAlignVertical: "center",
+    marginHorizontal: 10
+  },
+  input: {
+    fontSize: 12,
+    borderColor: color.COLORS.BLACK,
+    height: 20,
+    width: "100%",
+  }
 });

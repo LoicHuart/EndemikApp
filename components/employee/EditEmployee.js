@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import color from "../../constants/color";
 import { Button, Input } from "react-native-elements";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -8,6 +8,9 @@ import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
 import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
+import { updateEmployeeApi } from "../../requestApi";
+import { formatDisplay } from "../../function";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const EditEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -53,14 +56,47 @@ const EditEmployeeSchema = Yup.object().shape({
   id_service: Yup.string().required("Champ obligatoire"),
 });
 
-export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
+export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
   // console.log(employee);
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = React.useState(true);
   const [resultEditEmployee, setResultEditEmployee] = React.useState([]);
-  const [resultGetServices, setResultGetServices] = React.useState([]);
-  const [heightDropdown, setHeightDropdown] = React.useState(40);
+  const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
+  const [heightDropdownService, setHeightDropdownService] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
+
+  const today = new Date();
+  const [birthDate, setbirthDate] = useState(employee.date_birth);
+  const [showBirth, setShowBirth] = useState(false);
+  const [showArrival, setShowArrival] = useState(false);
+
+  const [arrivalDate, setArrivalDate] = useState(today);
+
+  const onChangeBirthDate = (selectedDate) => {
+    setShowBirth(false);
+    if (selectedDate.type !== "dismissed") {
+      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+      setbirthDate(timestamp);
+    }
+  };
+
+  const onChangeArrivalDate = (selectedDate) => {
+    setShowArrival(false);
+    if (selectedDate.type !== "dismissed") {
+      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
+      setArrivalDate(timestamp);
+    }
+  };
+
+  const showDatepickerBirth = () => {
+    setbirthDate(today);
+    setShowBirth(true);
+  };
+
+  const showDatepickerArrival = () => {
+    setShowArrival(true);
+  };
+
   const [Roles, setRoles] = React.useState([
     { label: "Administrateur", value: "60381739c7e71a89252b8844" },
     { label: "Salarié", value: "60381701c7e71a89252b8843" },
@@ -70,92 +106,21 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
   ]);
 
   const [Title, setTitle] = React.useState([
-    { label: "Madame", value: "Madame" },
-    { label: "Monsieur", value: "Monsieur" },
-    { label: "Mademoiselle", value: "Mademoiselle" },
-    { label: "Autres", value: "Autres" },
+    { label: "Madame", value: "madame" },
+    { label: "Monsieur", value: "monsieur" },
+    { label: "Mademoiselle", value: "mademoiselle" },
+    { label: "Autres", value: "autres" },
   ]);
 
   const sendEditEmployee = async (values) => {
-    console.log(JSON.stringify(values));
     if (!loading) {
       setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      // var formdata = new FormData();
-
-      // formdata.append("title", values.title);
-      // formdata.append("firstName", values.firstname);
-      // formdata.append("lastName", values.lastname);
-      // formdata.append("date_birth", values.date_birth);
-      // formdata.append("social_security_number", values.social_security_nb);
-      // formdata.append("mail", values.mail);
-      // formdata.append("tel_nb", values.tel);
-      // formdata.append("postal_code", values.postal_code);
-      // formdata.append("street_nb", values.street_nb);
-      // formdata.append("street", values.street);
-      // formdata.append("city", values.city);
-      // formdata.append("arrival_date", "2000-12-20");
-      // formdata.append("id_service", values.id_service);
-      // formdata.append("id_role", values.id_role);
-      // formdata.append("children_nb", 0);
-
-      var raw = JSON.stringify(values);
-
-      var requestOptions = {
-        method: "PUT",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-
-      await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees/60525dcfc417710570e8c9fa`,
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          setResultEditEmployee(result);
-        })
-        .catch((error) => console.log("error", error));
+      await updateEmployeeApi(token, values, employee._id).then((result) => {
+        setResultEditEmployee(result);
+      });
     } else {
       console.log("loading");
     }
-  };
-
-  const getAllService = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = "";
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/services?populate=1`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        let array = [];
-        result.forEach((elem) => {
-          array.push({
-            label: `${elem.name}`,
-            value: elem._id,
-          });
-        });
-        setResultGetServices(array);
-      })
-      .catch((error) => console.log("error : ", error));
   };
 
   useEffect(() => {
@@ -165,8 +130,6 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
   useEffect(() => {
     if (resultEditEmployee.message && !resultEditEmployee.error && !loading) {
       toggleOverlayEdit();
-    } else {
-      getAllService();
     }
   }, [loading]);
 
@@ -208,25 +171,34 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>
             <View>
-              {/* <Text style={{ fontSize: 15 }}>Civilité</Text> */}
-              <DropDownPicker
-                onChangeItem={(item) => (values.title = item.value)}
-                onBlur={(item) => (values.title = item.value)}
-                items={Title}
-                value={values.title}
-                placeholder="Civilité"
-                containerStyle={{ height: 40, margin: 10 }}
-                style={{ backgroundColor: color.COLORS.DEFAULT }}
-                labelStyle={{ textTransform: "capitalize" }}
-                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownRole(300)}
-                onClose={() => setHeightDropdownRole(40)}
-                dropDownMaxHeight={heightDropdownRole - 40}
-              />
+              <View
+                style={{
+                  margin: 10,
+                  marginBottom: 15,
+                  height: heightDropdownTitle,
+                }}
+              >
+                <DropDownPicker
+                  onChangeItem={(item) => (values.title = item.value)}
+                  onBlur={(item) => (values.title = item.value)}
+                  items={Title}
+                  defaultValue={values.title}
+                  value={values.title}
+                  placeholder="Civilité"
+                  containerStyle={{ height: 40 }}
+                  style={{ backgroundColor: color.COLORS.DEFAULT }}
+                  labelStyle={{ textTransform: "capitalize" }}
+                  dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
+                  onOpen={() => setHeightDropdownTitle(190)}
+                  onClose={() => setHeightDropdownTitle(40)}
+                  dropDownMaxHeight={heightDropdownTitle - 40}
+                />
+                <Text style={screen.errorDropdown}>{errors.title}</Text>
+              </View>
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("lastName")}
                     onBlur={handleBlur("lastName")}
                     value={values.lastName}
@@ -236,7 +208,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.inputF}
+                    style={[screen.input, { textTransform: "capitalize" }]}
                     onChangeText={handleChange("firstName")}
                     onBlur={handleBlur("firstName")}
                     value={values.firstName}
@@ -248,7 +220,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("tel_nb")}
                     onBlur={handleBlur("tel_nb")}
                     value={values.tel_nb}
@@ -257,18 +229,27 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                   />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Input
-                    style={styles.input}
-                    onChangeText={handleChange("date_birth")}
-                    onBlur={handleBlur("date_birth")}
-                    value={values.date_birth}
-                    placeholder="Date de naissance"
-                    errorMessage={errors.date_birth}
-                  />
+                  <View>
+                    <Pressable onPress={showDatepickerBirth}>
+                      <Text style={screen.InputDatePicker}>
+                        {birthDate ? formatDisplay(birthDate) : "Date de naissance"}
+                      </Text>
+                    </Pressable>
+                  </View>
+                  {showBirth && (
+                    <DateTimePicker
+                      testID="dateTimePickerDateBirth"
+                      value={birthDate}
+                      locale="fr-FR"
+                      mode="date"
+                      display="default"
+                      onChange={onChangeBirthDate}
+                    />
+                  )}
                 </View>
               </View>
               <Input
-                style={styles.input}
+                style={screen.input}
                 onChangeText={handleChange("mail")}
                 onBlur={handleBlur("mail")}
                 value={values.mail}
@@ -276,7 +257,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 errorMessage={errors.mail}
               />
               <Input
-                style={styles.input}
+                style={screen.input}
                 onChangeText={handleChange("social_security_number")}
                 onBlur={handleBlur("social_security_number")}
                 value={values.social_security_number}
@@ -289,7 +270,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("street_nb")}
                     onBlur={handleBlur("street_nb")}
                     value={values.street_nb}
@@ -299,7 +280,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Input
-                    style={styles.input}
+                    style={screen.input}
                     onChangeText={handleChange("street")}
                     onBlur={handleBlur("street")}
                     value={values.street}
@@ -312,7 +293,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1 }}>
                     <Input
-                      style={styles.input}
+                      style={screen.input}
                       onChangeText={handleChange("city")}
                       onBlur={handleBlur("city")}
                       value={values.city}
@@ -322,7 +303,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                   </View>
                   <View style={{ flex: 1 }}>
                     <Input
-                      style={styles.input}
+                      style={screen.input}
                       onChangeText={handleChange("postal_code")}
                       onBlur={handleBlur("postal_code")}
                       value={values.postal_code}
@@ -336,34 +317,37 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
             <View
               style={{
                 margin: 10,
-                height: heightDropdown,
-                flex: 1,
+                marginBottom: 15,
+                height: heightDropdownService,
               }}
             >
               <DropDownPicker
                 onChangeItem={(item) => (values.id_service = item.value)}
                 onBlur={(item) => (values.id_service = item.value)}
-                //defaultValue={setResultGetServices(employee.id_service)}
-                items={resultGetServices}
+                defaultValue={values.id_service}
+                items={allService}
                 value={values.id_service}
                 placeholder="Service"
                 searchable={true}
                 searchablePlaceholder="Rechercher"
                 searchableError={() => <Text>Aucun résultat</Text>}
-                containerStyle={{ height: 40, margin: 10 }}
+                containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdown(250)}
-                onClose={() => setHeightDropdown(40)}
-                dropDownMaxHeight={heightDropdown - 40}
+                onOpen={() => {
+                  setHeightDropdownService(250);
+                }}
+                onClose={() => setHeightDropdownService(40)}
+                dropDownMaxHeight={heightDropdownService - 40}
               />
+              <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
             <View
               style={{
                 margin: 10,
+                marginBottom: 15,
                 height: heightDropdownRole,
-                flex: 1,
               }}
             >
               <DropDownPicker
@@ -371,11 +355,12 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 onBlur={(item) => (values.id_role = item.value)}
                 items={Roles}
                 value={values.id_role}
+                defaultValue={values.id_role}
                 placeholder="Rôle"
                 searchable={true}
                 searchablePlaceholder="Rechercher"
                 searchableError={() => <Text>Aucun résultat</Text>}
-                containerStyle={{ height: 40, margin: 10 }}
+                containerStyle={{ height: 40 }}
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
@@ -383,21 +368,50 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
                 onClose={() => setHeightDropdownRole(40)}
                 dropDownMaxHeight={heightDropdownRole - 40}
               />
+              <Text style={screen.errorDropdown}>{errors.title}</Text>
             </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 12 }}>
+                  Jour d'arrivé du salarié :{" "}
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Pressable onPress={showDatepickerArrival}>
+                  <Text
+                    style={screen.InputDatePicker}
+                  >
+                    {formatDisplay(arrivalDate)}
+                  </Text>
+                </Pressable>
+              </View>
+              {showArrival && (
+                <DateTimePicker
+                  testID="dateTimePickerDateArrival"
+                  value={arrivalDate}
+                  locale="fr-FR"
+                  mode="date"
+                  display="default"
+                  onChange={onChangeArrivalDate}
+                />
+              )}
+            </View>
+
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={screen.buttonDanger}
                   title="Annuler"
                   onPress={() => toggleOverlayEdit()}
+                  buttonStyle={screen.buttonCancel}
                 />
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  buttonStyle={loading ? "" : screen.buttonSuccess}
-                  loading={loading ? true : false}
                   onPress={handleSubmit}
                   title="Valider"
+                  buttonStyle={loading ? "" : screen.button}
+                  loading={loading ? true : false}
                   type={loading ? "clear" : "solid"}
                 />
               </View>
@@ -410,34 +424,4 @@ export const EditEmployee = ({ toggleOverlayEdit, employee }) => {
 };
 
 const styles = StyleSheet.create({
-  form: {
-    // marginVertical: 10,
-    // marginHorizontal: 10,
-    // marginTop: 40,
-    backgroundColor: color.COLORS.LIGHTGREY,
-    // width: Dimensions.get("window").width - 30,
-    // borderRadius: 15,
-    // padding: 15,
-  },
-  input: {
-    fontSize: 12,
-    borderColor: color.COLORS.BLACK,
-    height: 20,
-    width: "100%",
-    backgroundColor: "white",
-    //borderColor: "gray",
-    // borderWidth: 1,
-    // borderRadius: 10,
-  },
-  inputF: {
-    fontSize: 12,
-    borderColor: color.COLORS.BLACK,
-    height: 20,
-    width: "100%",
-    backgroundColor: "white",
-    textTransform: "capitalize",
-    //borderColor: "gray",
-    // borderWidth: 1,
-    // borderRadius: 10,
-  },
 });

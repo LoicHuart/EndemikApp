@@ -5,8 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AuthContext } from "../context/AuthContext";
 import {
   dashbord,
-  holidaysManagement,
-  holidaysRequest,
+  TabsHolidaysManagement,
   login,
   profil,
   employeesManagement,
@@ -39,8 +38,8 @@ function RootNavigation() {
         >
           <Drawer.Screen name="dashbord" component={dashbord} />
           <Drawer.Screen
-            name="holidaysManagement"
-            component={holidaysManagement}
+            name="TabsHolidaysManagement"
+            component={TabsHolidaysManagement}
           />
           <Drawer.Screen
             name="TabsHolidaysContent"

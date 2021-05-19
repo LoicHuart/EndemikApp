@@ -3,9 +3,9 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
 import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
-import { validateHoliday, refuseHoliday } from "../../requestApi";
+import { prevalideHoliday, refuseHoliday } from "../../requestApi";
 
-export const ValidateRefuseHoliday = ({ item, toggleShowPopUp }) => {
+export const PrevalideHoliday = ({ item, toggleShowPopUp }) => {
   const { token } = useContext(AuthContext);
 
   return (
@@ -15,9 +15,9 @@ export const ValidateRefuseHoliday = ({ item, toggleShowPopUp }) => {
       </View>
       <View style={{ margin: 5 }}>
         <Button
-          title="Accepter"
+          title="Prévalider"
           onPress={() => {
-            validateHoliday(item, token);
+            prevalideHoliday(item, token);
             toggleShowPopUp();
           }}
           buttonStyle={styles.buttonValidate}

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { HeaderCustom, ListHolidays, Card } from "../../components/";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { HeaderCustom, ListHolidays, Card } from "../../components";
+import { screen } from "../../styles";
 import { AuthContext } from "../../context/AuthContext";
-import { screen } from "../../styles/";
 
-export const holidaysHistory = ({ navigation }) => {
+export const holidaysManagementHistory = ({ navigation }) => {
   const { user, token } = React.useContext(AuthContext);
 
   return (
@@ -30,12 +30,12 @@ export const holidaysHistory = ({ navigation }) => {
         </View>
         <ListHolidays
           token={token}
-          user={user}
-          status={["validé", "prévalidé", "en attente", "refusé", "annulé"]}
+          status={["prévalidé", "validé", "refusé", "en attente", "annulé"]}
+          gestionRole={user.id_role.name}
+          noTouch={true}
         />
       </Card>
     </View>
   );
 };
-
 const styles = StyleSheet.create({});
