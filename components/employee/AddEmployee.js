@@ -231,7 +231,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         validationSchema={AddEmployeeSchema}
         onSubmit={(values) => sendAddEmployee(values)}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+        {({ handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, values, errors }) => (
           <View>
             <View>
               <View style={{ flexDirection: "row", flex: 1 }}>
@@ -306,8 +306,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 }}
               >
                 <DropDownPicker
-                  onChangeItem={(item) => (values.title = item.value)}
-                  onBlur={(item) => (values.title = item.value)}
+                  onChangeItem={(item) => (setFieldValue("title", item.value))}
                   items={Title}
                   value={values.title}
                   placeholder="Civilité"
@@ -463,8 +462,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               }}
             >
               <DropDownPicker
-                onChangeItem={(item) => (values.id_service = item.value)}
-                onBlur={(item) => (values.id_service = item.value)}
+                onChangeItem={(item) => (setFieldValue("id_service", item.value))}
                 items={resultGetServices}
                 value={values.id_service}
                 placeholder="Service"
@@ -489,8 +487,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               }}
             >
               <DropDownPicker
-                onChangeItem={(item) => (values.id_role = item.value)}
-                onBlur={(item) => (values.id_role = item.value)}
+                onChangeItem={(item) => (setFieldValue("id_role", item.value))}
                 items={Roles}
                 value={values.id_role}
                 placeholder="Rôle"
