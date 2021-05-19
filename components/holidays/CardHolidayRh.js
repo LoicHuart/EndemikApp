@@ -48,7 +48,7 @@ export const CardHolidayRh = ({ item, refreshHolidays }) => {
     if (item.id_requester_employee.firstName) {
       return (
         <Text style={styles.type}>
-          {item.id_requester_employee.firstName}{" "}
+          {capitalize(item.id_requester_employee.firstName)}{" "}
           {item.id_requester_employee.lastName}{" "}
         </Text>
       );
@@ -246,6 +246,7 @@ const styles = StyleSheet.create({
     color: color.COLORS.WHITE,
     alignSelf: "center",
     flex: 1,
+    fontSize: 13,
   },
   type: {
     marginLeft: 10,
