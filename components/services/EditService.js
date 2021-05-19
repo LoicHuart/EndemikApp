@@ -72,7 +72,7 @@ export const EditService = ({ toggleOverlayEdit, service, allEmployee }) => {
         validationSchema={Schema}
         onSubmit={(values) => sendEditServices(values)}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+        {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors }) => (
           <View>
             <Input
               onChangeText={handleChange("name")}
@@ -90,8 +90,7 @@ export const EditService = ({ toggleOverlayEdit, service, allEmployee }) => {
             />
             <View style={{ margin: 10, height: heightDropdown }}>
               <DropDownPicker
-                onChangeItem={(item) => (values.id_manager = item.value)}
-                onBlur={(item) => (values.id_manager = item.value)}
+                onChangeItem={(item) => (setFieldValue("id_manager", item.value))}
                 items={allEmployee}
                 value={values.id_manager}
                 placeholder="Manager"
