@@ -130,6 +130,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     if (!loading) {
       setLoading(true);
       await addEmployeeApi(token, values).then((result) => {
+        console.log(result)
         setResultAddEmployee(result);
       });
     } else {
@@ -174,29 +175,21 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   }, [resultAddEmployee]);
 
   useEffect(() => {
-    if (resultAddEmployee._id) {
+    if (resultAddEmployee._id && !loading) {
       toggleOverlayAdd();
     } else {
       getAllService();
     }
-  }, [resultAddEmployee]);
+  }, [loading]);
 
   return (
-    <View
-      style={{
-        width: Dimensions.get("window").width - 100,
-      }}
-    >
-      <Text
-        style={{
-          marginTop: 5,
-          marginBottom: 18,
-          fontSize: 17,
-          alignSelf: "center",
-        }}
-      >
-        Ajout d'un utilisateur
-      </Text>
+    <View>
+      <Text style={screen.h1}>Ajout d'un utilisateur</Text>
+      {resultAddEmployee.code == "1" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+      {resultAddEmployee.code == "2" && <Text style={screen.error}>ID service non valide</Text>}
+      {resultAddEmployee.code == "3" && <Text style={screen.error}>ID role non valide</Text>}
+      {resultAddEmployee.code == "4" && <Text style={screen.error}>Email déjà utilié</Text>}
+      {resultAddEmployee._id && <Text style={screen.sucess}>Uilisateur ajouté</Text>}
       <Formik
         initialValues={{
           title: "",
@@ -210,7 +203,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           street_nb: "",
           street: "",
           city: "",
-          id_role: "",
+          id_role: "sqdfqsdf",
           id_service: "",
           arrival_date: "",
           // title: "",
@@ -231,7 +224,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         validationSchema={AddEmployeeSchema}
         onSubmit={(values) => sendAddEmployee(values)}
       >
-        {({ handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, values, errors }) => (
+        {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors }) => (
           <View>
             <View>
               <View style={{ flexDirection: "row", flex: 1 }}>
@@ -354,7 +347,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                       onChange={
                         (item) => {
                           onChangeBirthDate(item)
-                          values.date_birth = formatAPI(item.nativeEvent.timestamp);
+                          setFieldValue("date_birth", formatAPI(item.nativeEvent.timestamp))
                         }
                       }
                     />
@@ -399,7 +392,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   onChange={
                     (item) => {
                       onChangeArrivalDate(item)
-                      values.arrival_date = formatAPI(item.nativeEvent.timestamp);
+                      setFieldValue("arrival_date", formatAPI(item.nativeEvent.timestamp))
                     }
                   }
                 />
