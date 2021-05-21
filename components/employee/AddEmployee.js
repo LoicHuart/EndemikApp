@@ -130,7 +130,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     if (!loading) {
       setLoading(true);
       await addEmployeeApi(token, values).then((result) => {
-        console.log(result)
+        // console.log(result)
         setResultAddEmployee(result);
       });
     } else {
@@ -203,7 +203,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           street_nb: "",
           street: "",
           city: "",
-          id_role: "sqdfqsdf",
+          id_role: "",
           id_service: "",
           arrival_date: "",
           // title: "",
