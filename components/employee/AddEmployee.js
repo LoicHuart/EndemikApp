@@ -11,7 +11,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { formatDisplay } from "../../function";
 import { formatAPI } from "../../function";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { addEmployeeApi } from "../../requestApi";
+import { addEmployeeApi, getRolesApi } from "../../requestApi";
 import { OverlayPhoto } from "./OverlayPhoto";
 
 const AddEmployeeSchema = Yup.object().shape({
@@ -77,6 +77,8 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
 
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [roles, setRoles] = useState();
+
 
   const toggleOverlayPhoto = () => {
     setVisible(!visible);
@@ -109,13 +111,12 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     setShowArrival(true);
   };
 
-  const [Roles, setRoles] = React.useState([
-    { label: "Administrateur", value: "60381739c7e71a89252b8844" },
-    { label: "Salarié", value: "60381701c7e71a89252b8843" },
-    { label: "Développeur", value: "603ea811b4a9d056a48fccd7" },
-    { label: "Direction", value: "603ea81cb4a9d056a48fccd8" },
-    { label: "Ressource Humaine", value: "603ea826b4a9d056a48fccd9" },
-  ]);
+  const getRoles = async () => {
+    await getRolesApi(token)
+      .then((result) => {
+        setRoles(result);
+      })
+  };
 
   const [Title, setTitle] = React.useState([
     { label: "Madame", value: "Madame" },
@@ -481,7 +482,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
             >
               <DropDownPicker
                 onChangeItem={(item) => (setFieldValue("id_role", item.value))}
-                items={Roles}
+                items={roles}
                 value={values.id_role}
                 placeholder="Rôle"
                 searchable={true}
@@ -491,7 +492,10 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownRole(300)}
+                onOpen={() => {
+                  getRoles();
+                  setHeightDropdownRole(300)
+                }}
                 onClose={() => setHeightDropdownRole(40)}
                 dropDownMaxHeight={heightDropdownRole - 40}
               />

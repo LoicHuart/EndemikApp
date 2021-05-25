@@ -10,6 +10,8 @@ export { updateServiceApi } from "./services/updateServiceApi";
 export { getServiceApi } from "./services/getServiceApi";
 export { deleteServiceApi } from "./services/deleteServiceApi";
 
+//roles
+export { getRolesApi } from "./getRolesApi";
 
 //holiday
 
