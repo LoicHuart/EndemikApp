@@ -1,18 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import color from "../../constants/color";
-import { Button, Input, Avatar, ListItem, Overlay, Accessory } from "react-native-elements";
+import { Button, Input, Avatar } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
-import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
 import DropDownPicker from "react-native-dropdown-picker";
-import { formatDisplay } from "../../function";
 import { formatAPI } from "../../function";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { addEmployeeApi, getRolesApi } from "../../requestApi";
 import { OverlayPhoto } from "./OverlayPhoto";
+import { DatePicker } from "../DatePicker";
 
 const AddEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -70,10 +68,8 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const [loading, setLoading] = React.useState(true);
 
   const today = new Date();
-  const [birthDate, setbirthDate] = useState();
-  const [arrivalDate, setArrivalDate] = useState();
-  const [showBirth, setShowBirth] = useState(false);
-  const [showArrival, setShowArrival] = useState(false);
+  const [birthDate, setbirthDate] = useState(today);
+  const [arrivalDate, setArrivalDate] = useState(today);
 
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -82,33 +78,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
 
   const toggleOverlayPhoto = () => {
     setVisible(!visible);
-  };
-
-
-  const onChangeBirthDate = (selectedDate) => {
-    setShowBirth(false);
-    if (selectedDate.type !== "dismissed") {
-      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-      setbirthDate(timestamp);
-    }
-  };
-
-  const onChangeArrivalDate = (selectedDate) => {
-    setShowArrival(false);
-    if (selectedDate.type !== "dismissed") {
-      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-      setArrivalDate(timestamp);
-    }
-  };
-
-  const showDatepickerBirth = () => {
-    setbirthDate(today);
-    setShowBirth(true);
-  };
-
-  const showDatepickerArrival = () => {
-    setArrivalDate(today);
-    setShowArrival(true);
   };
 
   const getRoles = async () => {
@@ -198,8 +167,8 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           firstname: "",
           mail: "",
           tel: "",
-          date_birth: "",
-          social_security_nb: "",
+          date_birth: birthDate,
+          social_security_nb: arrivalDate,
           postal_code: "",
           street_nb: "",
           street: "",
@@ -314,47 +283,18 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 />
                 <Text style={screen.errorDropdown}>{errors.title}</Text>
               </View>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 1 }}>
-                  <Input
-                    style={screen.input}
-                    onChangeText={handleChange("tel")}
-                    onBlur={handleBlur("tel")}
-                    value={values.tel}
-                    placeholder="Téléphone"
-                    errorMessage={errors.tel}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <View>
-                    <Pressable onPress={showDatepickerBirth}>
-                      <Input
-                        style={screen.input}
-                        value={birthDate && formatDisplay(birthDate)}
-                        placeholder="Date de naissance"
-                        errorMessage={errors.date_birth}
-                        disabledInputStyle={{ color: color.COLORS.BLACK }}
-                        disabled
-                      />
-                    </Pressable>
-                  </View>
-                  {showBirth && (
-                    <DateTimePicker
-                      testID="dateTimePickerDateBirth"
-                      value={birthDate}
-                      locale="fr-FR"
-                      mode="date"
-                      display="default"
-                      onChange={
-                        (item) => {
-                          onChangeBirthDate(item)
-                          setFieldValue("date_birth", formatAPI(item.nativeEvent.timestamp))
-                        }
-                      }
-                    />
-                  )}
-                </View>
+
+              <View style={{ flex: 1 }}>
+                <Input
+                  style={screen.input}
+                  onChangeText={handleChange("tel")}
+                  onBlur={handleBlur("tel")}
+                  value={values.tel}
+                  placeholder="Téléphone"
+                  errorMessage={errors.tel}
+                />
               </View>
+
               <Input
                 style={screen.input}
                 onChangeText={handleChange("mail")}
@@ -371,33 +311,45 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 placeholder="Numéro de sécurité social"
                 errorMessage={errors.social_security_nb}
               />
-              <View style={{ flex: 1 }}>
-                <Pressable onPress={showDatepickerArrival}>
-                  <Input
-                    style={screen.input}
-                    value={arrivalDate && formatDisplay(arrivalDate)}
-                    placeholder="Date d'arrivé du salarié"
-                    errorMessage={errors.arrival_date}
-                    disabledInputStyle={{ color: color.COLORS.BLACK }}
-                    disabled
-                  />
-                </Pressable>
-              </View>
-              {showArrival && (
-                <DateTimePicker
-                  testID="dateTimePickerDateArrival"
-                  value={arrivalDate}
-                  locale="fr-FR"
-                  mode="date"
-                  display="default"
-                  onChange={
-                    (item) => {
-                      onChangeArrivalDate(item)
-                      setFieldValue("arrival_date", formatAPI(item.nativeEvent.timestamp))
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 10, paddingBottom: 20 }}>
+                    <Text >Date d'anniversaire :</Text>
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <DatePicker
+                    onChange={
+                      (date) => {
+                        setbirthDate(date)
+                        setFieldValue("date_birth", formatAPI(date))
+                      }
                     }
-                  }
-                />
-              )}
+                    value={birthDate}
+                    errorMessage={errors.date_birth}
+                  />
+                </View>
+              </View>
+
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 10, paddingBottom: 20 }}>
+                    <Text >Date d'arrivé du salarié :</Text>
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <DatePicker
+                    onChange={
+                      (date) => {
+                        setArrivalDate(date)
+                        setFieldValue("arrival_date", formatAPI(date))
+                      }
+                    }
+                    value={arrivalDate}
+                    errorMessage={errors.arrival_date}
+                  />
+                </View>
+              </View>
             </View>
             <View>
               <Text style={{ fontSize: 15 }}>Adresse</Text>
