@@ -1,6 +1,6 @@
 export { dashbord } from "./dashbord/dashbord";
 export { holidaysManagement } from "./holidaysManagement/holidaysManagement";
-export { holidaysRequest } from "./holidaysRequest/holidaysRequest";
+export { TabsHolidaysManagement } from "./holidaysManagement/TabsHolidaysManagement";
 export { login } from "./login/login";
 export { profil } from "./profil/profil";
 export { employeesManagement } from "./employeesManagement/employeesManagement";

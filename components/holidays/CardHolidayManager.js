@@ -3,19 +3,54 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Overlay, Icon } from "react-native-elements";
 import color from "../../constants/color";
 import { screen } from "../../styles";
-import { UpdateHoliday } from "./UpdateHoliday";
-import { CancelHoliday } from "./CancelHoliday";
+import { PrevalideHoliday } from "./PrevalideHoliday";
+
 import { date } from "yup/lib/locale";
 
-export const CardHoliday = ({ item, refreshHolidays }) => {
-  const [showValidatorCancel, setShowValidatorCancel] = useState(false);
-  const [showValidatorUpdate, setShowValidatorUpdate] = useState(false);
+export const CardHolidayManager = ({ item, refreshHolidays }) => {
+  const [showValidator, setShowValidator] = useState(false);
 
   const capitalize = (str) => {
     if (str.toUpperCase() === "RTT") {
       return "RTT";
     }
     return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  const formatDisplay = (date) => {
+    date = new Date(date);
+    let day = date.getDate();
+    if (day.toString().length < 2) {
+      day = "0" + day;
+    }
+
+    let month = date.getMonth() + 1;
+    if (month.toString().length < 2) {
+      month = "0" + month;
+    }
+
+    return day + "/" + month + "/" + date.getFullYear();
+  };
+  const toggleShowPopUp = async () => {
+    await setShowValidator(!showValidator);
+    if (showValidator) {
+      refreshHolidays(item);
+    }
+  };
+
+  const overlay = () => {
+    return <PrevalideHoliday item={item} toggleShowPopUp={toggleShowPopUp} />;
+  };
+
+  const requester = () => {
+    if (item.id_requester_employee.firstName) {
+      return (
+        <Text style={styles.type}>
+          {capitalize(item.id_requester_employee.firstName)}{" "}
+          {item.id_requester_employee.lastName}{" "}
+        </Text>
+      );
+    }
   };
 
   const displayStatus = () => {
@@ -129,99 +164,12 @@ export const CardHoliday = ({ item, refreshHolidays }) => {
     }
   };
 
-  const formatDisplay = (date) => {
-    date = new Date(date);
-    let day = date.getDate();
-    if (day.toString().length < 2) {
-      day = "0" + day;
-    }
-
-    let month = date.getMonth() + 1;
-    if (month.toString().length < 2) {
-      month = "0" + month;
-    }
-
-    return day + "/" + month + "/" + date.getFullYear();
-    z;
-  };
-  const toggleShowPopUpCancel = async () => {
-    await setShowValidatorCancel(!showValidatorCancel);
-    if (
-      (item.status === "en attente" ||
-        item.status === "prévalidé" ||
-        item.status === "validé") &&
-      showValidatorCancel
-    ) {
-      refreshHolidays(item.status);
-    }
-  };
-
-  const toggleShowPopUpUpdate = async () => {
-    await setShowValidatorUpdate(!showValidatorUpdate);
-    if (item.status === "en attente" && showValidatorUpdate) {
-      refreshHolidays(item.status);
-    }
-  };
-
-  const overlayCancel = () => {
-    if (
-      (item.status === "prévalidé" ||
-        item.status === "validé" ||
-        item.status === "en attente") &&
-      Date.now() < new Date(item.starting_date)
-    ) {
-      return (
-        <CancelHoliday
-          item={item}
-          toggleShowPopUpCancel={toggleShowPopUpCancel}
-        />
-      );
-    }
-  };
-
-  const overlayUpdate = () => {
-    if (
-      item.status === "en attente" &&
-      Date.now() < new Date(item.starting_date)
-    ) {
-      return (
-        <UpdateHoliday
-          item={item}
-          toggleShowPopUpUpdate={toggleShowPopUpUpdate}
-        />
-      );
-    }
-  };
-
-  const requester = () => {
-    if (item.id_requester_employee.firstName) {
-      return (
-        <Text style={styles.type}>
-          {capitalize(item.id_requester_employee.firstName)}{" "}
-          {item.id_requester_employee.lastName}{" "}
-        </Text>
-      );
-    }
-  };
-
   return (
     <View>
       <Pressable
         onPress={() => {
-          if (
-            item.status != "annulé" &&
-            item.status != "refusé" &&
-            Date.now() < new Date(item.starting_date)
-          ) {
-            toggleShowPopUpCancel();
-          }
-        }}
-        onLongPress={() => {
-          if (
-            item.status == "en attente" &&
-            Date.now() < new Date(item.starting_date)
-          ) {
-            toggleShowPopUpUpdate();
+          if (item.status === "en attente") {
+            toggleShowPopUp();
           }
         }}
       >
@@ -264,18 +212,11 @@ export const CardHoliday = ({ item, refreshHolidays }) => {
         </View>
       </Pressable>
       <Overlay
-        isVisible={showValidatorCancel}
-        onBackdropPress={toggleShowPopUpCancel}
+        isVisible={showValidator}
+        onBackdropPress={toggleShowPopUp}
         overlayStyle={screen.overlay}
       >
-        {overlayCancel()}
-      </Overlay>
-      <Overlay
-        isVisible={showValidatorUpdate}
-        onBackdropPress={toggleShowPopUpUpdate}
-        overlayStyle={screen.overlay}
-      >
-        {overlayUpdate()}
+        {overlay()}
       </Overlay>
     </View>
   );
@@ -298,6 +239,7 @@ const styles = StyleSheet.create({
   },
   dates: {
     marginTop: 10,
+    alignContent: "flex-start",
     flexDirection: "row",
   },
   column: {
