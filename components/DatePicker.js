@@ -28,7 +28,7 @@ export const DatePicker = ({ onChange, value, errorMessage }) => {
                     <View style={{ justifyContent: "center", marginVertical: 3 }}>
                         <DateTimePicker
                             testID="dateTimePickerDateBirth"
-                            value={value && formatDisplay(value)}
+                            value={value}
                             locale="fr-FR"
                             mode="date"
                             display="default"
