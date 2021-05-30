@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { screen } from "../../styles/screen";
 import DropDownPicker from "react-native-dropdown-picker";
 import { formatAPI } from "../../function";
-import { addEmployeeApi, getRolesApi } from "../../requestApi";
+import { addEmployeeApi, getRolesApi, getServiceApi } from "../../requestApi";
 import { OverlayPhoto } from "./OverlayPhoto";
 import { DatePicker } from "../DatePicker";
 
@@ -109,24 +109,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   };
 
   const getAllService = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = "";
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/services?populate=1`,
-      requestOptions
-    )
-      .then((response) => response.json())
+    getServiceApi(token, true)
       .then((result) => {
         let array = [];
         result.forEach((elem) => {
@@ -137,7 +120,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         });
         setResultGetServices(array);
       })
-      .catch((error) => console.log("error : ", error));
   };
 
   useEffect(() => {
@@ -147,8 +129,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   useEffect(() => {
     if (resultAddEmployee._id && !loading) {
       toggleOverlayAdd();
-    } else {
-      getAllService();
     }
   }, [loading]);
 
@@ -177,15 +157,15 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
           id_service: "",
           arrival_date: formatAPI(arrivalDate),
           // title: "",
-          // lastname: "Pottier",
-          // firstname: "Domitille",
-          // mail: "dopitter@gmail.com",
-          // tel: "0649826159",
+          // lastname: "test",
+          // firstname: "test",
+          // mail: "test@test.test",
+          // tel: "1111111111",
           // date_birth: formatAPI(birthDate),
-          // social_security_nb: "2980857403863",
+          // social_security_nb: "1111111111111",
           // postal_code: "51100",
           // street_nb: "27",
-          // street: "rue des moulins",
+          // street: "test",
           // city: "Reims",
           // id_role: "",
           // id_service: "",
@@ -423,7 +403,10 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownService(250)}
+                onOpen={() => {
+                  getAllService()
+                  setHeightDropdownService(250)
+                }}
                 onClose={() => setHeightDropdownService(40)}
                 dropDownMaxHeight={heightDropdownService - 40}
               />
