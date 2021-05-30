@@ -330,6 +330,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                     }
                     value={birthDate}
                     errorMessage={errors.date_birth}
+                    maximumDate={today}
                   />
                 </View>
               </View>

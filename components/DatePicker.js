@@ -6,7 +6,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { formatDisplay } from "../function";
 import { screen } from "../styles/screen";
 
-export const DatePicker = ({ onChange, value, errorMessage }) => {
+export const DatePicker = ({ onChange, value, errorMessage, minimumDate, maximumDate }) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
 
     const onChangeDate = (selectedDate) => {
@@ -35,6 +35,8 @@ export const DatePicker = ({ onChange, value, errorMessage }) => {
                             onChange={(item) =>
                                 onChangeDate(item)
                             }
+                            minimumDate={minimumDate}
+                            maximumDate={maximumDate}
                         />
                     </View>
                     <Text style={{ color: '#ff190c', fontSize: 12, margin: 5 }}>{errorMessage}</Text>
@@ -60,6 +62,8 @@ export const DatePicker = ({ onChange, value, errorMessage }) => {
                             onChange={(item) =>
                                 onChangeDate(item)
                             }
+                            minimumDate={minimumDate}
+                            maximumDate={maximumDate}
                         />
                     )}
                 </View>
