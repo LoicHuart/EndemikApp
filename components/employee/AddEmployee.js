@@ -292,6 +292,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   value={values.tel}
                   placeholder="Téléphone"
                   errorMessage={errors.tel}
+                  keyboardType="numeric"
                 />
               </View>
 
@@ -302,6 +303,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 value={values.mail}
                 placeholder="Email"
                 errorMessage={errors.mail}
+                keyboardType="email-address"
               />
               <Input
                 style={screen.input}
@@ -310,6 +312,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 value={values.social_security_nb}
                 placeholder="Numéro de sécurité social"
                 errorMessage={errors.social_security_nb}
+                keyboardType="numeric"
               />
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
