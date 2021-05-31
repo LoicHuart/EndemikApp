@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import color from "../../constants/color";
 import { Button, Input, Avatar } from "react-native-elements";
 import { Formik } from "formik";
@@ -61,7 +61,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const { token } = useContext(AuthContext);
   const [resultAddEmployee, setResultAddEmployee] = React.useState("");
   const [resultGetServices, setResultGetServices] = React.useState([]);
-  const [heightDropdown, setHeightDropdown] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
   const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
   const [heightDropdownService, setHeightDropdownService] = React.useState(40);
@@ -193,7 +192,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                         size={30}
                         rounded
                         containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 10 }}
-                        onPress={() => console.log("Works!")}
                         activeOpacity={0.7}
                         icon={{
                           name: 'trash-alt',
@@ -207,7 +205,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                       size={30}
                       rounded
                       containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 65 }}
-                      onPress={() => console.log("Works!")}
                       activeOpacity={0.7}
                       icon={{
                         name: 'pencil-alt',
@@ -241,13 +238,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   </View>
                 </View>
               </View>
-              <View
-                style={{
-                  margin: 10,
-                  marginBottom: 15,
-                  height: heightDropdownTitle,
-                }}
-              >
+              <View style={{ margin: 10, marginBottom: 15, height: heightDropdownTitle }}>
                 <DropDownPicker
                   onChangeItem={(item) => (setFieldValue("title", item.value))}
                   items={Title}
@@ -384,13 +375,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 </View>
               </View>
             </View>
-            <View
-              style={{
-                margin: 10,
-                marginBottom: 15,
-                height: heightDropdownService,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
               <DropDownPicker
                 onChangeItem={(item) => (setFieldValue("id_service", item.value))}
                 items={resultGetServices}
@@ -412,13 +397,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
               />
               <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
-            <View
-              style={{
-                margin: 10,
-                marginBottom: 15,
-                height: heightDropdownRole,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
               <DropDownPicker
                 onChangeItem={(item) => (setFieldValue("id_role", item.value))}
                 items={roles}
@@ -465,6 +444,3 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-});

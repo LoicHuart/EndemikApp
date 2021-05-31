@@ -6,8 +6,8 @@ import { SearchBar, Tooltip } from "react-native-elements";
 import { searchInJson, sortJson } from "../../function";
 import { screen } from "../../styles/";
 import DropDownPicker from "react-native-dropdown-picker";
-
 import color from "../../constants/color";
+import { getEmployeeApi } from "../../requestApi/";
 
 export const ListEmployees = (refresh) => {
   const { token } = useContext(AuthContext);
@@ -20,34 +20,10 @@ export const ListEmployees = (refresh) => {
 
   const displayEmployees = async () => {
     setLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    var raw = "";
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    try {
-      const resp = await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees?populate=0`,
-        requestOptions
-      );
-
-      const respJSON = await resp.json();
-
-      if (!resp.ok) {
-        console.log("error");
-        console.log(resp);
-      }
-      setEmployees(respJSON);
-    } catch (e) {
-      console.log(e);
-    }
+    getEmployeeApi(token, true)
+      .then((result) => {
+        setEmployees(result);
+      })
   };
 
   useEffect(() => {

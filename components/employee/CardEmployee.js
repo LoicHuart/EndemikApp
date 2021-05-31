@@ -12,7 +12,7 @@ import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
 import { Avatar, Icon, Overlay } from "react-native-elements";
 import { ValideRefuseEmployee } from "./ValideRefuseEmployee";
-import { updateEmployeeApi, getServiceApi } from "../../requestApi";
+import { updateEmployeeApi, getServiceApi, getRolesApi, getAllTitleEmployee } from "../../requestApi";
 import { AuthContext } from "../../context/AuthContext";
 
 export const CardEmployee = ({ item, refreshEmployee }) => {
@@ -28,8 +28,10 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   const [overlayDelete, setOverlayDelete] = React.useState(false);
   const [overlayEdit, setOverlayEdit] = React.useState(false);
   const [resultGetServices, setResultGetServices] = React.useState([]);
+  const [resultGetRoles, setResultGetRoles] = React.useState([]);
+  const [resultGetTitles, setResultGetTitles] = React.useState([]);
 
-  const getAllService = async () => {
+  const getAllServices = async () => {
     await getServiceApi(token, true).then((result) => {
       let array = [];
       result.forEach((elem) => {
@@ -39,8 +41,21 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
         });
       });
       setResultGetServices(array);
-      console.log(array);
     });
+  };
+
+  const getAllRoles = async () => {
+    await getRolesApi(token)
+      .then((result) => {
+        setResultGetRoles(result);
+      })
+  };
+
+  const getAllTitle = async () => {
+    await getAllTitleEmployee(token)
+      .then((result) => {
+        setResultGetTitles(result);
+      })
   };
 
   const toggleOverlayDelete = () => {
@@ -49,7 +64,9 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   };
 
   const toggleOverlayEdit = async () => {
-    await getAllService();
+    await getAllServices();
+    await getAllRoles();
+    await getAllTitle();
     // console.log(allService);
     setOverlayEdit(!overlayEdit);
     refreshEmployee();
@@ -107,7 +124,9 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
           <EditEmployee
             toggleOverlayEdit={toggleOverlayEdit}
             employee={item}
-            allService={resultGetServices}
+            allServices={resultGetServices}
+            allTitles={resultGetTitles}
+            allRoles={resultGetRoles}
           />
         </ScrollView>
       </Overlay>

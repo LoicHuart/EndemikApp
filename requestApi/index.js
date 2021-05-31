@@ -13,6 +13,9 @@ export { deleteServiceApi } from "./services/deleteServiceApi";
 //roles
 export { getRolesApi } from "./getRolesApi";
 
+//title
+export { getAllTitleEmployee } from "./getAllTitleEmployee";
+
 //holiday
 export { addHolidayApi } from "./holidays/addHolidayApi";
 export { cancelHolidayApi } from "./holidays/cancelHolidayApi";
