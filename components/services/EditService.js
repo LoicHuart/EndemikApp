@@ -62,7 +62,7 @@ export const EditService = ({ toggleOverlayEdit, service, allEmployee }) => {
       {resultEditService.code == "43" && <Text style={screen.error}>ID manager non valide</Text>}
       {resultEditService.code == "44" && <Text style={screen.error}>Ce nom de service est déjà utilisé</Text>}
       {resultEditService.code == "45" && <Text style={screen.error}>Cet employé est déjà responsable d'un service</Text>}
-      {resultEditService._id && <Text style={screen.sucess}>Service Édité</Text>}
+      {resultEditService.message && !resultEditService.error && <Text style={screen.sucess}>Service modifié</Text>}
       <Formik
         initialValues={{
           name: service.name,
@@ -72,7 +72,7 @@ export const EditService = ({ toggleOverlayEdit, service, allEmployee }) => {
         validationSchema={Schema}
         onSubmit={(values) => sendEditServices(values)}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+        {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors }) => (
           <View>
             <Input
               onChangeText={handleChange("name")}
@@ -90,8 +90,7 @@ export const EditService = ({ toggleOverlayEdit, service, allEmployee }) => {
             />
             <View style={{ margin: 10, height: heightDropdown }}>
               <DropDownPicker
-                onChangeItem={(item) => (values.id_manager = item.value)}
-                onBlur={(item) => (values.id_manager = item.value)}
+                onChangeItem={(item) => (setFieldValue("id_manager", item.value))}
                 items={allEmployee}
                 value={values.id_manager}
                 placeholder="Manager"

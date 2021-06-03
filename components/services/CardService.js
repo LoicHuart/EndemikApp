@@ -36,7 +36,7 @@ export const CardService = ({ item, refreshService }) => {
             value: elem._id,
           });
         });
-        console.log(array)
+        // console.log(array)
         setResultGetEmployees(array);
       })
   };
