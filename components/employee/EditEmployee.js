@@ -366,6 +366,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
                 onClose={() => setHeightDropdownService(40)}
                 dropDownMaxHeight={heightDropdownService - 40}
                 defaultValue={values.id_service}
+                disabled={employee.isManager}
               />
               <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
