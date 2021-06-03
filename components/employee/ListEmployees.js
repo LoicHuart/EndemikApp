@@ -30,7 +30,6 @@ export const ListEmployees = (refresh) => {
     displayEmployees();
   }, []);
 
-  // console.log(firstName);
   useEffect(() => {
     let filtre = searchInJson(
       employees,

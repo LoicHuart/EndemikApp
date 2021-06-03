@@ -62,7 +62,7 @@ export const EditService = ({ toggleOverlayEdit, service, allEmployee }) => {
       {resultEditService.code == "43" && <Text style={screen.error}>ID manager non valide</Text>}
       {resultEditService.code == "44" && <Text style={screen.error}>Ce nom de service est déjà utilisé</Text>}
       {resultEditService.code == "45" && <Text style={screen.error}>Cet employé est déjà responsable d'un service</Text>}
-      {resultEditService._id && <Text style={screen.sucess}>Service Édité</Text>}
+      {resultEditService.message && !resultEditService.error && <Text style={screen.sucess}>Service modifié</Text>}
       <Formik
         initialValues={{
           name: service.name,

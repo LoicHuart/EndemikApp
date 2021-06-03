@@ -14,11 +14,11 @@ import { DatePicker } from "../DatePicker";
 
 const EditEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
-  firstname: Yup.string()
+  firstName: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
-  lastname: Yup.string()
+  lastName: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
@@ -27,12 +27,12 @@ const EditEmployeeSchema = Yup.object().shape({
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
-  tel: Yup.string()
+  tel_nb: Yup.string()
     .min(10, "10 caractères")
     .max(10, "10 caractères")
     .required("Champ obligatoire"),
   date_birth: Yup.string().required("Champ obligatoire"),
-  social_security_nb: Yup.string()
+  social_security_number: Yup.string()
     .min(13, "13 caractères")
     .max(13, "13 caractères")
     .required("Champ obligatoire"),
@@ -94,7 +94,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
   }, [resultEditEmployee]);
 
   useEffect(() => {
-    if (resultEditEmployee._id && !loading) {
+    if (resultEditEmployee.message && !resultEditEmployee.error && !loading) {
       toggleOverlayEdit();
     }
   }, [loading]);
@@ -102,20 +102,24 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
   return (
     <View>
       <Text style={screen.h1}>Ajout d'un utilisateur</Text>
-      {resultEditEmployee.code == "1" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
-      {resultEditEmployee.code == "2" && <Text style={screen.error}>ID service non valide</Text>}
-      {resultEditEmployee.code == "3" && <Text style={screen.error}>ID role non valide</Text>}
-      {resultEditEmployee.code == "4" && <Text style={screen.error}>Email déjà utilié</Text>}
-      {resultEditEmployee._id && <Text style={screen.sucess}>Uilisateur ajouté</Text>}
+      {resultEditEmployee.code == "5" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+      {resultEditEmployee.code == "6" && <Text style={screen.error}>ID employée non valide</Text>}
+      {resultEditEmployee.code == "7" && <Text style={screen.error}>ID role non valide</Text>}
+      {resultEditEmployee.code == "8" && <Text style={screen.error}>Email déjà utilié</Text>}
+      {resultEditEmployee.code == "9" && <Text style={screen.error}>ID service non valide</Text>}
+      {resultEditEmployee.code == "10" && <Text style={screen.error}>Impossible de mettre à jour le service de cet employé, cet employé est manager d'un service</Text>}
+      {resultEditEmployee.code == "11" && <Text style={screen.error}>Impossible de désactiver cet employé, cet employé est manager d'un service</Text>}
+      {resultEditEmployee.code == "12" && <Text style={screen.error}>Impossible de désactiver cet employé, Cet employé a une demande de congé</Text>}
+      {resultEditEmployee.message && !resultEditEmployee.error && <Text style={screen.sucess}>Utilisateur modifié</Text>}
       <Formik
         initialValues={{
           title: employee.title,
-          lastname: employee.lastName,
-          firstname: employee.firstName,
+          lastName: employee.lastName,
+          firstName: employee.firstName,
           mail: employee.mail,
-          tel: employee.tel_nb,
+          tel_nb: employee.tel_nb,
           date_birth: employee.date_birth,
-          social_security_nb: employee.social_security_number,
+          social_security_number: employee.social_security_number,
           postal_code: employee.postal_code,
           street_nb: employee.street_nb,
           street: employee.street,
@@ -124,12 +128,12 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
           id_service: employee.id_service._id,
           arrival_date: employee.date_birth,
           // title: "",
-          // lastname: "test",
-          // firstname: "test",
+          // lastName: "test",
+          // firstName: "test",
           // mail: "test@test.test",
-          // tel: "1111111111",
+          // tel_nb: "1111111111",
           // date_birth: formatAPI(birthDate),
-          // social_security_nb: "1111111111111",
+          // social_security_number: "1111111111111",
           // postal_code: "51100",
           // street_nb: "27",
           // street: "test",
@@ -152,7 +156,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
                     containerStyle={!image && { backgroundColor: color.COLORS.GREY }}
                     size="large"
                     activeOpacity={0.7}
-                    title={values.lastname && values.firstname && values.lastname[0] + values.firstname[0]}
+                    title={values.lastName && values.firstName && values.lastName[0] + values.firstName[0]}
                   />
                   <View style={{ flexDirection: "row", alignSelf: "flex-start" }}>
                     {image &&
@@ -187,21 +191,21 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
                   <View style={{ flex: 1 }}>
                     <Input
                       style={screen.input}
-                      onChangeText={handleChange("lastname")}
-                      onBlur={handleBlur("lastname")}
-                      value={values.lastname}
+                      onChangeText={handleChange("lastName")}
+                      onBlur={handleBlur("lastName")}
+                      value={values.lastName}
                       placeholder="Nom"
-                      errorMessage={errors.lastname}
+                      errorMessage={errors.lastName}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
                     <Input
                       style={screen.input}
-                      onChangeText={handleChange("firstname")}
-                      onBlur={handleBlur("firstname")}
-                      value={values.firstname}
+                      onChangeText={handleChange("firstName")}
+                      onBlur={handleBlur("firstName")}
+                      value={values.firstName}
                       placeholder="Prénom"
-                      errorMessage={errors.firstname}
+                      errorMessage={errors.firstName}
                     />
                   </View>
                 </View>
@@ -227,11 +231,11 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
               <View style={{ flex: 1 }}>
                 <Input
                   style={screen.input}
-                  onChangeText={handleChange("tel")}
-                  onBlur={handleBlur("tel")}
-                  value={values.tel}
+                  onChangeText={handleChange("tel_nb")}
+                  onBlur={handleBlur("tel_nb")}
+                  value={values.tel_nb}
                   placeholder="Téléphone"
-                  errorMessage={errors.tel}
+                  errorMessage={errors.tel_nb}
                   keyboardType="numeric"
                 />
               </View>
@@ -247,11 +251,11 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
               />
               <Input
                 style={screen.input}
-                onChangeText={handleChange("social_security_nb")}
-                onBlur={handleBlur("social_security_nb")}
-                value={values.social_security_nb}
+                onChangeText={handleChange("social_security_number")}
+                onBlur={handleBlur("social_security_number")}
+                value={values.social_security_number}
                 placeholder="Numéro de sécurité social"
-                errorMessage={errors.social_security_nb}
+                errorMessage={errors.social_security_number}
                 keyboardType="numeric"
               />
               <View style={{ flexDirection: "row" }}>
@@ -339,6 +343,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
                       value={values.postal_code}
                       placeholder="Code Postal"
                       errorMessage={errors.postal_code}
+                      keyboardType="numeric"
                     />
                   </View>
                 </View>

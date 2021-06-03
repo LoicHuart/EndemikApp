@@ -10,12 +10,12 @@ export const addEmployeeApi = async (token, values) => {
 
   var formdata = new FormData();
   formdata.append("title", values.title);
-  formdata.append("firstName", values.firstname);
-  formdata.append("lastName", values.lastname);
+  formdata.append("firstName", values.firstName);
+  formdata.append("lastName", values.lastName);
   formdata.append("date_birth", values.date_birth);
-  formdata.append("social_security_number", values.social_security_nb);
+  formdata.append("social_security_number", values.social_security_number);
   formdata.append("mail", values.mail);
-  formdata.append("tel_nb", values.tel);
+  formdata.append("tel_nb", values.tel_nb);
   formdata.append("postal_code", values.postal_code);
   formdata.append("street_nb", values.street_nb);
   formdata.append("street", values.street);
@@ -25,7 +25,7 @@ export const addEmployeeApi = async (token, values) => {
   formdata.append("id_role", values.id_role);
   formdata.append("children_nb", 0);
 
-  if (values.photo) {
+  if (values.photo.name) {
     formdata.append('photo', {
       name: "test.jpg",
       type: 'image/jpeg',
