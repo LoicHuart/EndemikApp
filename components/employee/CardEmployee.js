@@ -23,27 +23,32 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   const [resultGetServices, setResultGetServices] = React.useState([]);
   const [resultGetRoles, setResultGetRoles] = React.useState([]);
   const [resultGetTitles, setResultGetTitles] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [resultToggleSwitch, setResultToggleSwitch] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const toggleSwitch = async () => {
     if (!loading) {
       setLoading(true);
-      // console.log(isEnabled);
-      item.active = !isEnabled;
-      item.id_service = item.id_service._id;
-      item.id_role = item.id_role._id;
-      await updateEmployeeApi(token, item, item._id).then(() => {
-        refreshEmployee();
+      // console.log(!isEnabled);
+      var item2 = { ...item }
+
+      item2.active = !isEnabled;
+      item2.id_service = item2.id_service._id;
+      item2.id_role = item2.id_role._id;
+
+      await updateEmployeeApi(token, item2, item2._id).then((result) => {
+        console.log(result)
+        // refreshEmployee();
+        if (!result.error) {
+          setIsEnabled(!isEnabled)
+        }
+        setResultToggleSwitch(result)
+        setLoading(false);
       });
-      setIsEnabled(item.active)
     } else {
       console.log("loading");
     }
   };
-
-  useEffect(() => {
-    setLoading(false);
-  }, [isEnabled]);
 
   const getAllServices = async () => {
     await getServiceApi(token, true).then((result) => {
@@ -88,6 +93,17 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
 
   return (
     <View style={styles.cardEmployee}>
+      <View style={{ flexDirection: "row", alignItems: "center", marginHorizontal: 10 }}>
+        {resultToggleSwitch.code == "5" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+        {resultToggleSwitch.code == "6" && <Text style={screen.error}>ID employée non valide</Text>}
+        {resultToggleSwitch.code == "7" && <Text style={screen.error}>ID role non valide</Text>}
+        {resultToggleSwitch.code == "8" && <Text style={screen.error}>Email déjà utilié</Text>}
+        {resultToggleSwitch.code == "9" && <Text style={screen.error}>ID service non valide</Text>}
+        {resultToggleSwitch.code == "10" && <Text style={screen.error}>Impossible de mettre à jour le service de cet employé, cet employé est manager d'un service</Text>}
+        {resultToggleSwitch.code == "11" && <Text style={screen.error}>Impossible de désactiver cet employé, cet employé est manager d'un service</Text>}
+        {resultToggleSwitch.code == "12" && <Text style={screen.error}>Impossible de désactiver cet employé, Cet employé a une demande de congé</Text>}
+        {resultToggleSwitch.message && !resultToggleSwitch.error && <Text style={screen.sucess}>Utilisateur modifié</Text>}
+      </View>
       <View style={{ flexDirection: "row", alignItems: "center", margin: 10 }}>
         <Avatar
           rounded
