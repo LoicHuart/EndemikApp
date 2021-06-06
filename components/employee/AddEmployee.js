@@ -80,10 +80,16 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   };
 
   const getRoles = async () => {
-    await getRolesApi(token)
-      .then((result) => {
-        setRoles(result);
-      })
+    await getRolesApi(token).then((result) => {
+      let array = [];
+      result.forEach((elem) => {
+        array.push({
+          label: `${elem.name}`,
+          value: elem._id,
+        });
+      });
+      setRoles(array);
+    });
   };
 
   const [Title, setTitle] = React.useState([
