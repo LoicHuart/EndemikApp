@@ -37,8 +37,7 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
       item2.id_role = item2.id_role._id;
 
       await updateEmployeeApi(token, item2, item2._id).then((result) => {
-        console.log(result)
-        // refreshEmployee();
+        // console.log(result)
         if (!result.error) {
           setIsEnabled(!isEnabled)
         }
@@ -64,10 +63,16 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   };
 
   const getAllRoles = async () => {
-    await getRolesApi(token)
-      .then((result) => {
-        setResultGetRoles(result);
-      })
+    await getRolesApi(token).then((result) => {
+      let array = [];
+      result.forEach((elem) => {
+        array.push({
+          label: `${elem.name}`,
+          value: elem._id,
+        });
+      });
+      setResultGetRoles(array);
+    });
   };
 
   const getAllTitle = async () => {

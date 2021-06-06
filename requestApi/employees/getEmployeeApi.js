@@ -1,8 +1,8 @@
 /**
  * @param {String} token
- * @param {Boolean} polulate
+ * @param {Boolean} populate
  */
-export const getEmployeeApi = async (token, polulate) => {
+export const getEmployeeApi = async (token, populate) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
@@ -19,7 +19,7 @@ export const getEmployeeApi = async (token, polulate) => {
     var val
 
     await fetch(
-        `http://${process.env.REACT_APP_API_HOST}/api/employees?populate=${polulate && 1}`,
+        `http://${process.env.REACT_APP_API_HOST}/api/employees?populate=${populate && 1}`,
         requestOptions
     )
         .then((response) => response.json())
