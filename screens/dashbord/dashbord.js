@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, FlatList,ScrollView } from "react-native";
 import { Button, Icon } from "react-native-elements";
 import { dashbaord } from "../../styles/dashbaord";
 import { HeaderCustom, ListHolidays } from "../../components/";
-import { CardHoliday } from "../../components/holidays/CardHoliday";
+import { Card } from "../../components/Card";
 import color from "../../constants/color";
 
 
@@ -14,7 +14,6 @@ export const dashbord = ({ navigation, gestion }) => {
   const [hollidays, setHollidays] = useState(null);
   const [hollidayWaiting, setHollidayWaiting] = useState();
   const [hollidayAccept, setHollidayAccept] = useState();
-  const [loading, setLoading] = useState(false);
 
 
   const Pendingholliday = async () => {
@@ -68,37 +67,39 @@ export const dashbord = ({ navigation, gestion }) => {
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
       <ScrollView>
-      <View style={dashbaord.flexbox} >
-        <Text style={{fontWeight: 'bold', fontSize: 20, marginTop:40,color:"grey"}}>Demande de congés en attente</Text> 
-        <View style={{flex:1, flexDirection:"row",margin: 10,alignItems: "center", justifyContent: "center"}} > 
-          <Text style={{fontWeight: 'bold', fontSize: 75, margin:20, marginRight:50, color:"grey"}}>{hollidayWaiting}</Text>
-          <View style={{borderRadius:100, backgroundColor:"orange", padding:15}} >
-            <Icon
-                name="hourglass-half"
-                type="font-awesome-5"
-                color="white"
-                style={{ width:30}}
-              />
-          </View>
-        </View>
+      <View style={{flexDirection: "row",    alignItems: "center", justifyContent: "center" }}>
+            <Card >
+              <Text style={{fontSize:11,align: "left"}}>Demande de congés en attente</Text>   
+              <View style={{flexDirection: "row",  alignItems: "center", justifyContent: "center"}}>
+                <Text style={{fontSize:50}}>{hollidayWaiting}</Text>
+                  <View style={{borderRadius:100, backgroundColor:"orange", padding:15, margin:10}} >
+                    <Icon
+                        name="hourglass-half"
+                        type="font-awesome-5"
+                        color="white"
+                        style={{ width:30}}
+                      />
+                  </View> 
+              </View> 
+            </Card>
+          <Card>
+            <Text style={{fontSize:11,align: "left"}}>Demande de congés traitées</Text>   
+            <View style={{flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+              <Text style={{fontSize:50}}>{hollidayAccept}</Text>
+                <View style={{borderRadius:100, backgroundColor:"limegreen", padding:15, margin:10}} >
+                  <Icon
+                      name="check"
+                      type="font-awesome-5"
+                      color="white"
+                      style={{ width:30}}
+                    />
+                </View>
+            </View>
+          </Card>
       </View>
-      <View style={dashbaord.flexbox}>
-      <Text style={{fontWeight: 'bold', fontSize: 20, marginTop:40, color:"grey"}}>Demande de congés traités</Text> 
-        <View style={{flex:1, flexDirection:"row",margin: 10,alignItems: "center", justifyContent: "center"}} > 
-        <Text style={{fontWeight: 'bold', fontSize: 75, margin:20, marginRight:50, color:"grey"}}>{hollidayAccept}</Text>
-          <View style={{borderRadius:100, backgroundColor:"limegreen", padding:15}} >
-            <Icon
-                name="check"
-                type="font-awesome-5"
-                color="white"
-                style={{ width:30}}
-              />
-          </View>
-        </View>
-      </View>
-      <View style={dashbaord.demande} >
-          <ListHolidays token={token} user={user} />
-      </View>
+      <Card >
+          <ListHolidays third={true} token={token} user={user} noTouch={true} status={["en attente", "prévalidé", "annulé", "validé", "refusé"]}/>
+      </Card>
       <Button onPress={signOut} title='Logout'/>
       </ScrollView>
     </View>

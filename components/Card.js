@@ -13,9 +13,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 15,
     backgroundColor: color.COLORS.WHITE,
-    width: Dimensions.get("window").width - 30,
+    width: "auto",
     borderRadius: 15,
     padding: 15,
-    alignSelf: "center",
+    alignSelf: "stretch",
   },
 });
