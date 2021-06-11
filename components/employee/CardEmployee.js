@@ -12,24 +12,44 @@ import { screen } from "../../styles/";
 import { EditEmployee } from "./EditEmployee";
 import { Avatar, Icon, Overlay } from "react-native-elements";
 import { ValideRefuseEmployee } from "./ValideRefuseEmployee";
-import { updateEmployeeApi, getServiceApi } from "../../requestApi";
+import { updateEmployeeApi, getServiceApi, getRolesApi, getAllTitleEmployee } from "../../requestApi";
 import { AuthContext } from "../../context/AuthContext";
 
 export const CardEmployee = ({ item, refreshEmployee }) => {
   const { token } = useContext(AuthContext);
   const [isEnabled, setIsEnabled] = useState(item.active);
-  const toggleSwitch = () => {
-    console.log(isEnabled);
-    item.active = !isEnabled;
-    updateEmployeeApi(token, item, item._id);
-    setIsEnabled(!isEnabled);
-  };
-
   const [overlayDelete, setOverlayDelete] = React.useState(false);
   const [overlayEdit, setOverlayEdit] = React.useState(false);
   const [resultGetServices, setResultGetServices] = React.useState([]);
+  const [resultGetRoles, setResultGetRoles] = React.useState([]);
+  const [resultGetTitles, setResultGetTitles] = React.useState([]);
+  const [resultToggleSwitch, setResultToggleSwitch] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
-  const getAllService = async () => {
+  const toggleSwitch = async () => {
+    if (!loading) {
+      setLoading(true);
+      // console.log(!isEnabled);
+      var item2 = { ...item }
+
+      item2.active = !isEnabled;
+      item2.id_service = item2.id_service._id;
+      item2.id_role = item2.id_role._id;
+
+      await updateEmployeeApi(token, item2, item2._id).then((result) => {
+        // console.log(result)
+        if (!result.error) {
+          setIsEnabled(!isEnabled)
+        }
+        setResultToggleSwitch(result)
+        setLoading(false);
+      });
+    } else {
+      console.log("loading");
+    }
+  };
+
+  const getAllServices = async () => {
     await getServiceApi(token, true).then((result) => {
       let array = [];
       result.forEach((elem) => {
@@ -39,8 +59,27 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
         });
       });
       setResultGetServices(array);
-      console.log(array);
     });
+  };
+
+  const getAllRoles = async () => {
+    await getRolesApi(token).then((result) => {
+      let array = [];
+      result.forEach((elem) => {
+        array.push({
+          label: `${elem.name}`,
+          value: elem._id,
+        });
+      });
+      setResultGetRoles(array);
+    });
+  };
+
+  const getAllTitle = async () => {
+    await getAllTitleEmployee(token)
+      .then((result) => {
+        setResultGetTitles(result);
+      })
   };
 
   const toggleOverlayDelete = () => {
@@ -49,7 +88,9 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
   };
 
   const toggleOverlayEdit = async () => {
-    await getAllService();
+    await getAllServices();
+    await getAllRoles();
+    await getAllTitle();
     // console.log(allService);
     setOverlayEdit(!overlayEdit);
     refreshEmployee();
@@ -57,6 +98,17 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
 
   return (
     <View style={styles.cardEmployee}>
+      <View style={{ flexDirection: "row", alignItems: "center", marginHorizontal: 10 }}>
+        {resultToggleSwitch.code == "5" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+        {resultToggleSwitch.code == "6" && <Text style={screen.error}>ID employée non valide</Text>}
+        {resultToggleSwitch.code == "7" && <Text style={screen.error}>ID role non valide</Text>}
+        {resultToggleSwitch.code == "8" && <Text style={screen.error}>Email déjà utilié</Text>}
+        {resultToggleSwitch.code == "9" && <Text style={screen.error}>ID service non valide</Text>}
+        {resultToggleSwitch.code == "10" && <Text style={screen.error}>Impossible de mettre à jour le service de cet employé, cet employé est manager d'un service</Text>}
+        {resultToggleSwitch.code == "11" && <Text style={screen.error}>Impossible de désactiver cet employé, cet employé est manager d'un service</Text>}
+        {resultToggleSwitch.code == "12" && <Text style={screen.error}>Impossible de désactiver cet employé, Cet employé a une demande de congé</Text>}
+        {resultToggleSwitch.message && !resultToggleSwitch.error && <Text style={screen.sucess}>Utilisateur modifié</Text>}
+      </View>
       <View style={{ flexDirection: "row", alignItems: "center", margin: 10 }}>
         <Avatar
           rounded
@@ -86,6 +138,7 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
               ios_backgroundColor={color.COLORS.GREY}
               onValueChange={toggleSwitch}
               value={isEnabled}
+              disabled={loading ? true : false}
             />
           </View>
           <Pressable style={{ flex: 1 }} onPress={toggleOverlayDelete}>
@@ -107,7 +160,9 @@ export const CardEmployee = ({ item, refreshEmployee }) => {
           <EditEmployee
             toggleOverlayEdit={toggleOverlayEdit}
             employee={item}
-            allService={resultGetServices}
+            allServices={resultGetServices}
+            allTitles={resultGetTitles}
+            allRoles={resultGetRoles}
           />
         </ScrollView>
       </Overlay>

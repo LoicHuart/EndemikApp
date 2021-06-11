@@ -6,6 +6,8 @@
 export const updateEmployeeApi = async (token, values, id) => {
   var myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
+  myHeaders.append('Accept', 'application/json');
+  myHeaders.append("Content-Type", 'multipart/form-data');
 
   var formdata = new FormData();
   formdata.append("title", values.title);
@@ -22,9 +24,16 @@ export const updateEmployeeApi = async (token, values, id) => {
   formdata.append("arrival_date", values.arrival_date);
   formdata.append("id_service", values.id_service);
   formdata.append("id_role", values.id_role);
-  formdata.append("children_nb", 0);
-  formdata.append("active", values.active);
-
+  if (values.active) {
+    formdata.append("active", values.active);
+  }
+  if (values.photo) {
+    formdata.append('photo', {
+      name: "test.jpg",
+      type: 'image/jpeg',
+      uri: values.photo.uri,
+    });
+  }
   // console.log(formdata);
 
   var requestOptions = {
@@ -42,7 +51,7 @@ export const updateEmployeeApi = async (token, values, id) => {
   )
     .then((response) => response.json())
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       val = result;
     })
     .catch((error) => console.log("error", error));

@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
     color: color.COLORS.WHITE,
     alignSelf: "center",
     flex: 1,
+    fontSize: 13,
   },
   type: {
     marginLeft: 10,

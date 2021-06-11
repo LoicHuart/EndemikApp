@@ -1,26 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { Text, View } from "react-native";
 import color from "../../constants/color";
-import { Button, Input, Avatar, ListItem, Overlay, Accessory } from "react-native-elements";
+import { Button, Input, Avatar } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
-import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
 import DropDownPicker from "react-native-dropdown-picker";
-import { formatDisplay } from "../../function";
 import { formatAPI } from "../../function";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { addEmployeeApi } from "../../requestApi";
+import { addEmployeeApi, getRolesApi, getServiceApi } from "../../requestApi";
 import { OverlayPhoto } from "./OverlayPhoto";
+import { DatePicker } from "../DatePicker";
 
 const AddEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
-  firstname: Yup.string()
+  firstName: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
-  lastname: Yup.string()
+  lastName: Yup.string()
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
@@ -29,12 +27,12 @@ const AddEmployeeSchema = Yup.object().shape({
     .min(2, "2 caractères minimum")
     .max(50, "50 caractères maximum")
     .required("Champ obligatoire"),
-  tel: Yup.string()
+  tel_nb: Yup.string()
     .min(10, "10 caractères")
     .max(10, "10 caractères")
     .required("Champ obligatoire"),
   date_birth: Yup.string().required("Champ obligatoire"),
-  social_security_nb: Yup.string()
+  social_security_number: Yup.string()
     .min(13, "13 caractères")
     .max(13, "13 caractères")
     .required("Champ obligatoire"),
@@ -63,59 +61,36 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   const { token } = useContext(AuthContext);
   const [resultAddEmployee, setResultAddEmployee] = React.useState("");
   const [resultGetServices, setResultGetServices] = React.useState([]);
-  const [heightDropdown, setHeightDropdown] = React.useState(40);
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
   const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
   const [heightDropdownService, setHeightDropdownService] = React.useState(40);
   const [loading, setLoading] = React.useState(true);
 
   const today = new Date();
-  const [birthDate, setbirthDate] = useState();
-  const [arrivalDate, setArrivalDate] = useState();
-  const [showBirth, setShowBirth] = useState(false);
-  const [showArrival, setShowArrival] = useState(false);
+  const [birthDate, setbirthDate] = useState(today);
+  const [arrivalDate, setArrivalDate] = useState(today);
 
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [roles, setRoles] = useState();
+
 
   const toggleOverlayPhoto = () => {
     setVisible(!visible);
   };
 
-
-  const onChangeBirthDate = (selectedDate) => {
-    setShowBirth(false);
-    if (selectedDate.type !== "dismissed") {
-      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-      setbirthDate(timestamp);
-    }
+  const getRoles = async () => {
+    await getRolesApi(token).then((result) => {
+      let array = [];
+      result.forEach((elem) => {
+        array.push({
+          label: `${elem.name}`,
+          value: elem._id,
+        });
+      });
+      setRoles(array);
+    });
   };
-
-  const onChangeArrivalDate = (selectedDate) => {
-    setShowArrival(false);
-    if (selectedDate.type !== "dismissed") {
-      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-      setArrivalDate(timestamp);
-    }
-  };
-
-  const showDatepickerBirth = () => {
-    setbirthDate(today);
-    setShowBirth(true);
-  };
-
-  const showDatepickerArrival = () => {
-    setArrivalDate(today);
-    setShowArrival(true);
-  };
-
-  const [Roles, setRoles] = React.useState([
-    { label: "Administrateur", value: "60381739c7e71a89252b8844" },
-    { label: "Salarié", value: "60381701c7e71a89252b8843" },
-    { label: "Développeur", value: "603ea811b4a9d056a48fccd7" },
-    { label: "Direction", value: "603ea81cb4a9d056a48fccd8" },
-    { label: "Ressource Humaine", value: "603ea826b4a9d056a48fccd9" },
-  ]);
 
   const [Title, setTitle] = React.useState([
     { label: "Madame", value: "Madame" },
@@ -130,6 +105,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     if (!loading) {
       setLoading(true);
       await addEmployeeApi(token, values).then((result) => {
+        // console.log(result)
         setResultAddEmployee(result);
       });
     } else {
@@ -138,24 +114,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   };
 
   const getAllService = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = "";
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/services?populate=1`,
-      requestOptions
-    )
-      .then((response) => response.json())
+    getServiceApi(token, true)
       .then((result) => {
         let array = [];
         result.forEach((elem) => {
@@ -166,7 +125,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
         });
         setResultGetServices(array);
       })
-      .catch((error) => console.log("error : ", error));
   };
 
   useEffect(() => {
@@ -174,64 +132,54 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
   }, [resultAddEmployee]);
 
   useEffect(() => {
-    if (resultAddEmployee._id) {
+    if (resultAddEmployee._id && !loading) {
       toggleOverlayAdd();
-    } else {
-      getAllService();
     }
-  }, [resultAddEmployee]);
+  }, [loading]);
 
   return (
-    <View
-      style={{
-        width: Dimensions.get("window").width - 100,
-      }}
-    >
-      <Text
-        style={{
-          marginTop: 5,
-          marginBottom: 18,
-          fontSize: 17,
-          alignSelf: "center",
-        }}
-      >
-        Ajout d'un utilisateur
-      </Text>
+    <View>
+      <Text style={screen.h1}>Ajout d'un utilisateur</Text>
+      {resultAddEmployee.code == "1" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+      {resultAddEmployee.code == "2" && <Text style={screen.error}>ID service non valide</Text>}
+      {resultAddEmployee.code == "3" && <Text style={screen.error}>ID role non valide</Text>}
+      {resultAddEmployee.code == "4" && <Text style={screen.error}>Email déjà utilié</Text>}
+      {resultAddEmployee._id && <Text style={screen.sucess}>Utilisateur ajouté</Text>}
       <Formik
         initialValues={{
           title: "",
-          lastname: "",
-          firstname: "",
+          lastName: "",
+          firstName: "",
           mail: "",
-          tel: "",
-          date_birth: "",
-          social_security_nb: "",
+          tel_nb: "",
+          date_birth: formatAPI(birthDate),
+          social_security_number: "",
           postal_code: "",
           street_nb: "",
           street: "",
           city: "",
           id_role: "",
           id_service: "",
-          arrival_date: "",
+          arrival_date: formatAPI(arrivalDate),
           // title: "",
-          // lastname: "Pottier",
-          // firstname: "Domitille",
-          // mail: "dopitter@gmail.com",
-          // tel: "0649826159",
-          // date_birth: "",
-          // social_security_nb: "2980857403863",
+          // lastName: "test",
+          // firstName: "test",
+          // mail: "test@test.test",
+          // tel_nb: "1111111111",
+          // date_birth: formatAPI(birthDate),
+          // social_security_number: "1111111111111",
           // postal_code: "51100",
           // street_nb: "27",
-          // street: "rue des moulins",
+          // street: "test",
           // city: "Reims",
           // id_role: "",
           // id_service: "",
-          // arrival_date: "",
+          // arrival_date: formatAPI(arrivalDate),
         }}
         validationSchema={AddEmployeeSchema}
         onSubmit={(values) => sendAddEmployee(values)}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+        {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors }) => (
           <View>
             <View>
               <View style={{ flexDirection: "row", flex: 1 }}>
@@ -242,7 +190,7 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                     containerStyle={!image && { backgroundColor: color.COLORS.GREY }}
                     size="large"
                     activeOpacity={0.7}
-                    title={values.lastname && values.firstname && values.lastname[0] + values.firstname[0]}
+                    title={values.lastName && values.firstName && values.lastName[0] + values.firstName[0]}
                   />
                   <View style={{ flexDirection: "row", alignSelf: "flex-start" }}>
                     {image &&
@@ -250,7 +198,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                         size={30}
                         rounded
                         containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 10 }}
-                        onPress={() => console.log("Works!")}
                         activeOpacity={0.7}
                         icon={{
                           name: 'trash-alt',
@@ -264,7 +211,6 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                       size={30}
                       rounded
                       containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 65 }}
-                      onPress={() => console.log("Works!")}
                       activeOpacity={0.7}
                       icon={{
                         name: 'pencil-alt',
@@ -279,35 +225,28 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                   <View style={{ flex: 1 }}>
                     <Input
                       style={screen.input}
-                      onChangeText={handleChange("lastname")}
-                      onBlur={handleBlur("lastname")}
-                      value={values.lastname}
+                      onChangeText={handleChange("lastName")}
+                      onBlur={handleBlur("lastName")}
+                      value={values.lastName}
                       placeholder="Nom"
-                      errorMessage={errors.lastname}
+                      errorMessage={errors.lastName}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
                     <Input
                       style={screen.input}
-                      onChangeText={handleChange("firstname")}
-                      onBlur={handleBlur("firstname")}
-                      value={values.firstname}
+                      onChangeText={handleChange("firstName")}
+                      onBlur={handleBlur("firstName")}
+                      value={values.firstName}
                       placeholder="Prénom"
-                      errorMessage={errors.firstname}
+                      errorMessage={errors.firstName}
                     />
                   </View>
                 </View>
               </View>
-              <View
-                style={{
-                  margin: 10,
-                  marginBottom: 15,
-                  height: heightDropdownTitle,
-                }}
-              >
+              <View style={{ margin: 10, marginBottom: 15, height: heightDropdownTitle }}>
                 <DropDownPicker
-                  onChangeItem={(item) => (values.title = item.value)}
-                  onBlur={(item) => (values.title = item.value)}
+                  onChangeItem={(item) => (setFieldValue("title", item.value))}
                   items={Title}
                   value={values.title}
                   placeholder="Civilité"
@@ -321,47 +260,19 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 />
                 <Text style={screen.errorDropdown}>{errors.title}</Text>
               </View>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 1 }}>
-                  <Input
-                    style={screen.input}
-                    onChangeText={handleChange("tel")}
-                    onBlur={handleBlur("tel")}
-                    value={values.tel}
-                    placeholder="Téléphone"
-                    errorMessage={errors.tel}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <View>
-                    <Pressable onPress={showDatepickerBirth}>
-                      <Input
-                        style={screen.input}
-                        value={birthDate && formatDisplay(birthDate)}
-                        placeholder="Date de naissance"
-                        errorMessage={errors.date_birth}
-                        disabledInputStyle={{ color: color.COLORS.BLACK }}
-                        disabled
-                      />
-                    </Pressable>
-                  </View>
-                  {showBirth && (
-                    <DateTimePicker
-                      testID="dateTimePickerDateBirth"
-                      value={birthDate}
-                      locale="fr-FR"
-                      mode="date"
-                      display="default"
-                      onChange={
-                        (item) => {
-                          onChangeBirthDate(item)
-                          values.date_birth = formatAPI(item.nativeEvent.timestamp);
-                        }
-                      }
-                    />
-                  )}
-                </View>
+
+              <View style={{ flex: 1 }}>
+                <Input
+                  style={screen.input}
+                  onChangeText={handleChange("tel_nb")}
+                  onBlur={handleBlur("tel_nb")}
+                  value={values.tel_nb}
+                  placeholder="Téléphone"
+                  errorMessage={errors.tel_nb}
+                  keyboardType="numeric"
+                />
               </View>
+
               <Input
                 style={screen.input}
                 onChangeText={handleChange("mail")}
@@ -369,42 +280,57 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 value={values.mail}
                 placeholder="Email"
                 errorMessage={errors.mail}
+                keyboardType="email-address"
               />
               <Input
                 style={screen.input}
-                onChangeText={handleChange("social_security_nb")}
-                onBlur={handleBlur("social_security_nb")}
-                value={values.social_security_nb}
+                onChangeText={handleChange("social_security_number")}
+                onBlur={handleBlur("social_security_number")}
+                value={values.social_security_number}
                 placeholder="Numéro de sécurité social"
-                errorMessage={errors.social_security_nb}
+                errorMessage={errors.social_security_number}
+                keyboardType="numeric"
               />
-              <View style={{ flex: 1 }}>
-                <Pressable onPress={showDatepickerArrival}>
-                  <Input
-                    style={screen.input}
-                    value={arrivalDate && formatDisplay(arrivalDate)}
-                    placeholder="Date d'arrivé du salarié"
-                    errorMessage={errors.arrival_date}
-                    disabledInputStyle={{ color: color.COLORS.BLACK }}
-                    disabled
-                  />
-                </Pressable>
-              </View>
-              {showArrival && (
-                <DateTimePicker
-                  testID="dateTimePickerDateArrival"
-                  value={arrivalDate}
-                  locale="fr-FR"
-                  mode="date"
-                  display="default"
-                  onChange={
-                    (item) => {
-                      onChangeArrivalDate(item)
-                      values.arrival_date = formatAPI(item.nativeEvent.timestamp);
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 10, paddingBottom: 20 }}>
+                    <Text >Date d'anniversaire :</Text>
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <DatePicker
+                    onChange={
+                      (date) => {
+                        setbirthDate(date)
+                        setFieldValue("date_birth", formatAPI(date))
+                      }
                     }
-                  }
-                />
-              )}
+                    value={birthDate}
+                    errorMessage={errors.date_birth}
+                    maximumDate={today}
+                  />
+                </View>
+              </View>
+
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 10, paddingBottom: 20 }}>
+                    <Text >Date d'arrivé du salarié :</Text>
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <DatePicker
+                    onChange={
+                      (date) => {
+                        setArrivalDate(date)
+                        setFieldValue("arrival_date", formatAPI(date))
+                      }
+                    }
+                    value={arrivalDate}
+                    errorMessage={errors.arrival_date}
+                  />
+                </View>
+              </View>
             </View>
             <View>
               <Text style={{ fontSize: 15 }}>Adresse</Text>
@@ -450,21 +376,15 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                       value={values.postal_code}
                       placeholder="Code Postal"
                       errorMessage={errors.postal_code}
+                      keyboardType="numeric"
                     />
                   </View>
                 </View>
               </View>
             </View>
-            <View
-              style={{
-                margin: 10,
-                marginBottom: 15,
-                height: heightDropdownService,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
               <DropDownPicker
-                onChangeItem={(item) => (values.id_service = item.value)}
-                onBlur={(item) => (values.id_service = item.value)}
+                onChangeItem={(item) => (setFieldValue("id_service", item.value))}
                 items={resultGetServices}
                 value={values.id_service}
                 placeholder="Service"
@@ -475,23 +395,19 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownService(250)}
+                onOpen={() => {
+                  getAllService()
+                  setHeightDropdownService(250)
+                }}
                 onClose={() => setHeightDropdownService(40)}
                 dropDownMaxHeight={heightDropdownService - 40}
               />
               <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
-            <View
-              style={{
-                margin: 10,
-                marginBottom: 15,
-                height: heightDropdownRole,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
               <DropDownPicker
-                onChangeItem={(item) => (values.id_role = item.value)}
-                onBlur={(item) => (values.id_role = item.value)}
-                items={Roles}
+                onChangeItem={(item) => (setFieldValue("id_role", item.value))}
+                items={roles}
                 value={values.id_role}
                 placeholder="Rôle"
                 searchable={true}
@@ -501,7 +417,10 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownRole(300)}
+                onOpen={() => {
+                  getRoles();
+                  setHeightDropdownRole(300)
+                }}
                 onClose={() => setHeightDropdownRole(40)}
                 dropDownMaxHeight={heightDropdownRole - 40}
               />
@@ -532,6 +451,3 @@ export const AddEmployee = ({ toggleOverlayAdd }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-});

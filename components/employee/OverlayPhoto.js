@@ -34,7 +34,7 @@ export const OverlayPhoto = ({ toggleOverlay, visible, setImage }) => {
             quality: 1,
         });
 
-        console.log(result);
+        // console.log(result);
 
         if (!result.cancelled) {
             setImage(result);
@@ -50,7 +50,7 @@ export const OverlayPhoto = ({ toggleOverlay, visible, setImage }) => {
             quality: 1,
         });
 
-        console.log(result);
+        // console.log(result);
 
         if (!result.cancelled) {
             setImage(result);

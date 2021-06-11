@@ -1,16 +1,16 @@
-import React, { useState, useContext, useEffect } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Text, View } from "react-native";
 import color from "../../constants/color";
-import { Button, Input } from "react-native-elements";
-import DropDownPicker from "react-native-dropdown-picker";
+import { Button, Input, Avatar } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
-import { Dimensions } from "react-native";
 import { screen } from "../../styles/screen";
+import DropDownPicker from "react-native-dropdown-picker";
+import { formatAPI } from "../../function";
 import { updateEmployeeApi } from "../../requestApi";
-import { formatDisplay } from "../../function";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { OverlayPhoto } from "./OverlayPhoto";
+import { DatePicker } from "../DatePicker";
 
 const EditEmployeeSchema = Yup.object().shape({
   title: Yup.string().required("Champ obligatoire"),
@@ -54,68 +54,34 @@ const EditEmployeeSchema = Yup.object().shape({
     .required("Champ obligatoire"),
   id_role: Yup.string().required("Champ obligatoire"),
   id_service: Yup.string().required("Champ obligatoire"),
+  arrival_date: Yup.string().required("Champ onligatoire"),
 });
 
-export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
-  // console.log(employee);
+export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitles, allRoles }) => {
   const { token } = useContext(AuthContext);
-  const [loading, setLoading] = React.useState(true);
-  const [resultEditEmployee, setResultEditEmployee] = React.useState([]);
+  const [resultEditEmployee, setResultEditEmployee] = React.useState("");
+  const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
   const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
   const [heightDropdownService, setHeightDropdownService] = React.useState(40);
-  const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
+  const [loading, setLoading] = React.useState(true);
 
   const today = new Date();
-  const [birthDate, setbirthDate] = useState(employee.date_birth);
-  const [showBirth, setShowBirth] = useState(false);
-  const [showArrival, setShowArrival] = useState(false);
+  const [birthDate, setbirthDate] = useState(new Date(employee.date_birth));
+  const [arrivalDate, setArrivalDate] = useState(new Date(employee.arrival_date));
 
-  const [arrivalDate, setArrivalDate] = useState(today);
+  const [image, setImage] = useState({ uri: `http://${process.env.REACT_APP_API_HOST}/uploads/${employee.photo_url}` });
+  const [visible, setVisible] = useState(false);
 
-  const onChangeBirthDate = (selectedDate) => {
-    setShowBirth(false);
-    if (selectedDate.type !== "dismissed") {
-      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-      setbirthDate(timestamp);
-    }
+  const toggleOverlayPhoto = () => {
+    setVisible(!visible);
   };
-
-  const onChangeArrivalDate = (selectedDate) => {
-    setShowArrival(false);
-    if (selectedDate.type !== "dismissed") {
-      let timestamp = new Date(selectedDate.nativeEvent.timestamp);
-      setArrivalDate(timestamp);
-    }
-  };
-
-  const showDatepickerBirth = () => {
-    setbirthDate(today);
-    setShowBirth(true);
-  };
-
-  const showDatepickerArrival = () => {
-    setShowArrival(true);
-  };
-
-  const [Roles, setRoles] = React.useState([
-    { label: "Administrateur", value: "60381739c7e71a89252b8844" },
-    { label: "Salarié", value: "60381701c7e71a89252b8843" },
-    { label: "Développeur", value: "603ea811b4a9d056a48fccd7" },
-    { label: "Direction", value: "603ea81cb4a9d056a48fccd8" },
-    { label: "Ressource Humaine", value: "603ea826b4a9d056a48fccd9" },
-  ]);
-
-  const [Title, setTitle] = React.useState([
-    { label: "Madame", value: "madame" },
-    { label: "Monsieur", value: "monsieur" },
-    { label: "Mademoiselle", value: "mademoiselle" },
-    { label: "Autres", value: "autres" },
-  ]);
 
   const sendEditEmployee = async (values) => {
+    values.photo = image;
     if (!loading) {
       setLoading(true);
       await updateEmployeeApi(token, values, employee._id).then((result) => {
+        // console.log(result)
         setResultEditEmployee(result);
       });
     } else {
@@ -134,21 +100,17 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
   }, [loading]);
 
   return (
-    <View
-      style={{
-        width: Dimensions.get("window").width - 100,
-      }}
-    >
-      <Text
-        style={{
-          marginTop: 5,
-          marginBottom: 18,
-          fontSize: 17,
-          alignSelf: "center",
-        }}
-      >
-        Edition d'un compte utilisateur
-      </Text>
+    <View>
+      <Text style={screen.h1}>Ajout d'un utilisateur</Text>
+      {resultEditEmployee.code == "5" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+      {resultEditEmployee.code == "6" && <Text style={screen.error}>ID employée non valide</Text>}
+      {resultEditEmployee.code == "7" && <Text style={screen.error}>ID role non valide</Text>}
+      {resultEditEmployee.code == "8" && <Text style={screen.error}>Email déjà utilié</Text>}
+      {resultEditEmployee.code == "9" && <Text style={screen.error}>ID service non valide</Text>}
+      {resultEditEmployee.code == "10" && <Text style={screen.error}>Impossible de mettre à jour le service de cet employé, cet employé est manager d'un service</Text>}
+      {resultEditEmployee.code == "11" && <Text style={screen.error}>Impossible de désactiver cet employé, cet employé est manager d'un service</Text>}
+      {resultEditEmployee.code == "12" && <Text style={screen.error}>Impossible de désactiver cet employé, Cet employé a une demande de congé</Text>}
+      {resultEditEmployee.message && !resultEditEmployee.error && <Text style={screen.sucess}>Utilisateur modifié</Text>}
       <Formik
         initialValues={{
           title: employee.title,
@@ -164,25 +126,94 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
           city: employee.city,
           id_role: employee.id_role._id,
           id_service: employee.id_service._id,
+          arrival_date: employee.date_birth,
+          // title: "",
+          // lastName: "test",
+          // firstName: "test",
+          // mail: "test@test.test",
+          // tel_nb: "1111111111",
+          // date_birth: formatAPI(birthDate),
+          // social_security_number: "1111111111111",
+          // postal_code: "51100",
+          // street_nb: "27",
+          // street: "test",
+          // city: "Reims",
+          // id_role: "",
+          // id_service: "",
+          // arrival_date: formatAPI(arrivalDate),
         }}
         validationSchema={EditEmployeeSchema}
         onSubmit={(values) => sendEditEmployee(values)}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+        {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors }) => (
           <View>
             <View>
-              <View
-                style={{
-                  margin: 10,
-                  marginBottom: 15,
-                  height: heightDropdownTitle,
-                }}
-              >
+              <View style={{ flexDirection: "row", flex: 1 }}>
+                <View style={{ flex: 0.6, alignSelf: "center", alignItems: "center" }}>
+                  <Avatar
+                    rounded
+                    source={image && { uri: image.uri }}
+                    containerStyle={!image && { backgroundColor: color.COLORS.GREY }}
+                    size="large"
+                    activeOpacity={0.7}
+                    title={values.lastName && values.firstName && values.lastName[0] + values.firstName[0]}
+                  />
+                  <View style={{ flexDirection: "row", alignSelf: "flex-start" }}>
+                    {image &&
+                      <Avatar
+                        size={30}
+                        rounded
+                        containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 10 }}
+                        activeOpacity={0.7}
+                        icon={{
+                          name: 'trash-alt',
+                          type: 'font-awesome-5',
+                          color: color.COLORS.DEFAULT
+                        }}
+                        onPress={() => setImage(null)}
+                      />
+                    }
+                    <Avatar
+                      size={30}
+                      rounded
+                      containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 65 }}
+                      activeOpacity={0.7}
+                      icon={{
+                        name: 'pencil-alt',
+                        type: 'font-awesome-5',
+                        color: color.COLORS.DEFAULT
+                      }}
+                      onPress={toggleOverlayPhoto}
+                    />
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1 }}>
+                    <Input
+                      style={screen.input}
+                      onChangeText={handleChange("lastName")}
+                      onBlur={handleBlur("lastName")}
+                      value={values.lastName}
+                      placeholder="Nom"
+                      errorMessage={errors.lastName}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Input
+                      style={screen.input}
+                      onChangeText={handleChange("firstName")}
+                      onBlur={handleBlur("firstName")}
+                      value={values.firstName}
+                      placeholder="Prénom"
+                      errorMessage={errors.firstName}
+                    />
+                  </View>
+                </View>
+              </View>
+              <View style={{ margin: 10, marginBottom: 15, height: heightDropdownTitle }}>
                 <DropDownPicker
-                  onChangeItem={(item) => (values.title = item.value)}
-                  onBlur={(item) => (values.title = item.value)}
-                  items={Title}
-                  defaultValue={values.title}
+                  onChangeItem={(item) => (setFieldValue("title", item.value))}
+                  items={allTitles}
                   value={values.title}
                   placeholder="Civilité"
                   containerStyle={{ height: 40 }}
@@ -192,62 +223,23 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                   onOpen={() => setHeightDropdownTitle(190)}
                   onClose={() => setHeightDropdownTitle(40)}
                   dropDownMaxHeight={heightDropdownTitle - 40}
+                  defaultValue={values.title}
                 />
                 <Text style={screen.errorDropdown}>{errors.title}</Text>
               </View>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 1 }}>
-                  <Input
-                    style={screen.input}
-                    onChangeText={handleChange("lastName")}
-                    onBlur={handleBlur("lastName")}
-                    value={values.lastName}
-                    placeholder="Nom"
-                    errorMessage={errors.lastName}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Input
-                    style={[screen.input, { textTransform: "capitalize" }]}
-                    onChangeText={handleChange("firstName")}
-                    onBlur={handleBlur("firstName")}
-                    value={values.firstName}
-                    placeholder="Prénom"
-                    errorMessage={errors.firstName}
-                  />
-                </View>
+
+              <View style={{ flex: 1 }}>
+                <Input
+                  style={screen.input}
+                  onChangeText={handleChange("tel_nb")}
+                  onBlur={handleBlur("tel_nb")}
+                  value={values.tel_nb}
+                  placeholder="Téléphone"
+                  errorMessage={errors.tel_nb}
+                  keyboardType="numeric"
+                />
               </View>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 1 }}>
-                  <Input
-                    style={screen.input}
-                    onChangeText={handleChange("tel_nb")}
-                    onBlur={handleBlur("tel_nb")}
-                    value={values.tel_nb}
-                    placeholder="Téléphone"
-                    errorMessage={errors.tel_nb}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <View>
-                    <Pressable onPress={showDatepickerBirth}>
-                      <Text style={screen.InputDatePicker}>
-                        {birthDate ? formatDisplay(birthDate) : "Date de naissance"}
-                      </Text>
-                    </Pressable>
-                  </View>
-                  {showBirth && (
-                    <DateTimePicker
-                      testID="dateTimePickerDateBirth"
-                      value={birthDate}
-                      locale="fr-FR"
-                      mode="date"
-                      display="default"
-                      onChange={onChangeBirthDate}
-                    />
-                  )}
-                </View>
-              </View>
+
               <Input
                 style={screen.input}
                 onChangeText={handleChange("mail")}
@@ -255,6 +247,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                 value={values.mail}
                 placeholder="Email"
                 errorMessage={errors.mail}
+                keyboardType="email-address"
               />
               <Input
                 style={screen.input}
@@ -263,7 +256,48 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                 value={values.social_security_number}
                 placeholder="Numéro de sécurité social"
                 errorMessage={errors.social_security_number}
+                keyboardType="numeric"
               />
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 10, paddingBottom: 20 }}>
+                    <Text >Date d'anniversaire :</Text>
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <DatePicker
+                    onChange={
+                      (date) => {
+                        setbirthDate(date)
+                        setFieldValue("date_birth", formatAPI(date))
+                      }
+                    }
+                    value={birthDate}
+                    errorMessage={errors.date_birth}
+                    maximumDate={today}
+                  />
+                </View>
+              </View>
+
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 10, paddingBottom: 20 }}>
+                    <Text >Date d'arrivé du salarié :</Text>
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <DatePicker
+                    onChange={
+                      (date) => {
+                        setArrivalDate(date)
+                        setFieldValue("arrival_date", formatAPI(date))
+                      }
+                    }
+                    value={arrivalDate}
+                    errorMessage={errors.arrival_date}
+                  />
+                </View>
+              </View>
             </View>
             <View>
               <Text style={{ fontSize: 15 }}>Adresse</Text>
@@ -309,23 +343,16 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                       value={values.postal_code}
                       placeholder="Code Postal"
                       errorMessage={errors.postal_code}
+                      keyboardType="numeric"
                     />
                   </View>
                 </View>
               </View>
             </View>
-            <View
-              style={{
-                margin: 10,
-                marginBottom: 15,
-                height: heightDropdownService,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
               <DropDownPicker
-                onChangeItem={(item) => (values.id_service = item.value)}
-                onBlur={(item) => (values.id_service = item.value)}
-                defaultValue={values.id_service}
-                items={allService}
+                onChangeItem={(item) => (setFieldValue("id_service", item.value))}
+                items={allServices}
                 value={values.id_service}
                 placeholder="Service"
                 searchable={true}
@@ -335,27 +362,19 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                 style={{ backgroundColor: color.COLORS.DEFAULT }}
                 labelStyle={{ textTransform: "capitalize" }}
                 dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => {
-                  setHeightDropdownService(250);
-                }}
+                onOpen={() => setHeightDropdownService(250)}
                 onClose={() => setHeightDropdownService(40)}
                 dropDownMaxHeight={heightDropdownService - 40}
+                defaultValue={values.id_service}
+                disabled={employee.isManager}
               />
               <Text style={screen.errorDropdown}>{errors.id_service}</Text>
             </View>
-            <View
-              style={{
-                margin: 10,
-                marginBottom: 15,
-                height: heightDropdownRole,
-              }}
-            >
+            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
               <DropDownPicker
-                onChangeItem={(item) => (values.id_role = item.value)}
-                onBlur={(item) => (values.id_role = item.value)}
-                items={Roles}
+                onChangeItem={(item) => (setFieldValue("id_role", item.value))}
+                items={allRoles}
                 value={values.id_role}
-                defaultValue={values.id_role}
                 placeholder="Rôle"
                 searchable={true}
                 searchablePlaceholder="Rechercher"
@@ -367,37 +386,10 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
                 onOpen={() => setHeightDropdownRole(300)}
                 onClose={() => setHeightDropdownRole(40)}
                 dropDownMaxHeight={heightDropdownRole - 40}
+                defaultValue={values.id_role}
               />
-              <Text style={screen.errorDropdown}>{errors.title}</Text>
+              <Text style={screen.errorDropdown}>{errors.id_role}</Text>
             </View>
-
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 12 }}>
-                  Jour d'arrivé du salarié :{" "}
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Pressable onPress={showDatepickerArrival}>
-                  <Text
-                    style={screen.InputDatePicker}
-                  >
-                    {formatDisplay(arrivalDate)}
-                  </Text>
-                </Pressable>
-              </View>
-              {showArrival && (
-                <DateTimePicker
-                  testID="dateTimePickerDateArrival"
-                  value={arrivalDate}
-                  locale="fr-FR"
-                  mode="date"
-                  display="default"
-                  onChange={onChangeArrivalDate}
-                />
-              )}
-            </View>
-
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
@@ -419,9 +411,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allService }) => {
           </View>
         )}
       </Formik>
+      <OverlayPhoto toggleOverlay={toggleOverlayPhoto} visible={visible} setImage={setImage}></OverlayPhoto>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-});
