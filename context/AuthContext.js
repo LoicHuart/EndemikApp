@@ -1,10 +1,11 @@
 import React, { useEffect, createContext, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
+import { getEmployeeByIdApi } from "../requestApi";
 
 export const AuthContext = React.createContext();
 
-export const AuthContextProvier = ({ children }) => {
+export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -38,65 +39,45 @@ export const AuthContextProvier = ({ children }) => {
     }
   );
 
-  const getEmployeeById = async (id, token) => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
-
-    return await fetch(
-      `http://${process.env.REACT_APP_API_HOST}/api/employees/${id}?populate=1`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        // console.log(result);
-        return result;
-      })
-      .catch((error) => console.log("error", error));
-  };
-
   useEffect(() => {
-    const checkIfTokenExist = async () => {
-      let userToken;
-      try {
-        userToken = await AsyncStorage.getItem("token");
-        if (userToken !== null) {
-          var decoded = jwt_decode(userToken);
-          var user;
-          await getEmployeeById(decoded._id, userToken).then((result) => {
-            if (result) {
-              user = JSON.stringify(result);
-            }
-          });
-          if (!user) {
-            user = await AsyncStorage.getItem("user");
-          }
-
-          dispatch({
-            type: "RESTORE_TOKEN",
-            token: userToken,
-            user: user,
-            error: null,
-          });
-        }
-      } catch (error) {
-        console.log(error);
-        dispatch({
-          type: "RESTORE_TOKEN",
-          token: null,
-          user: null,
-          error: error,
-        });
-      }
-    };
-
     checkIfTokenExist();
   }, []);
+
+  const checkIfTokenExist = async () => {
+    let userToken;
+    try {
+      userToken = await AsyncStorage.getItem("token");
+      if (userToken !== null) {
+        var decoded = jwt_decode(userToken);
+        var user = await getEmployeeByIdApi(userToken, decoded._id, true);
+
+        if (user) {
+          user = JSON.stringify(user);
+        } else {
+          user = await AsyncStorage.getItem("user");
+        }
+
+        dispatch({
+          type: "RESTORE_TOKEN",
+          token: userToken,
+          user: user,
+          error: null,
+        });
+      } else {
+        console.log("pas token")
+      }
+    } catch (error) {
+      console.log(error)
+      await AsyncStorage.setItem("token", "");
+      await AsyncStorage.setItem("user", "");
+      dispatch({
+        type: "RESTORE_TOKEN",
+        token: null,
+        user: null,
+        error: error,
+      });
+    }
+  };
 
   const signIn = async (data) => {
     var myHeaders = new Headers();
@@ -125,7 +106,7 @@ export const AuthContextProvier = ({ children }) => {
       }
 
       var decoded = jwt_decode(respJSON.token);
-      let user = await getEmployeeById(decoded._id, respJSON.token);
+      let user = await getEmployeeByIdApi(respJSON.token, decoded._id, true);
 
       await AsyncStorage.setItem("token", respJSON.token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
@@ -172,6 +153,7 @@ export const AuthContextProvier = ({ children }) => {
         error: state.error,
         signIn: signIn,
         signOut: signOut,
+        checkIfTokenExist: checkIfTokenExist,
       }}
     >
       {children}
