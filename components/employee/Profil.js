@@ -57,8 +57,9 @@ const EditEmployeeSchema = Yup.object().shape({
   arrival_date: Yup.string().required("Champ onligatoire"),
 });
 
-export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitles, allRoles }) => {
-  const { token } = useContext(AuthContext);
+export const Profil = ({ allServices, allTitles, allRoles }) => {
+  const { token, user } = useContext(AuthContext);
+  const employee = user;
   const [resultEditEmployee, setResultEditEmployee] = React.useState("");
   const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
   const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
@@ -82,7 +83,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
     if (!loading) {
       setLoading(true);
       await updateEmployeeApi(token, values, employee._id).then((result) => {
-        // console.log(result)
+        console.log(result)
         setResultEditEmployee(result);
       });
     } else {
@@ -94,16 +95,10 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
     setLoading(false);
   }, [resultEditEmployee]);
 
-  useEffect(() => {
-    if (resultEditEmployee.message && !resultEditEmployee.error && !loading) {
-      toggleOverlayEdit();
-    }
-  }, [loading]);
-
   return (
     <View>
-      <Text style={screen.h1}>Ajout d'un utilisateur</Text>
-      {resultEditEmployee.code == "5" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+      <Text style={screen.h1}>Mon profil</Text>
+      {/* {resultEditEmployee.code == "5" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
       {resultEditEmployee.code == "6" && <Text style={screen.error}>ID employée non valide</Text>}
       {resultEditEmployee.code == "7" && <Text style={screen.error}>ID role non valide</Text>}
       {resultEditEmployee.code == "8" && <Text style={screen.error}>Email déjà utilié</Text>}
@@ -111,7 +106,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
       {resultEditEmployee.code == "10" && <Text style={screen.error}>Impossible de mettre à jour le service de cet employé, cet employé est manager d'un service</Text>}
       {resultEditEmployee.code == "11" && <Text style={screen.error}>Impossible de désactiver cet employé, cet employé est manager d'un service</Text>}
       {resultEditEmployee.code == "12" && <Text style={screen.error}>Impossible de désactiver cet employé, Cet employé a une demande de congé</Text>}
-      {resultEditEmployee.message && !resultEditEmployee.error && <Text style={screen.sucess}>Utilisateur modifié</Text>}
+      {resultEditEmployee.message && !resultEditEmployee.error && <Text style={screen.sucess}>Utilisateur modifié</Text>} */}
       <Formik
         initialValues={{
           title: employee.title,
@@ -177,7 +172,7 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
                     <Avatar
                       size={30}
                       rounded
-                      containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 65 }}
+                      containerStyle={{ backgroundColor: color.COLORS.GREY, position: 'absolute', left: 75 }}
                       activeOpacity={0.7}
                       icon={{
                         name: 'pencil-alt',
@@ -350,55 +345,41 @@ export const EditEmployee = ({ toggleOverlayEdit, employee, allServices, allTitl
                 </View>
               </View>
             </View>
-            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownService }}>
-              <DropDownPicker
-                onChangeItem={(item) => (setFieldValue("id_service", item.value))}
-                items={allServices}
-                value={values.id_service}
-                placeholder="Service"
-                searchable={true}
-                searchablePlaceholder="Rechercher"
-                searchableError={() => <Text>Aucun résultat</Text>}
-                containerStyle={{ height: 40 }}
-                style={{ backgroundColor: color.COLORS.DEFAULT }}
-                labelStyle={{ textTransform: "capitalize" }}
-                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownService(250)}
-                onClose={() => setHeightDropdownService(40)}
-                dropDownMaxHeight={heightDropdownService - 40}
-                defaultValue={values.id_service}
-                disabled={employee.isManager}
-              />
-              <Text style={screen.errorDropdown}>{errors.id_service}</Text>
-            </View>
-            <View style={{ margin: 10, marginBottom: 15, height: heightDropdownRole }}>
-              <DropDownPicker
-                onChangeItem={(item) => (setFieldValue("id_role", item.value))}
-                items={allRoles}
-                value={values.id_role}
-                placeholder="Rôle"
-                searchable={true}
-                searchablePlaceholder="Rechercher"
-                searchableError={() => <Text>Aucun résultat</Text>}
-                containerStyle={{ height: 40 }}
-                style={{ backgroundColor: color.COLORS.DEFAULT }}
-                labelStyle={{ textTransform: "capitalize" }}
-                dropDownStyle={{ backgroundColor: color.COLORS.DEFAULT }}
-                onOpen={() => setHeightDropdownRole(300)}
-                onClose={() => setHeightDropdownRole(40)}
-                dropDownMaxHeight={heightDropdownRole - 40}
-                defaultValue={values.id_role}
-              />
-              <Text style={screen.errorDropdown}>{errors.id_role}</Text>
-            </View>
+
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
-                <Button
-                  title="Annuler"
-                  onPress={() => toggleOverlayEdit()}
-                  buttonStyle={screen.buttonCancel}
+                <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 10, paddingBottom: 20 }}>
+                  <Text >Service :</Text>
+                </View>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Input
+                  style={screen.input}
+                  value={employee.id_service.name}
+                  placeholder="Service"
+                  disabled
                 />
               </View>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 10, paddingBottom: 20 }}>
+                  <Text >Role :</Text>
+                </View>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Input
+                  style={screen.input}
+                  value={employee.id_role.name}
+                  placeholder="Role"
+                  disabled
+                />
+              </View>
+            </View>
+
+
+            <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
                 <Button
                   onPress={handleSubmit}
