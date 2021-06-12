@@ -6,7 +6,6 @@ import {
   Card,
   AddEmployee,
 } from "../../components/";
-import { FontAwesome } from "@expo/vector-icons";
 import { Icon, Overlay } from "react-native-elements";
 import color from "../../constants/color";
 import { screen } from "../../styles/screen";
