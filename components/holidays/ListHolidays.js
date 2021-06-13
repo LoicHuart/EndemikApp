@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Text, FlatList } from "react-native";
-import { CardHoliday } from "./CardHoliday";
+import { CardHolidayEmployee } from "./CardHolidayEmployee";
 import { CardHolidayRh } from "./CardHolidayRh";
 import { CardHolidayManager } from "./CardHolidayManager";
 import { CardHolidayNoTouch } from "./CardHolidayNoTouch";
@@ -106,7 +106,7 @@ export const ListHolidays = ({
                 );
               }
               return (
-                <CardHoliday item={item} refreshHolidays={displayHolidays} />
+                <CardHolidayEmployee item={item} refreshHolidays={displayHolidays} />
               );
           }
         }}
