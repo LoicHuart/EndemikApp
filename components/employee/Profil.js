@@ -57,13 +57,11 @@ const EditEmployeeSchema = Yup.object().shape({
   arrival_date: Yup.string().required("Champ onligatoire"),
 });
 
-export const Profil = ({ allServices, allTitles, allRoles }) => {
+export const Profil = ({ allTitles }) => {
   const { token, user } = useContext(AuthContext);
   const employee = user;
   const [resultEditEmployee, setResultEditEmployee] = React.useState("");
-  const [heightDropdownRole, setHeightDropdownRole] = React.useState(40);
   const [heightDropdownTitle, setHeightDropdownTitle] = React.useState(40);
-  const [heightDropdownService, setHeightDropdownService] = React.useState(40);
   const [loading, setLoading] = React.useState(true);
 
   const today = new Date();
@@ -98,7 +96,7 @@ export const Profil = ({ allServices, allTitles, allRoles }) => {
   return (
     <View>
       <Text style={screen.h1}>Mon profil</Text>
-      {/* {resultEditEmployee.code == "5" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
+      {resultEditEmployee.code == "5" && <Text style={screen.error}>Contenue de la requête invalide</Text>}
       {resultEditEmployee.code == "6" && <Text style={screen.error}>ID employée non valide</Text>}
       {resultEditEmployee.code == "7" && <Text style={screen.error}>ID role non valide</Text>}
       {resultEditEmployee.code == "8" && <Text style={screen.error}>Email déjà utilié</Text>}
@@ -106,7 +104,7 @@ export const Profil = ({ allServices, allTitles, allRoles }) => {
       {resultEditEmployee.code == "10" && <Text style={screen.error}>Impossible de mettre à jour le service de cet employé, cet employé est manager d'un service</Text>}
       {resultEditEmployee.code == "11" && <Text style={screen.error}>Impossible de désactiver cet employé, cet employé est manager d'un service</Text>}
       {resultEditEmployee.code == "12" && <Text style={screen.error}>Impossible de désactiver cet employé, Cet employé a une demande de congé</Text>}
-      {resultEditEmployee.message && !resultEditEmployee.error && <Text style={screen.sucess}>Utilisateur modifié</Text>} */}
+      {resultEditEmployee.message && !resultEditEmployee.error && <Text style={screen.sucess}>Utilisateur modifié</Text>}
       <Formik
         initialValues={{
           title: employee.title,
