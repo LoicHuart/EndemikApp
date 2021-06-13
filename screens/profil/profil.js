@@ -6,37 +6,9 @@ import { getServiceApi, getRolesApi, getAllTitleEmployee } from "../../requestAp
 
 export const profil = ({ navigation }) => {
   const { token } = useContext(AuthContext);
-  const [resultGetServices, setResultGetServices] = React.useState();
-  const [resultGetRoles, setResultGetRoles] = React.useState();
   const [resultGetTitles, setResultGetTitles] = React.useState();
 
   useEffect(() => {
-    const getAllServices = async () => {
-      await getServiceApi(token, true).then((result) => {
-        let array = [];
-        result.forEach((elem) => {
-          array.push({
-            label: `${elem.name}`,
-            value: elem._id,
-          });
-        });
-        setResultGetServices(array);
-      });
-    };
-
-    const getAllRoles = async () => {
-      await getRolesApi(token).then((result) => {
-        let array = [];
-        result.forEach((elem) => {
-          array.push({
-            label: `${elem.name}`,
-            value: elem._id,
-          });
-        });
-        setResultGetRoles(array);
-      });
-    };
-
     const getAllTitle = async () => {
       await getAllTitleEmployee(token)
         .then((result) => {
@@ -44,13 +16,7 @@ export const profil = ({ navigation }) => {
         })
     };
 
-    const test = async () => {
-      await getAllServices()
-      await getAllTitle()
-      await getAllRoles()
-    }
-
-    test()
+    getAllTitle()
   }, [token]);
 
   return (
@@ -60,12 +26,9 @@ export const profil = ({ navigation }) => {
         <Card>
           <ScrollView >
             {
-              (resultGetServices && resultGetTitles && resultGetRoles) &&
-
+              resultGetTitles &&
               <Profil
-                allServices={resultGetServices}
                 allTitles={resultGetTitles}
-                allRoles={resultGetRoles}
               />
             }
           </ScrollView>
