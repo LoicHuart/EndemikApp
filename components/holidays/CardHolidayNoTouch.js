@@ -3,134 +3,71 @@ import { StyleSheet, Text, View } from "react-native";
 import { Icon } from "react-native-elements";
 import color from "../../constants/color";
 import { formatDisplay } from "../../function/";
+import { CardHolidays } from "./CardHoliday";
 
 export const CardHolidayNoTouch = ({ item }) => {
-
-  const capitalize = (str) => {
-    if (str.toUpperCase() === "RTT") {
-      return "RTT";
-    }
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
 
   const displayStatus = () => {
     switch (item.status) {
       case "en attente":
         return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.WAIT,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-              flexDirection: "column",
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="hourglass"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+          <CardHolidays
+            backgroundColor={color.COLORS.WAIT}
+            icon={"hourglass"}
+            colorIcon={color.COLORS.WHITE}
+            status={item.status}
+          />
+        )
 
       case "prévalidé":
         return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.PREVALIDATE,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="play-circle"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+          <CardHolidays
+            backgroundColor={color.COLORS.PREVALIDATE}
+            icon={"play-circle"}
+            colorIcon={color.COLORS.WHITE}
+            status={item.status}
+          />
+        )
 
       case "validé":
         return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.VALIDATE,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="check-circle"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+          <CardHolidays
+            backgroundColor={color.COLORS.VALIDATE}
+            icon={"check-circle"}
+            colorIcon={color.COLORS.WHITE}
+            status={item.status}
+          />
+        )
 
       case "refusé":
         return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.REFUSE,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="times-circle"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+          <CardHolidays
+            backgroundColor={color.COLORS.REFUSE}
+            icon={"times-circle"}
+            colorIcon={color.COLORS.WHITE}
+            status={item.status}
+          />
+        )
+
       case "annulé":
         return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.CANCEL,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-              flexDirection: "column",
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="ban"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+          <CardHolidays
+            backgroundColor={color.COLORS.CANCEL}
+            icon={"ban"}
+            colorIcon={color.COLORS.WHITE}
+            status={item.status}
+          />
+        )
     }
   };
 
   const requester = () => {
     if (item.id_requester_employee.firstName) {
       return (
-        <Text style={styles.type}>
-          {capitalize(item.id_requester_employee.firstName)}{" "}
-          {item.id_requester_employee.lastName}{" "}
-        </Text>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={styles.firstName}>{item.id_requester_employee.firstName}</Text>
+          <Text>{item.id_requester_employee.lastName}</Text>
+        </View>
       );
     }
   };
@@ -144,7 +81,7 @@ export const CardHolidayNoTouch = ({ item }) => {
             {formatDisplay(item.current_date)}
           </Text>
           {requester()}
-          <Text style={styles.type}>{capitalize(item.type)}</Text>
+          <Text style={styles.type}>{item.type}</Text>
           <View style={styles.dates}>
             <View style={{ alignSelf: "center", flex: 1 }}></View>
             <View style={{ alignSelf: "center", flex: 3 }}>
@@ -209,5 +146,11 @@ const styles = StyleSheet.create({
   },
   type: {
     marginLeft: 10,
+    textTransform: "capitalize",
+  },
+  firstName: {
+    textTransform: "capitalize",
+    marginRight: 5,
+    marginLeft: 20,
   },
 });

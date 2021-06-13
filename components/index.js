@@ -6,6 +6,7 @@ export { DatePicker } from "./DatePicker";
 //holiday
 export { ListHolidays } from "./holidays/ListHolidays";
 export { AddHoliday } from "./holidays/AddHoliday";
+export { CardHolidayEmployee } from "./holidays/CardHolidayEmployee";
 export { CardHoliday } from "./holidays/CardHoliday";
 export { ValidateRefuseHoliday } from "./holidays/ValidateRefuseHoliday";
 
