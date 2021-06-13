@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from "react";
-import { View, ScrollView, Dimensions } from "react-native";
+import { View, ScrollView } from "react-native";
 import { HeaderCustom, Card, Profil } from "../../components/";
 import { AuthContext } from "../../context/AuthContext";
-import { getServiceApi, getRolesApi, getAllTitleEmployee } from "../../requestApi";
+import { getAllTitleEmployee } from "../../requestApi";
 
 export const profil = ({ navigation }) => {
   const { token } = useContext(AuthContext);

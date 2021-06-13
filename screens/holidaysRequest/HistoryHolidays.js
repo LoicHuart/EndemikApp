@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React from "react";
+import { View, Text } from "react-native";
 import { HeaderCustom, ListHolidays, Card } from "../../components/";
 import { AuthContext } from "../../context/AuthContext";
 import { screen } from "../../styles/";
@@ -10,32 +10,20 @@ export const holidaysHistory = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
-      <Card style={{ flex: 1 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={[
-              screen.h2,
-              {
-                flex: 0.9,
-              },
-            ]}
-          >
+      <View style={{ flex: 93 }}>
+        <Card>
+          <Text style={screen.h2}>
             Liste des congés :
           </Text>
-        </View>
-        <ListHolidays
-          token={token}
-          user={user}
-          status={["validé", "prévalidé", "en attente", "refusé", "annulé"]}
-        />
-      </Card>
+          <ListHolidays
+            token={token}
+            user={user}
+            status={["validé", "prévalidé", "en attente", "refusé", "annulé"]}
+          />
+        </Card>
+      </View>
+      <View style={{ flex: 7 }}>
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({});

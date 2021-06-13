@@ -11,9 +11,10 @@ import RadioForm, {
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
 import { AuthContext } from "../../context/AuthContext";
+import { formatDisplay } from "../../function/";
 
 export const UpdateHoliday = ({ item, toggleShowPopUpUpdate }) => {
-  const { token, user } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
 
   const today = new Date();
   const tomorrow = new Date(today);
@@ -33,22 +34,6 @@ export const UpdateHoliday = ({ item, toggleShowPopUpUpdate }) => {
   useEffect(() => {
     setLoading(false);
   }, [resultUpdateHoliday]);
-
-  const formatDisplay = (date) => {
-    //console.log(date);
-    date = new Date(date);
-    let day = date.getDate();
-    if (day.toString().length < 2) {
-      day = "0" + day;
-    }
-
-    let month = date.getMonth() + 1;
-    if (month.toString().length < 2) {
-      month = "0" + month;
-    }
-
-    return day + "/" + month + "/" + date.getFullYear();
-  };
 
   const formatAPI = (date) => {
     date = new Date(date);
@@ -135,21 +120,8 @@ export const UpdateHoliday = ({ item, toggleShowPopUpUpdate }) => {
   ];
 
   return (
-    <View
-      style={{
-        backgroundColor: color.COLORS.DEFAULT,
-
-        borderRadius: 15,
-      }}
-    >
-      <Text
-        style={{
-          fontWeight: "bold",
-          fontSize: 18,
-          textAlign: "center",
-          //marginHorizontal: 39,
-        }}
-      >
+    <View style={{ backgroundColor: color.COLORS.DEFAULT, borderRadius: 15, }} >
+      <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center", }}   >
         Modification de la demande
       </Text>
       <Formik

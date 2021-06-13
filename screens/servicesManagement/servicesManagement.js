@@ -22,22 +22,10 @@ export const servicesManagement = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
-      <View>
+      <View style={{ flex: 75 }}>
         <Card>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={[
-                screen.h2,
-                {
-                  flex: 0.9,
-                },
-              ]}
-            >
+          <View style={{ flexDirection: "row", alignItems: "center", }} >
+            <Text style={[screen.h2, { flex: 0.9 }]} >
               Liste des services :
             </Text>
             <Icon
@@ -61,6 +49,8 @@ export const servicesManagement = ({ navigation }) => {
             <AddService toggleOverlayAdd={toggleOverlayAdd} />
           </Overlay>
         </Card>
+      </View>
+      <View style={{ flex: 25 }}>
       </View>
     </View>
   );

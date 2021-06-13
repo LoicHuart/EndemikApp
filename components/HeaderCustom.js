@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { Header, Icon, Avatar, Tooltip, Text, Button, ButtonGroup } from "react-native-elements";
+import React, { useContext } from "react";
+import { Header, Icon, Avatar, Tooltip, Text } from "react-native-elements";
 import { View, Pressable } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import color from "../constants/color";
@@ -53,15 +53,8 @@ export const HeaderCustom = ({ navigation, title }) => {
                   <Pressable style={{ flex: 1, justifyContent: "center", width: 150 }} onPress={signOut}>
                     <Text style={screen.h1}>Se déconnecter</Text>
                   </Pressable>
-
-                  {/* <Button
-                    title="Annuler"
-                    // onPress={() => toggleOverlayEdit()}
-                    buttonStyle={screen.buttonCancel}
-                  /> */}
                 </View>
               }
-
             >
               <Avatar
                 size={40}

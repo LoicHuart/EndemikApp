@@ -6,9 +6,8 @@ import { Card } from "../../components/Card";
 import { getHolidaysByUserApi } from "../../requestApi/";
 import { AuthContext } from "../../context/AuthContext";
 
-export const dashbord = ({ navigation, gestion }) => {
-  const { signOut, user, token } = useContext(AuthContext);
-  const [hollidays, setHollidays] = useState(null);
+export const dashbord = ({ navigation }) => {
+  const { user, token } = useContext(AuthContext);
   const [hollidayWaiting, setHollidayWaiting] = useState();
   const [hollidayAccept, setHollidayAccept] = useState();
 
@@ -24,38 +23,41 @@ export const dashbord = ({ navigation, gestion }) => {
   }, [token])
 
   return (
-
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-        <Card >
-          <Text style={{ fontSize: 11 }}>Demande de congés en attente</Text>
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ fontSize: 50 }}>{hollidayWaiting}</Text>
-            <View style={{ borderRadius: 100, backgroundColor: "orange", padding: 15, margin: 10 }} >
-              <Icon
-                name="hourglass-half"
-                type="font-awesome-5"
-                color="white"
-                style={{ width: 30 }}
-              />
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ flex: 1 }}>
+          <Card >
+            <Text style={{ fontSize: 11, textAlign: "center", height: 30 }}>Demande de congés en attente</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ fontSize: 50 }}>{hollidayWaiting}</Text>
+              <View style={{ borderRadius: 100, backgroundColor: "orange", padding: 15, margin: 10 }} >
+                <Icon
+                  name="hourglass-half"
+                  type="font-awesome-5"
+                  color="white"
+                  style={{ width: 30 }}
+                />
+              </View>
             </View>
-          </View>
-        </Card>
-        <Card>
-          <Text style={{ fontSize: 11 }}>Demande de congés traitées</Text>
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ fontSize: 50 }}>{hollidayAccept}</Text>
-            <View style={{ borderRadius: 100, backgroundColor: "limegreen", padding: 15, margin: 10 }} >
-              <Icon
-                name="check"
-                type="font-awesome-5"
-                color="white"
-                style={{ width: 30 }}
-              />
+          </Card>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Card>
+            <Text style={{ fontSize: 11, textAlign: "center", height: 30 }}>Demande de congés traitées</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ fontSize: 50 }}>{hollidayAccept}</Text>
+              <View style={{ borderRadius: 100, backgroundColor: "limegreen", padding: 15, margin: 10 }} >
+                <Icon
+                  name="check"
+                  type="font-awesome-5"
+                  color="white"
+                  style={{ width: 30 }}
+                />
+              </View>
             </View>
-          </View>
-        </Card>
+          </Card>
+        </View>
       </View>
       <View style={{ flex: 1 }}>
         <Card >
