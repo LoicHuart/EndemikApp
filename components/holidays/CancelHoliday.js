@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Button } from "react-native-elements";
-import color from "../../constants/color";
 import { AuthContext } from "../../context/AuthContext";
 import { screen } from "../../styles/";
 import { cancelHolidayApi } from "../../requestApi/";
@@ -43,7 +42,7 @@ export const CancelHoliday = ({ item, toggleShowPopUpCancel }) => {
           <Button
             title="Retour"
             onPress={() => {
-              toggleShowPopUp();
+              toggleShowPopUpCancel();
             }}
             buttonStyle={screen.buttonCancel}
           />
@@ -63,10 +62,3 @@ export const CancelHoliday = ({ item, toggleShowPopUpCancel }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  buttonValidate: {
-    backgroundColor: color.COLORS.PRIMARY,
-  },
-  buttonReturn: { borderColor: color.COLORS.PRIMARY, borderWidth: 1 },
-});

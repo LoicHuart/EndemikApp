@@ -16,13 +16,12 @@ export const TabsHolidaysManagement = () => {
           let iconColor;
 
           if (route.name === "En cours") {
-            iconName = focused ? "calendar-plus" : "calendar-plus";
+            iconName = "calendar-plus";
             iconColor = focused ? color.COLORS.PRIMARY : color.COLORS.GREY;
           } else if (route.name === "Historique") {
-            iconName = focused ? "history" : "history";
+            iconName = "history";
             iconColor = focused ? color.COLORS.PRIMARY : color.COLORS.GREY;
           }
-          // You can return any component that you like here!
           return (
             <Icon name={iconName} type="font-awesome-5" color={iconColor} />
           );

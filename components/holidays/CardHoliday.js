@@ -5,7 +5,7 @@ import color from "../../constants/color";
 import { screen } from "../../styles";
 import { UpdateHoliday } from "./UpdateHoliday";
 import { CancelHoliday } from "./CancelHoliday";
-import { date } from "yup/lib/locale";
+import { formatDisplay } from "../../function/";
 
 export const CardHoliday = ({ item, refreshHolidays }) => {
   const [showValidatorCancel, setShowValidatorCancel] = useState(false);
@@ -18,132 +18,49 @@ export const CardHoliday = ({ item, refreshHolidays }) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
+  const card = (backgroundColor, icon, colorIcon, status) => {
+    return (
+      <View
+        style={{
+          backgroundColor: backgroundColor,
+          flex: 1,
+          borderTopLeftRadius: 9,
+          borderBottomLeftRadius: 9,
+          flexDirection: "column",
+        }}
+      >
+        <View style={{ flex: 1, marginTop: 30 }}>
+          <Icon
+            name={icon}
+            type="font-awesome-5"
+            color={colorIcon}
+          />
+        </View>
+
+        <Text style={[styles.textStatus, { textTransform: 'capitalize' }]}>{status}</Text>
+      </View>
+    )
+  }
+
   const displayStatus = () => {
     switch (item.status) {
       case "en attente":
-        return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.WAIT,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-              flexDirection: "column",
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="hourglass"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+        return card(color.COLORS.WAIT, "hourglass", color.COLORS.WHITE, item.status)
 
       case "prévalidé":
-        return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.PREVALIDATE,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="play-circle"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+        return card(color.COLORS.PREVALIDATE, "play-circle", color.COLORS.WHITE, item.status)
 
       case "validé":
-        return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.VALIDATE,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="check-circle"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+        return card(color.COLORS.VALIDATE, "check-circle", color.COLORS.WHITE, item.status)
 
       case "refusé":
-        return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.REFUSE,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="times-circle"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+        return card(color.COLORS.REFUSE, "times-circle", color.COLORS.WHITE, item.status)
+
       case "annulé":
-        return (
-          <View
-            style={{
-              backgroundColor: color.COLORS.CANCEL,
-              flex: 1,
-              borderTopLeftRadius: 9,
-              borderBottomLeftRadius: 9,
-              flexDirection: "column",
-            }}
-          >
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <Icon
-                name="ban"
-                type="font-awesome-5"
-                color={color.COLORS.WHITE}
-              />
-            </View>
-            <Text style={styles.textStatus}>{capitalize(item.status)}</Text>
-          </View>
-        );
+        return card(color.COLORS.CANCEL, "ban", color.COLORS.WHITE, item.status)
     }
   };
 
-  const formatDisplay = (date) => {
-    date = new Date(date);
-    let day = date.getDate();
-    if (day.toString().length < 2) {
-      day = "0" + day;
-    }
-
-    let month = date.getMonth() + 1;
-    if (month.toString().length < 2) {
-      month = "0" + month;
-    }
-
-    return day + "/" + month + "/" + date.getFullYear();
-    z;
-  };
   const toggleShowPopUpCancel = async () => {
     await setShowValidatorCancel(!showValidatorCancel);
     if (

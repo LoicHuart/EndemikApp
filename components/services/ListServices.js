@@ -1,6 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import { Dimensions } from "react-native";
+import { Text, View, FlatList } from "react-native";
 import { CardService } from "./CardService";
 import { AuthContext } from "../../context/AuthContext";
 import { SearchBar } from "react-native-elements";
@@ -45,7 +44,7 @@ export const ListServices = ({ refresh }) => {
   }, [refresh]);
 
   return (
-    <View>
+    <>
       <SearchBar
         placeholder="Rechercher"
         onChangeText={setSearch}
@@ -80,10 +79,7 @@ export const ListServices = ({ refresh }) => {
           <CardService item={item} refreshService={displayServices} />
         )}
         keyExtractor={(item) => item._id}
-        style={{ height: Dimensions.get("window").height - 275 }}
       />
-    </View>
+    </>
   );
 };
-
-const styles = StyleSheet.create({});

@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { Text, View, FlatList } from "react-native";
+import { Text, FlatList } from "react-native";
 import { CardHoliday } from "./CardHoliday";
 import { CardHolidayRh } from "./CardHolidayRh";
 import { CardHolidayManager } from "./CardHolidayManager";
 import { CardHolidayNoTouch } from "./CardHolidayNoTouch";
+import { screen } from "../../styles/";
 import {
   getHolidaysApi,
   getHolidaysByUserApi,
@@ -47,12 +48,13 @@ export const ListHolidays = ({
   }, [holidays]);
 
   return (
-    <View style={{ marginBottom: 50 }}>
+    <>
       <FlatList
         data={holidays}
-        ListEmptyComponent={() => <Text>rien</Text>}
+        ListEmptyComponent={() => <Text style={screen.h1}>Aucun résultat</Text>}
         refreshing={loading}
         onRefresh={() => displayHolidays()}
+        style={{ flexGrow: 0 }}
         renderItem={({ item }) => {
           switch (gestionRole) {
             case "manager":
@@ -110,6 +112,6 @@ export const ListHolidays = ({
         }}
         keyExtractor={(item) => item._id}
       />
-    </View>
+    </>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import {
   HeaderCustom,
   ListEmployees,
@@ -20,33 +20,12 @@ export const employeesManagement = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
-      <View>
+      <View style={{ flex: 75 }}>
         <Card>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={[
-                screen.h2,
-                {
-                  flex: 0.9,
-                },
-              ]}
-            >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={[screen.h2, { flex: 0.9 }]}>
               Liste des utilisateurs :
             </Text>
-            {/* <FontAwesome
-            name="user-plus"
-            onPress={() => console.log("addUser")}
-            size={15}
-            style={{
-              alignContent: "center",
-              flex: 0.2,
-            }}
-          /> */}
             <Icon
               raised
               reverse
@@ -54,9 +33,7 @@ export const employeesManagement = ({ navigation }) => {
               size={17}
               type="font-awesome"
               color={color.COLORS.PRIMARY}
-              style={{
-                flex: 0.1,
-              }}
+              style={{ flex: 0.1 }}
               onPress={toggleOverlayAdd}
             />
           </View>
@@ -72,20 +49,8 @@ export const employeesManagement = ({ navigation }) => {
           </Overlay>
         </Card>
       </View>
+      <View style={{ flex: 25 }}>
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({});
-
-{
-  /* <View
-style={{
-  flex: 1,
-  alignItems: "center",
-  justifyContent: "center",
-}}
->
-<ListEmployees />
-</View> */
-}

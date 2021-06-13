@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { StyleSheet, View, FlatList, Dimensions, Text } from "react-native";
+import { StyleSheet, View, FlatList, Text } from "react-native";
 import { CardEmployee } from "./CardEmployee";
 import { AuthContext } from "../../context/AuthContext";
 import { SearchBar, Tooltip } from "react-native-elements";
@@ -48,7 +48,7 @@ export const ListEmployees = (refresh) => {
   }, [refresh]);
 
   return (
-    <View>
+    <>
       <Tooltip
         popover={
           <Text style={{ fontStyle: "italic" }}>
@@ -83,7 +83,6 @@ export const ListEmployees = (refresh) => {
       </View>
       <FlatList
         data={employeesSearch}
-        style={{ height: Dimensions.get("window").height - 275 }}
         refreshing={loading}
         onRefresh={() => displayEmployees()}
         renderItem={({ item }) => (
@@ -91,7 +90,7 @@ export const ListEmployees = (refresh) => {
         )}
         keyExtractor={(item) => item._id}
       />
-    </View>
+    </>
   );
 };
 

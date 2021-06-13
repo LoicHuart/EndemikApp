@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { Icon } from "react-native-elements";
 import color from "../../constants/color";
+import { formatDisplay } from "../../function/";
 
-export const CardHolidayNoTouch = ({ item, refreshHolidays }) => {
-  const [showValidatorCancel, setShowValidatorCancel] = useState(false);
-  const [showValidatorUpdate, setShowValidatorUpdate] = useState(false);
+export const CardHolidayNoTouch = ({ item }) => {
 
   const capitalize = (str) => {
     if (str.toUpperCase() === "RTT") {
@@ -123,21 +122,6 @@ export const CardHolidayNoTouch = ({ item, refreshHolidays }) => {
           </View>
         );
     }
-  };
-
-  const formatDisplay = (date) => {
-    date = new Date(date);
-    let day = date.getDate();
-    if (day.toString().length < 2) {
-      day = "0" + day;
-    }
-
-    let month = date.getMonth() + 1;
-    if (month.toString().length < 2) {
-      month = "0" + month;
-    }
-
-    return day + "/" + month + "/" + date.getFullYear();
   };
 
   const requester = () => {

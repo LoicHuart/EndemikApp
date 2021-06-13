@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { Text, View, Image, StatusBar, ImageBackground } from "react-native";
 import color from "../../constants/color";
 import { login as loginStyle } from "../../styles/";
@@ -127,9 +127,9 @@ export const login = ({ navigation }) => {
                 <Button
                   onPress={handleSubmit}
                   title="Se connecter"
-                  buttonStyle={loading?'':loginStyle.button}
-                  loading={loading?true:false}
-                  type={loading?'clear':'solid'}
+                  buttonStyle={loading ? '' : loginStyle.button}
+                  loading={loading ? true : false}
+                  type={loading ? 'clear' : 'solid'}
                 />
               </View>
             )}
@@ -185,9 +185,9 @@ export const login = ({ navigation }) => {
                     <Button
                       onPress={handleSubmit}
                       title="Valider"
-                      buttonStyle={loading?'':loginStyle.button}
-                      loading={loading?true:false}
-                      type={loading?'clear':'solid'}
+                      buttonStyle={loading ? '' : loginStyle.button}
+                      loading={loading ? true : false}
+                      type={loading ? 'clear' : 'solid'}
                     />
                   </View>
                 </View>

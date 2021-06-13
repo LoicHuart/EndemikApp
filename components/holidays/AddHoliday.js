@@ -81,7 +81,7 @@ export const AddHoliday = () => {
   ];
 
   return (
-    <View>
+    <>
       <Card>
         <Text style={{ fontWeight: "bold", fontSize: 18, textAlign: "center" }}>
           Nouvelle demande
@@ -109,7 +109,7 @@ export const AddHoliday = () => {
                         onPress={(value) => {
                           setType(value);
                           values.type = radio_props[value].name;
-                          console.log(values.type);
+                          // console.log(values.type);
                         }}
                         isSelected={type === i}
                         borderWidth={1}
@@ -125,13 +125,12 @@ export const AddHoliday = () => {
                         onPress={(value) => {
                           setType(value);
                           values.type = radio_props[value].name;
-                          console.log(values.type);
+                          // console.log(values.type);
                         }}
                         obj={obj}
                         index={i}
                         labelHorizontal={true}
                         labelStyle={{ fontSize: 15, color: color.COLORS.BLACK }}
-                        labelWrapStyle={{}}
                       />
                     </RadioButton>
                   ))}
@@ -215,15 +214,18 @@ export const AddHoliday = () => {
           )}
         </Formik>
       </Card>
-      <Pressable
-        onPress={() => setShowConfirm(false)}
-        style={{ opacity: showConfirm ? 100 : 0 }}
-      >
-        <Card>
-          <ConfirmAddHoliday />
-        </Card>
-      </Pressable>
-    </View>
+      {
+        showConfirm &&
+        <Pressable
+          onPress={() => setShowConfirm(false)}
+          style={{ opacity: showConfirm ? 100 : 0 }}
+        >
+          <Card>
+            <ConfirmAddHoliday />
+          </Card>
+        </Pressable>
+      }
+    </>
   );
 };
 
