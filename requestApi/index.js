@@ -3,6 +3,8 @@ export { getEmployeeApi } from "./employees/getEmployeeApi";
 export { addEmployeeApi } from "./employees/addEmployeeApi";
 export { updateEmployeeApi } from "./employees/updateEmployeeApi";
 export { deleteEmployeeApi } from "./employees/deleteEmployeeApi";
+export { getEmployeeByIdApi } from "./employees/getEmployeeByIdApi";
+
 
 //service
 export { addServiceApi } from "./services/addServiceApi";

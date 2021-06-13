@@ -100,22 +100,6 @@ export function DrawerContent(props) {
             }}
             labelStyle={drawer.labelStyle}
           />
-          <DrawerItem
-            icon={() => (
-              <Icon
-                name="user"
-                type="font-awesome-5"
-                color={color.COLORS.DEFAULT}
-                iconStyle={drawer.icon}
-              />
-            )}
-            label="Mon profil"
-            onPress={() => {
-              props.navigation.navigate("profil");
-            }}
-            labelStyle={drawer.labelStyle}
-          />
-
         </View>
       </DrawerContentScrollView>
     </View>
