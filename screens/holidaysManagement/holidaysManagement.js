@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 import { HeaderCustom, ListHolidays, Card } from "../../components/";
 import { screen } from "../../styles/";
@@ -7,6 +7,9 @@ import { AuthContext } from "../../context/AuthContext";
 export const holidaysManagement = ({ navigation }) => {
   const { user, token } = React.useContext(AuthContext);
 
+  useEffect(() => {
+    console.log(user.id_role.name)
+  })
   return (
     <View style={{ flex: 1 }}>
       <HeaderCustom navigation={navigation} />
@@ -19,8 +22,8 @@ export const holidaysManagement = ({ navigation }) => {
           </View>
           <ListHolidays
             token={token}
-            status={["prévalidé"]}
-            gestionRole={user.id_role.name}
+            status={["prévalidé"], ["en attente"]}
+            gestionRole={user.isManager ? "manager" : user.id_role.name}
           />
         </Card>
       </View>

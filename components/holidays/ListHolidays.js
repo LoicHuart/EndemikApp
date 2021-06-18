@@ -54,7 +54,6 @@ export const ListHolidays = ({
         ListEmptyComponent={() => <Text style={screen.h1}>Aucun résultat</Text>}
         refreshing={loading}
         onRefresh={() => displayHolidays()}
-        style={{ flexGrow: 0 }}
         renderItem={({ item }) => {
           switch (gestionRole) {
             case "manager":
