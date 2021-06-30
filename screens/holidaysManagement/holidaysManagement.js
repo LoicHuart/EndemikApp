@@ -22,7 +22,7 @@ export const holidaysManagement = ({ navigation }) => {
           </View>
           <ListHolidays
             token={token}
-            status={["prévalidé"], ["en attente"]}
+            status={user.isManager ? ["en attente"] : ["prévalidé"]}
             gestionRole={user.isManager ? "manager" : user.id_role.name}
           />
         </Card>
