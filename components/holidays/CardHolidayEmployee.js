@@ -12,60 +12,6 @@ export const CardHolidayEmployee = ({ item, refreshHolidays }) => {
   const [showValidatorCancel, setShowValidatorCancel] = useState(false);
   const [showValidatorUpdate, setShowValidatorUpdate] = useState(false);
 
-  const displayStatus = () => {
-    switch (item.status) {
-      case "en attente":
-        return (
-          <CardHolidays
-            backgroundColor={color.COLORS.WAIT}
-            icon={"hourglass"}
-            colorIcon={color.COLORS.WHITE}
-            status={item.status}
-          />
-        )
-
-      case "prévalidé":
-        return (
-          <CardHolidays
-            backgroundColor={color.COLORS.PREVALIDATE}
-            icon={"play-circle"}
-            colorIcon={color.COLORS.WHITE}
-            status={item.status}
-          />
-        )
-
-      case "validé":
-        return (
-          <CardHolidays
-            backgroundColor={color.COLORS.VALIDATE}
-            icon={"check-circle"}
-            colorIcon={color.COLORS.WHITE}
-            status={item.status}
-          />
-        )
-
-      case "refusé":
-        return (
-          <CardHolidays
-            backgroundColor={color.COLORS.REFUSE}
-            icon={"times-circle"}
-            colorIcon={color.COLORS.WHITE}
-            status={item.status}
-          />
-        )
-
-      case "annulé":
-        return (
-          <CardHolidays
-            backgroundColor={color.COLORS.CANCEL}
-            icon={"ban"}
-            colorIcon={color.COLORS.WHITE}
-            status={item.status}
-          />
-        )
-    }
-  };
-
   const toggleShowPopUpCancel = async () => {
     await setShowValidatorCancel(!showValidatorCancel);
     if (
@@ -82,47 +28,6 @@ export const CardHolidayEmployee = ({ item, refreshHolidays }) => {
     await setShowValidatorUpdate(!showValidatorUpdate);
     if (item.status === "en attente" && showValidatorUpdate) {
       refreshHolidays(item.status);
-    }
-  };
-
-  const overlayCancel = () => {
-    if (
-      (item.status === "prévalidé" ||
-        item.status === "validé" ||
-        item.status === "en attente") &&
-      Date.now() < new Date(item.starting_date)
-    ) {
-      return (
-        <CancelHoliday
-          item={item}
-          toggleShowPopUpCancel={toggleShowPopUpCancel}
-        />
-      );
-    }
-  };
-
-  const overlayUpdate = () => {
-    if (
-      item.status === "en attente" &&
-      Date.now() < new Date(item.starting_date)
-    ) {
-      return (
-        <UpdateHoliday
-          item={item}
-          toggleShowPopUpUpdate={toggleShowPopUpUpdate}
-        />
-      );
-    }
-  };
-
-  const requester = () => {
-    if (item.id_requester_employee.firstName) {
-      return (
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.firstName}>{item.id_requester_employee.firstName}</Text>
-          <Text>{item.id_requester_employee.lastName}</Text>
-        </View>
-      );
     }
   };
 
@@ -148,12 +53,20 @@ export const CardHolidayEmployee = ({ item, refreshHolidays }) => {
         }}
       >
         <View style={styles.card}>
-          {displayStatus()}
+          <CardHolidays
+            status={item.status}
+          />
           <View style={{ flex: 4 }}>
             <Text style={{ alignSelf: "flex-end", marginRight: 5 }}>
               {formatDisplay(item.current_date)}
             </Text>
-            {requester()}
+            {
+              (item.id_requester_employee.firstName) &&
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.firstName}>{item.id_requester_employee.firstName}</Text>
+                <Text>{item.id_requester_employee.lastName}</Text>
+              </View>
+            }
             <Text style={styles.type}>{item.type}</Text>
             <View style={styles.dates}>
               <View style={{ alignSelf: "center", flex: 1 }}></View>
@@ -190,14 +103,26 @@ export const CardHolidayEmployee = ({ item, refreshHolidays }) => {
         onBackdropPress={toggleShowPopUpCancel}
         overlayStyle={screen.overlay}
       >
-        {overlayCancel()}
+        {
+          ((item.status === "prévalidé" || item.status === "validé" || item.status === "en attente") && Date.now() < new Date(item.starting_date)) &&
+          <CancelHoliday
+            item={item}
+            toggleShowPopUpCancel={toggleShowPopUpCancel}
+          />
+        }
       </Overlay>
       <Overlay
         isVisible={showValidatorUpdate}
         onBackdropPress={toggleShowPopUpUpdate}
         overlayStyle={screen.overlay}
       >
-        {overlayUpdate()}
+        {
+          (item.status === "en attente" && Date.now() < new Date(item.starting_date)) &&
+          <UpdateHoliday
+            item={item}
+            toggleShowPopUpUpdate={toggleShowPopUpUpdate}
+          />
+        }
       </Overlay>
     </View>
   );

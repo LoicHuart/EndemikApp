@@ -19,8 +19,8 @@ export const holidaysManagementHistory = ({ navigation }) => {
           </View>
           <ListHolidays
             token={token}
-            status={["prévalidé", "validé", "refusé", "en attente", "annulé"]}
-            gestionRole={user.id_role.name}
+            status={user.isManager ? ["prévalidé", "validé", "refusé", "annulé"] : ["validé", "refusé", "annulé"]}
+            gestionRole={user.isManager ? "manager" : user.id_role.name}
             noTouch={true}
           />
         </Card>
